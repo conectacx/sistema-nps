@@ -116,28 +116,15 @@ document.getElementById("vendedor").innerText = vendedor || "Não informado";
 document.getElementById("tecnico").innerText = tecnico || "Não informado";
 
 // ===== CARREGAR ATENDENTES DO BANCO =====
-async function carregarAtendentes() {
-  let { data, error } = await supabaseClient
-    .from("usuarios")
-    .select("*")
-    .eq("perfil", "atendente");
 
-  let select = document.getElementById("atendente");
+let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  data.forEach(u => {
-    let opt = document.createElement("option");
-    opt.value = u.nome;
-    opt.textContent = u.nome;
-    select.appendChild(opt);
-  });
+if (!usuarioLogado) {
+  alert("Usuário não logado");
+  window.location.href = "login.html";
 }
 
-carregarAtendentes();
+document.getElementById("atendente").value = usuarioLogado.nome;
 
 // ===== GERAR PERGUNTAS =====
 function gerarPerguntas() {
