@@ -681,7 +681,9 @@ if (error) {
   return;
 }
 
-if (clienteId) {
+      
+  alert("ID do cliente: " + clienteId);
+      
   const { error: erroCliente } = await supabaseClient
     .from("clientes")
     .update({
