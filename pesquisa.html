@@ -309,14 +309,7 @@
         formulario.innerHTML = `
           <div class="bloco">
             <h3>Atendente que realizou a pesquisa</h3>
-            <select id="atendente">
-              <option value="">Selecione</option>
-              <option value="Tamara">Tamara</option>
-              <option value="Hudson">Hudson</option>
-              <option value="Lucas">Lucas</option>
-              <option value="Carlos">Carlos</option>
-            </select>
-          </div>
+            <input type="text" id="atendente" readonly>
 
           <div class="bloco">
             <h3>Técnico que executou o serviço</h3>
@@ -490,7 +483,7 @@
 
           <div class="bloco">
             <h3>Atendente que realizou a pesquisa</h3>
-            <select id="atendente">
+            <input type="text" id="atendente" readonly>
               <option value="">Selecione</option>
               <option value="Tamara">Tamara</option>
               <option value="Hudson">Hudson</option>
@@ -624,6 +617,11 @@
 
           <button onclick="enviar()">Enviar</button>
         `;
+
+        const campoAtendente = document.getElementById("atendente");
+if (campoAtendente) {
+  campoAtendente.value = usuarioLogado.nome || usuarioLogado.usuario || "";
+}
       }
     }
 
