@@ -620,7 +620,7 @@
 
         const campoAtendente = document.getElementById("atendente");
 if (campoAtendente) {
-  campoAtendente.value = JSON.stringify(usuarioLogado); 
+  campoAtendente.value = usuarioLogado.nome || usuarioLogado.usuario || "";
 }
       }
     }
