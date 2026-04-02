@@ -620,85 +620,91 @@
       }
     }
     async function enviar() {
-      const atendente = document.getElementById("atendente").value;
-      const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value;
-      const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value;
-      const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value;
-      const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value;
+  const atendente = document.getElementById("atendente").value;
+  const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value;
+  const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value;
+  const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value;
+  const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value;
 
-      if (!atendente) {
-        alert("Selecione o atendente que realizou a pesquisa!");
-        return;
-      }
-
-      if (!statusPesquisa) {
-        alert("Selecione o status da pesquisa!");
-        return;
-      }
-
-      if (statusPesquisa === "realizada") {
-        if (!pergunta1 || !pergunta2 || !pergunta3) {
-          alert("Preencha todas as avaliações!");
-          return;
-        }
-      }
-
-      let resposta = {
-        cliente: nome || null,
-        tipo: tipo || null,
-        tecnico: tecnico || "Não informado",
-        atendente: atendente,
-        pergunta1: pergunta1 ? Number(pergunta1) : null,
-        pergunta2: pergunta2 ? Number(pergunta2) : null,
-        pergunta3: pergunta3 ? Number(pergunta3) : null,
-        comentario: document.getElementById("comentario").value || "",
-        status: statusPesquisa,
-        data: new Date().toISOString().slice(0, 10),
-        dadosCorretos: null,
-        canais: null,
-        problemaResolvido: null,
-        indicacao: null
-      };
-
-      if (tipo === "Pós Venda") {
-        resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
-        resposta.canais = document.querySelector('input[name="canais"]:checked')?.value || null;
-      } else {
-        resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
-
-        const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value;
-        resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
-      }
-
-      const { error } = await supabaseClient
-  .from("respostas")
-  .insert([resposta]);
-
-if (error) {
-  console.error("Erro ao salvar resposta:", error);
-  alert("Erro ao salvar no Supabase: " + error.message);
-  return;
-}
-
-if (clienteId) {
-  const { error: erroCliente } = await supabaseClient
-    .from("clientes")
-    .update({
-      status_pesquisa: "concluido",
-      ultima_tentativa_por: atendente
-    })
-    .eq("id", Number(clienteId));
-
-  if (erroCliente) {
-    console.error("Erro ao atualizar cliente:", erroCliente);
-    alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+  if (!atendente) {
+    alert("Selecione o atendente que realizou a pesquisa!");
     return;
   }
-}
 
-alert("Pesquisa salva com sucesso!");
-window.location.href = "index.html";
-      }
+  if (!statusPesquisa) {
+    alert("Selecione o status da pesquisa!");
+    return;
+  }
+
+  if (statusPesquisa === "realizada") {
+    if (!pergunta1 || !pergunta2 || !pergunta3) {
+      alert("Preencha todas as avaliações!");
+      return;
+    }
+  }
+
+  let resposta = {
+    cliente_id: clienteId ? Number(clienteId) : null,
+    codigo: codigo || null,
+    cliente: nome || null,
+    bairro: bairro || null,
+    telefone: telefone || null,
+    email: email || null,
+    vendedor: vendedor || null,
+    tipo: tipo || null,
+    tecnico: tecnico || "Não informado",
+    atendente: atendente,
+    pergunta1: pergunta1 ? Number(pergunta1) : null,
+    pergunta2: pergunta2 ? Number(pergunta2) : null,
+    pergunta3: pergunta3 ? Number(pergunta3) : null,
+    comentario: document.getElementById("comentario")?.value || "",
+    status: statusPesquisa,
+    data: new Date().toISOString().slice(0, 10),
+    dadosCorretos: null,
+    canais: null,
+    problemaResolvido: null,
+    indicacao: null
+  };
+
+  if (tipo === "Pós Venda") {
+    resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
+    resposta.canais = document.querySelector('input[name="canais"]:checked')?.value || null;
+  } else {
+    resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
+
+    const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value;
+    resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
+  }
+
+  const { error } = await supabaseClient
+    .from("respostas")
+    .insert([resposta]);
+
+  if (error) {
+    console.error("Erro ao salvar resposta:", error);
+    alert("Erro ao salvar no Supabase: " + error.message);
+    return;
+  }
+
+  if (clienteId) {
+    const { error: erroCliente } = await supabaseClient
+      .from("clientes")
+      .update({
+        status_pesquisa: "concluido",
+        ultima_tentativa_por: atendente
+      })
+      .eq("id", Number(clienteId));
+
+    if (erroCliente) {
+      console.error("Erro ao atualizar cliente:", erroCliente);
+      alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+      return;
+    }
+  }
+
+  alert("Pesquisa salva com sucesso!");
+  window.location.href = "index.html";
+}
 
       alert("Pesquisa salva com sucesso!");
       window.location.href = "index.html";
