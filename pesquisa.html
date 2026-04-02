@@ -67,7 +67,7 @@
   <p><b>Técnico:</b> <span id="tecnico"></span></p>
 
   <label>Atendente:</label>
-  <select id="atendente"></select>
+  <input type="text" id="atendente" readonly>
 
   <div id="perguntas"></div>
 
@@ -95,6 +95,16 @@ const data = params.get("data");
 const vendedor = params.get("vendedor");
 const tecnico = params.get("tecnico");
 const tipo = params.get("tipo");
+
+let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+
+if (!usuarioLogado) {
+  alert("Usuário não logado");
+  window.location.href = "login.html";
+}
+
+// Preencher atendente automaticamente
+document.getElementById("atendente").value = usuarioLogado.nome;
 
 // ===== MOSTRAR DADOS =====
 document.getElementById("cliente").innerText = nome || "Não informado";
