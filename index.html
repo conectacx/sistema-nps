@@ -62,6 +62,12 @@
       padding: 6px;
       margin-top: 10px;
     }
+
+    .info-usuario {
+      font-size: 14px;
+      color: #555;
+      margin-top: 8px;
+    }
   </style>
 </head>
 
@@ -69,7 +75,10 @@
 
   <div class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap;">
-      <h1 style="margin:0;">Lista de Atendimentos</h1>
+      <div>
+        <h1 style="margin:0;">Lista de Atendimentos</h1>
+        <div class="info-usuario" id="infoUsuario"></div>
+      </div>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button onclick="logout()">Sair</button>
@@ -126,6 +135,9 @@
       }
     }
 
+    document.getElementById("infoUsuario").innerText =
+      "Usuário logado: " + (usuarioLogado.nome || usuarioLogado.usuario || "Não informado");
+
     function normalizarTipo(tipo) {
       let texto = String(tipo || "")
         .toLowerCase()
@@ -148,10 +160,18 @@
         </tr>
       `;
 
-      let { data, error } = await supabaseClient
+      let query = supabaseClient
         .from("clientes")
         .select("*")
-        .order("id", { ascending: true });
+        .eq("status_pesquisa", "pendente")
+        .order("id", { ascending: true })
+        .limit(5);
+
+      if (usuarioLogado.perfil === "atendente") {
+        query = query.eq("atendente_responsavel", usuarioLogado.nome);
+      }
+
+      let { data, error } = await query;
 
       if (error) {
         console.error("Erro ao carregar clientes:", error);
@@ -167,17 +187,19 @@
 
       atendimentos = (data || []).map(function(item) {
         return {
-          id: item.id || "",
+          id: item.id,
           codigo: item.codigo || "",
           nome: item.nome || "",
           bairro: item.bairro || "",
-          telefone: item.telefone || item.telefones || "",
+          telefone: item.telefone || "",
           email: item.email || "",
-          data: item.data || item["data de execução"] || "",
+          data: item.data || "",
           vendedor: item.vendedor || "",
-          tecnico: item.tecnico || item["tecnico que executou"] || "",
+          tecnico: item.tecnico || "",
           tipo: normalizarTipo(item.tipo),
-          endereco: item.endereco || item.logradouro || item.rua || ""
+          endereco: item.endereco || "",
+          atendente_responsavel: item.atendente_responsavel || "",
+          status_pesquisa: item.status_pesquisa || ""
         };
       });
 
@@ -192,7 +214,7 @@
         tabela.innerHTML = `
           <tr>
             <td colspan="9" style="text-align:center; color:#666;">
-              Nenhum atendimento encontrado.
+              Nenhum atendimento pendente encontrado.
             </td>
           </tr>
         `;
@@ -213,7 +235,19 @@
             <td>${a.vendedor}</td>
             <td>${a.tecnico}</td>
             <td>
-              <button onclick="realizarPesquisa(${a.id ? `'${String(a.id).replace(/'/g, "\\'")}'` : `''`}, '${String(a.codigo).replace(/'/g, "\\'")}', '${String(a.nome).replace(/'/g, "\\'")}', '${String(a.bairro).replace(/'/g, "\\'")}', '${String(a.telefone).replace(/'/g, "\\'")}', '${String(a.email).replace(/'/g, "\\'")}', '${String(a.data).replace(/'/g, "\\'")}', '${String(a.vendedor).replace(/'/g, "\\'")}', '${String(a.tecnico).replace(/'/g, "\\'")}', '${String(a.tipo).replace(/'/g, "\\'")}', '${String(a.endereco).replace(/'/g, "\\'")}')">
+              <button onclick="realizarPesquisa(
+                '${a.id}',
+                '${String(a.codigo).replace(/'/g, "\\'")}',
+                '${String(a.nome).replace(/'/g, "\\'")}',
+                '${String(a.bairro).replace(/'/g, "\\'")}',
+                '${String(a.telefone).replace(/'/g, "\\'")}',
+                '${String(a.email).replace(/'/g, "\\'")}',
+                '${String(a.data).replace(/'/g, "\\'")}',
+                '${String(a.vendedor).replace(/'/g, "\\'")}',
+                '${String(a.tecnico).replace(/'/g, "\\'")}',
+                '${String(a.tipo).replace(/'/g, "\\'")}',
+                '${String(a.endereco).replace(/'/g, "\\'")}'
+              )">
                 Realizar
               </button>
             </td>
@@ -238,21 +272,18 @@
     }
 
     function realizarPesquisa(id, codigo, nome, bairro, telefone, email, data, vendedor, tecnico, tipo, endereco) {
-      const params = new URLSearchParams({
-        id: id || "",
-        codigo: codigo || "",
-        nome: nome || "",
-        bairro: bairro || "",
-        telefone: telefone || "",
-        email: email || "",
-        data: data || "",
-        vendedor: vendedor || "",
-        tecnico: tecnico || "",
-        tipo: tipo || "",
-        endereco: endereco || ""
-      });
-
-      window.location.href = "pesquisa.html?" + params.toString();
+      window.location.href =
+        "pesquisa.html?id=" + encodeURIComponent(id) +
+        "&codigo=" + encodeURIComponent(codigo) +
+        "&nome=" + encodeURIComponent(nome) +
+        "&bairro=" + encodeURIComponent(bairro) +
+        "&telefone=" + encodeURIComponent(telefone) +
+        "&email=" + encodeURIComponent(email) +
+        "&data=" + encodeURIComponent(data) +
+        "&vendedor=" + encodeURIComponent(vendedor) +
+        "&tecnico=" + encodeURIComponent(tecnico) +
+        "&tipo=" + encodeURIComponent(tipo) +
+        "&endereco=" + encodeURIComponent(endereco);
     }
 
     function logout() {
