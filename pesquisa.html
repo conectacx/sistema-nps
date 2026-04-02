@@ -272,12 +272,14 @@
     <div id="formulario"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
     const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
     const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
@@ -620,92 +622,90 @@
       }
     }
 
-    <script>
-  async function enviar() {
-    const atendente = document.getElementById("atendente")?.value || "";
-    const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value || null;
-    const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value || null;
-    const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value || null;
-    const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value || null;
+    async function enviar() {
+      const atendente = document.getElementById("atendente")?.value || "";
+      const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value || null;
+      const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value || null;
+      const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value || null;
+      const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value || null;
 
-    if (!atendente) {
-      alert("Selecione o atendente que realizou a pesquisa!");
-      return;
-    }
-
-    if (!statusPesquisa) {
-      alert("Selecione o status da pesquisa!");
-      return;
-    }
-
-    if (statusPesquisa === "realizada") {
-      if (!pergunta1 || !pergunta2 || !pergunta3) {
-        alert("Preencha todas as avaliações!");
+      if (!atendente) {
+        alert("Selecione o atendente que realizou a pesquisa!");
         return;
       }
+
+      if (!statusPesquisa) {
+        alert("Selecione o status da pesquisa!");
+        return;
+      }
+
+      if (statusPesquisa === "realizada") {
+        if (!pergunta1 || !pergunta2 || !pergunta3) {
+          alert("Preencha todas as avaliações!");
+          return;
+        }
+      }
+
+      let resposta = {
+        cliente: nome || null,
+        tipo: tipo || null,
+        tecnico: tecnico || "Não informado",
+        atendente: atendente,
+        pergunta1: pergunta1 ? Number(pergunta1) : null,
+        pergunta2: pergunta2 ? Number(pergunta2) : null,
+        pergunta3: pergunta3 ? Number(pergunta3) : null,
+        comentario: document.getElementById("comentario")?.value || "",
+        status: statusPesquisa,
+        data: new Date().toISOString().slice(0, 10),
+        dadosCorretos: null,
+        canais: null,
+        problemaResolvido: null,
+        indicacao: null
+      };
+
+      if (tipo === "Pós Venda") {
+        resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
+        resposta.canais = document.querySelector('input[name="canais"]:checked')?.value || null;
+      } else {
+        resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
+        const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value || null;
+        resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
+      }
+
+      const { error } = await supabaseClient
+        .from("respostas")
+        .insert([resposta]);
+
+      if (error) {
+        console.error("Erro ao salvar resposta:", error);
+        alert("Erro ao salvar no Supabase: " + error.message);
+        return;
+      }
+
+      const { error: erroCliente } = await supabaseClient
+        .from("clientes")
+        .update({
+          status_pesquisa: "concluido",
+          ultima_tentativa_por: atendente
+        })
+        .eq("id", clienteId);
+
+      if (erroCliente) {
+        console.error("Erro ao atualizar cliente:", erroCliente);
+        alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+        return;
+      }
+
+      alert("Pesquisa salva com sucesso!");
+      window.location.href = "index.html";
     }
 
-    let resposta = {
-      cliente: nome || null,
-      tipo: tipo || null,
-      tecnico: tecnico || "Não informado",
-      atendente: atendente,
-      pergunta1: pergunta1 ? Number(pergunta1) : null,
-      pergunta2: pergunta2 ? Number(pergunta2) : null,
-      pergunta3: pergunta3 ? Number(pergunta3) : null,
-      comentario: document.getElementById("comentario")?.value || "",
-      status: statusPesquisa,
-      data: new Date().toISOString().slice(0, 10),
-      dadosCorretos: null,
-      canais: null,
-      problemaResolvido: null,
-      indicacao: null
-    };
-
-    if (tipo === "Pós Venda") {
-      resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
-      resposta.canais = document.querySelector('input[name="canais"]:checked')?.value || null;
-    } else {
-      resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
-
-      const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value || null;
-      resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
+    function logout() {
+      localStorage.removeItem("usuarioLogado");
+      window.location.href = "login.html";
     }
 
-    const { error } = await supabaseClient
-      .from("respostas")
-      .insert([resposta]);
-
-    if (error) {
-      console.error("Erro ao salvar resposta:", error);
-      alert("Erro ao salvar no Supabase: " + error.message);
-      return;
-    }
-
-    const { error: erroCliente } = await supabaseClient
-      .from("clientes")
-      .update({
-        status_pesquisa: "concluido",
-        ultima_tentativa_por: atendente
-      })
-      .eq("id", clienteId);
-
-    if (erroCliente) {
-      console.error("Erro ao atualizar cliente:", erroCliente);
-      alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
-      return;
-    }
-
-    alert("Pesquisa salva com sucesso!");
-    window.location.href = "index.html";
-  }
-
-  function logout() {
-    localStorage.removeItem("usuarioLogado");
-    window.location.href = "login.html";
-  }
-
-  carregarFormulario();
-</script>
+    carregarFormulario();
+  </script>
 </body>
 </html>
