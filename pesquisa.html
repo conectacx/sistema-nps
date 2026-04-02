@@ -308,9 +308,9 @@
       if (tipo === "Pós Venda") {
         formulario.innerHTML = `
           <div class="bloco">
-  <h3>Atendente que realizou a pesquisa</h3>
-  <input type="text" id="atendente" readonly>
-</div>
+            <h3>Atendente que realizou a pesquisa</h3>
+            <input type="text" id="atendente" readonly>
+          </div>
 
           <div class="bloco">
             <h3>Técnico que executou o serviço</h3>
@@ -483,9 +483,9 @@
           </div>
 
           <div class="bloco">
-  <h3>Atendente que realizou a pesquisa</h3>
-  <input type="text" id="atendente" readonly>
-</div>
+            <h3>Atendente que realizou a pesquisa</h3>
+            <input type="text" id="atendente" readonly>
+          </div>
 
           <div class="bloco">
             <h3>Técnico que executou o serviço</h3>
@@ -619,70 +619,71 @@
         campoAtendente.value = usuarioLogado.nome || usuarioLogado.usuario || "";
       }
     }
+
     async function enviar() {
-  const atendente = document.getElementById("atendente")?.value || "";
-  const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value || null;
-  const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value || null;
-  const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value || null;
-  const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value || null;
+      const atendente = document.getElementById("atendente")?.value || "";
+      const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value || null;
+      const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value || null;
+      const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value || null;
+      const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value || null;
 
-  if (!atendente) {
-    alert("Selecione o atendente que realizou a pesquisa!");
-    return;
-  }
+      if (!atendente) {
+        alert("Selecione o atendente que realizou a pesquisa!");
+        return;
+      }
 
-  if (!statusPesquisa) {
-    alert("Selecione o status da pesquisa!");
-    return;
-  }
+      if (!statusPesquisa) {
+        alert("Selecione o status da pesquisa!");
+        return;
+      }
 
-  if (statusPesquisa === "realizada") {
-    if (!pergunta1 || !pergunta2 || !pergunta3) {
-      alert("Preencha todas as avaliações!");
-      return;
+      if (statusPesquisa === "realizada") {
+        if (!pergunta1 || !pergunta2 || !pergunta3) {
+          alert("Preencha todas as avaliações!");
+          return;
+        }
+      }
+
+      let resposta = {
+        cliente: nome || null,
+        tipo: tipo || null,
+        tecnico: tecnico || "Não informado",
+        atendente: atendente,
+        pergunta1: pergunta1 ? Number(pergunta1) : null,
+        pergunta2: pergunta2 ? Number(pergunta2) : null,
+        pergunta3: pergunta3 ? Number(pergunta3) : null,
+        comentario: document.getElementById("comentario")?.value || "",
+        status: statusPesquisa,
+        data: new Date().toISOString().slice(0, 10),
+        dadosCorretos: null,
+        canais: null,
+        problemaResolvido: null,
+        indicacao: null
+      };
+
+      if (tipo === "Pós Venda") {
+        resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
+        resposta.canais = document.querySelector('input[name="canais"]:checked')?.value || null;
+      } else {
+        resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
+
+        const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value || null;
+        resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
+      }
+
+      const { error } = await supabaseClient
+        .from("respostas")
+        .insert([resposta]);
+
+      if (error) {
+        console.error("Erro ao salvar resposta:", error);
+        alert("Erro ao salvar no Supabase: " + error.message);
+        return;
+      }
+
+      alert("Pesquisa salva com sucesso!");
+      window.location.href = "index.html";
     }
-  }
-
-  let resposta = {
-    cliente: nome || null,
-    tipo: tipo || null,
-    tecnico: tecnico || "Não informado",
-    atendente: atendente,
-    pergunta1: pergunta1 ? Number(pergunta1) : null,
-    pergunta2: pergunta2 ? Number(pergunta2) : null,
-    pergunta3: pergunta3 ? Number(pergunta3) : null,
-    comentario: document.getElementById("comentario")?.value || "",
-    status: statusPesquisa,
-    data: new Date().toISOString().slice(0, 10),
-    dadosCorretos: null,
-    canais: null,
-    problemaResolvido: null,
-    indicacao: null
-  };
-
-  if (tipo === "Pós Venda") {
-    resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
-    resposta.canais = document.querySelector('input[name="canais"]:checked')?.value || null;
-  } else {
-    resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
-
-    const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value || null;
-    resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
-  }
-
-  const { error } = await supabaseClient
-    .from("respostas")
-    .insert([resposta]);
-
-  if (error) {
-    console.error("Erro ao salvar resposta:", error);
-    alert("Erro ao salvar no Supabase: " + error.message);
-    return;
-  }
-
-  alert("Pesquisa salva com sucesso!");
-  window.location.href = "index.html";
-}
 
     function logout() {
       localStorage.removeItem("usuarioLogado");
