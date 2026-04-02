@@ -1,241 +1,703 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Pesquisa de Satisfação</title>
 
   <style>
     body {
-      font-family: Arial;
-      background: #f4f6f9;
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
       padding: 30px;
+      font-size: 14px;
     }
 
     .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 25px;
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-sizing: border-box;
     }
 
-    h2 {
+    .topo-formulario {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .logo-esquerda,
+    .logo-direita {
+      width: 120px;
+      text-align: center;
+    }
+
+    .titulo-centro {
+      width: 700px;
+      text-align: center;
+    }
+
+    .titulo-centro h1 {
+      margin-bottom: 10px;
       color: #1f3c88;
     }
 
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
+    .linha {
+      height: 1px;
+      background-color: #d9d9d9;
+      margin: 10px auto;
+      width: 100%;
     }
 
-    select, input, textarea {
+    .logo-formulario {
+      max-width: 110px;
+      height: auto;
+    }
+
+    #cliente,
+    #tipo {
+      margin: 4px 0;
+      font-size: 16px;
+    }
+
+    .bloco {
+      margin-bottom: 40px;
+    }
+
+    .introducao {
+      background-color: #f7f9fc;
+      padding: 18px;
+      border-left: 4px solid #1f3c88;
+      border-radius: 8px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .texto-ajuda {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #333;
+    }
+
+    .dados {
+      background: #f7f9fc;
+      padding: 12px;
+      border-radius: 6px;
+    }
+
+    h3 {
+      margin-bottom: 6px;
+      color: #333;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 6px 0;
+    }
+
+    input, textarea, select {
       width: 100%;
       padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
       margin-top: 5px;
+      box-sizing: border-box;
+      font-size: 13px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
     }
 
     button {
-      margin-top: 20px;
-      padding: 10px;
-      background: #1f3c88;
+      background-color: #1f3c88;
       color: white;
+      padding: 12px 16px;
+      border-radius: 6px;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
     }
 
     button:hover {
-      background: #16306d;
+      background-color: #16306d;
+    }
+
+    .opcoes-linha {
+      display: flex;
+      gap: 20px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .opcao-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .opcao-box input {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #1f3c88;
+      border-radius: 4px;
+      position: relative;
+      margin: 0;
+    }
+
+    .opcao-box input:checked {
+      background-color: #1f3c88;
+    }
+
+    .opcao-box input:checked::after {
+      content: "✔";
+      color: white;
+      font-size: 11px;
+      position: absolute;
+      top: -1px;
+      left: 2px;
+    }
+
+    .escala {
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .numeros,
+    .bolinhas {
+      display: grid;
+      grid-template-columns: repeat(5, 30px);
+      column-gap: 16px;
+      justify-content: start;
+    }
+
+    .numeros {
+      margin-bottom: 6px;
+    }
+
+    .numeros span {
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .bolinhas input {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #1f3c88;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .bolinhas input:checked {
+      background-color: #1f3c88;
+    }
+
+    .bolinhas input:checked::after {
+      content: "✔";
+      color: white;
+      font-size: 11px;
+      position: absolute;
+      top: -1px;
+      left: 2px;
+    }
+
+    .canais-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .canal-item {
+      flex: 1;
+      min-width: 180px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .canal-item strong {
+      display: block;
+      margin-bottom: 3px;
+      color: #1f3c88;
+    }
+
+    .canal-item a {
+      color: #1f3c88;
+      text-decoration: none;
+    }
+
+    .canal-item a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+      <button type="button" onclick="logout()">Sair</button>
+    </div>
 
-<div class="container">
+    <div class="topo-formulario">
+      <div class="logo-esquerda">
+        <img src="logo.png" alt="Logo Petranet" class="logo-formulario">
+      </div>
 
-  <h2>Pesquisa de Satisfação</h2>
+      <div class="titulo-centro">
+        <h1>Pesquisa de Qualidade</h1>
+        <div class="linha"></div>
+        <p id="cliente"></p>
+        <p id="tipo"></p>
+      </div>
 
-  <p><b>Cliente:</b> <span id="cliente"></span></p>
-  <p><b>Bairro:</b> <span id="bairro"></span></p>
-  <p><b>Telefone:</b> <span id="telefone"></span></p>
-  <p><b>Email:</b> <span id="email"></span></p>
-  <p><b>Data:</b> <span id="data"></span></p>
-  <p><b>Vendedor:</b> <span id="vendedor"></span></p>
-  <p><b>Técnico:</b> <span id="tecnico"></span></p>
+      <div class="logo-direita">
+        <img src="logo.png" alt="Logo Petranet" class="logo-formulario">
+      </div>
+    </div>
 
-  <label>Atendente:</label>
-  <select id="atendente"></select>
+    <div id="formulario"></div>
+  </div>
 
-  <div id="perguntas"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-  <button onclick="enviar()">Enviar</button>
+  <script>
+    const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-</div>
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    if (!usuarioLogado) {
+      window.location.href = "login.html";
+    }
 
-<script>
-const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
-const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
+    const parametros = new URLSearchParams(window.location.search);
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const clienteId = parametros.get("id");
+    const codigo = parametros.get("codigo");
+    const nome = parametros.get("nome");
+    const bairro = parametros.get("bairro");
+    const telefone = parametros.get("telefone");
+    const email = parametros.get("email");
+    const dataCliente = parametros.get("data");
+    const vendedor = parametros.get("vendedor");
+    const tecnico = parametros.get("tecnico");
+    const tipo = parametros.get("tipo");
+    const endereco = parametros.get("endereco");
 
-// ===== PEGAR PARAMETROS =====
-const params = new URLSearchParams(window.location.search);
+    document.getElementById("cliente").innerText = "Cliente: " + (nome || "Não informado");
+    document.getElementById("tipo").innerText = "Tipo: " + (tipo || "Não informado");
 
-const codigo = params.get("codigo");
-const nome = params.get("nome");
-const bairro = params.get("bairro");
-const telefone = params.get("telefone");
-const email = params.get("email");
-const data = params.get("data");
-const vendedor = params.get("vendedor");
-const tecnico = params.get("tecnico");
-const tipo = params.get("tipo");
+    function carregarFormulario() {
+      const formulario = document.getElementById("formulario");
 
-// ===== MOSTRAR DADOS =====
-document.getElementById("cliente").innerText = nome || "Não informado";
-document.getElementById("bairro").innerText = bairro || "Não informado";
-document.getElementById("telefone").innerText = telefone || "Não informado";
-document.getElementById("email").innerText = email || "Não informado";
-document.getElementById("data").innerText = data || "Não informado";
-document.getElementById("vendedor").innerText = vendedor || "Não informado";
-document.getElementById("tecnico").innerText = tecnico || "Não informado";
+      if (tipo === "Pós Venda") {
+        formulario.innerHTML = `
+          <div class="bloco">
+            <h3>Atendente que realizou a pesquisa</h3>
+            <select id="atendente">
+              <option value="">Selecione</option>
+              <option value="Tamara">Tamara</option>
+              <option value="Hudson">Hudson</option>
+              <option value="Lucas">Lucas</option>
+              <option value="Carlos">Carlos</option>
+            </select>
+          </div>
 
-// ===== CARREGAR ATENDENTES DO BANCO =====
-async function carregarAtendentes() {
-  let { data, error } = await supabaseClient
-    .from("usuarios")
-    .select("*")
-    .eq("perfil", "atendente");
+          <div class="bloco">
+            <h3>Técnico que executou o serviço</h3>
+            <input type="text" value="${tecnico || "Não informado"}" disabled>
+          </div>
 
-  let select = document.getElementById("atendente");
+          <div class="introducao">
+            <p>
+              Olá, gostaria de falar com o Sr.(a) <strong>${nome || "Cliente"}</strong>.<br><br>
+              Meu nome é [seu nome] e sou do setor de Qualidade da Petranet.<br><br>
+              O motivo do meu contato é para lhe dar as boas-vindas à Petranet e saber como está sendo sua experiência após contratar nossos serviços.<br><br>
+              O Sr.(a) teria 3 minutinhos para uma breve pesquisa?
+            </p>
+          </div>
 
-  if (error) {
-    console.error(error);
-    return;
-  }
+          <div class="texto-ajuda">
+            Vamos iniciar com a confirmação de dados para atualização no nosso sistema.
+          </div>
 
-  data.forEach(u => {
-    let opt = document.createElement("option");
-    opt.value = u.nome;
-    opt.textContent = u.nome;
-    select.appendChild(opt);
-  });
-}
+          <div class="bloco">
+            <h3>Dados do cliente</h3>
+            <div class="dados">
+              <p><strong>Código:</strong> ${codigo || "Não informado"}</p>
+              <p><strong>Nome completo:</strong> ${nome || "Não informado"}</p>
+              <p><strong>Endereço:</strong> ${endereco || "Não informado"}</p>
+              <p><strong>Bairro:</strong> ${bairro || "Não informado"}</p>
+              <p><strong>Email:</strong> ${email || "Não informado"}</p>
+              <p><strong>Telefones:</strong> ${telefone || "Não informado"}</p>
+              <p><strong>Data:</strong> ${dataCliente || "Não informado"}</p>
+              <p><strong>Vendedor:</strong> ${vendedor || "Não informado"}</p>
+            </div>
+          </div>
 
-carregarAtendentes();
+          <div class="bloco">
+            <h3>Os dados estão corretos?</h3>
+            <div class="opcoes-linha">
+              <label class="opcao-box">
+                <input type="radio" name="dadosCorretos" value="sim">
+                <span>Sim</span>
+              </label>
 
-// ===== GERAR PERGUNTAS =====
-function gerarPerguntas() {
-  let div = document.getElementById("perguntas");
+              <label class="opcao-box">
+                <input type="radio" name="dadosCorretos" value="nao">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
 
-  if (tipo === "Pós Venda") {
-    div.innerHTML = `
-      <label>Os dados estão corretos?</label>
-      <select id="dadosCorretos">
-        <option value="Sim">Sim</option>
-        <option value="Não">Não</option>
-      </select>
+          <div class="bloco">
+            <h3>Você conhece os canais de atendimento da Petranet?</h3>
+            <div class="opcoes-linha">
+              <label class="opcao-box">
+                <input type="radio" name="canais" value="sim">
+                <span>Sim</span>
+              </label>
 
-      <label>Como avalia o atendimento?</label>
-      <select id="pergunta1">
-        ${gerarNotas()}
-      </select>
+              <label class="opcao-box">
+                <input type="radio" name="canais" value="nao">
+                <span>Não</span>
+              </label>
+            </div>
 
-      <label>Como avalia o técnico?</label>
-      <select id="pergunta2">
-        ${gerarNotas()}
-      </select>
+            <div class="canais-info">
+              <div class="canal-item">
+                <strong>Telefone</strong>
+                <a href="tel:3735122424">(37) 3512-2424</a>
+              </div>
 
-      <label>De 0 a 10, quanto indicaria?</label>
-      <select id="pergunta3">
-        ${gerarNotasNPS()}
-      </select>
-    `;
-  } else {
-    div.innerHTML = `
-      <label>Problema resolvido?</label>
-      <select id="problemaResolvido">
-        <option value="Sim">Sim</option>
-        <option value="Não">Não</option>
-      </select>
+              <div class="canal-item">
+                <strong>Loja LP Pereira</strong>
+                R. Paraíba, 2790 – LP Pereira
+              </div>
 
-      <label>Como avalia o atendimento?</label>
-      <select id="pergunta1">
-        ${gerarNotas()}
-      </select>
+              <div class="canal-item">
+                <strong>Loja Ermida</strong>
+                R. Bernardo de Bessa Barreto, 179 – Ermida
+              </div>
 
-      <label>Como avalia o suporte?</label>
-      <select id="pergunta2">
-        ${gerarNotas()}
-      </select>
+              <div class="canal-item">
+                <strong>Loja Niterói</strong>
+                Av. Governador Magalhães Pinto, 696 – Niterói
+              </div>
+            </div>
+          </div>
 
-      <label>De 0 a 10, quanto indicaria?</label>
-      <select id="indicacao">
-        ${gerarNotasNPS()}
-      </select>
-    `;
-  }
-}
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 5, como foi sua experiência ao agendar sua instalação com a Petranet?</h3>
+            <div class="escala">
+              <div class="numeros">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              </div>
+              <div class="bolinhas">
+                <input type="radio" name="pergunta1" value="1">
+                <input type="radio" name="pergunta1" value="2">
+                <input type="radio" name="pergunta1" value="3">
+                <input type="radio" name="pergunta1" value="4">
+                <input type="radio" name="pergunta1" value="5">
+              </div>
+            </div>
+          </div>
 
-function gerarNotas() {
-  let html = "";
-  for (let i = 1; i <= 5; i++) {
-    html += `<option value="${i}">${i}</option>`;
-  }
-  return html;
-}
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 5, como você avalia a qualidade do atendimento e do serviço prestado pelo técnico que realizou sua instalação?</h3>
+            <div class="escala">
+              <div class="numeros">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              </div>
+              <div class="bolinhas">
+                <input type="radio" name="pergunta2" value="1">
+                <input type="radio" name="pergunta2" value="2">
+                <input type="radio" name="pergunta2" value="3">
+                <input type="radio" name="pergunta2" value="4">
+                <input type="radio" name="pergunta2" value="5">
+              </div>
+            </div>
+          </div>
 
-function gerarNotasNPS() {
-  let html = "";
-  for (let i = 0; i <= 10; i++) {
-    html += `<option value="${i}">${i}</option>`;
-  }
-  return html;
-}
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 5, como você avalia sua experiência com a Petranet até o momento?</h3>
+            <div class="escala">
+              <div class="numeros">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              </div>
+              <div class="bolinhas">
+                <input type="radio" name="pergunta3" value="1">
+                <input type="radio" name="pergunta3" value="2">
+                <input type="radio" name="pergunta3" value="3">
+                <input type="radio" name="pergunta3" value="4">
+                <input type="radio" name="pergunta3" value="5">
+              </div>
+            </div>
+          </div>
 
-gerarPerguntas();
+          <div class="bloco">
+            <h3>Comentário</h3>
+            <textarea id="comentario"></textarea>
+          </div>
 
-// ===== ENVIAR =====
-async function enviar() {
+          <div class="bloco">
+            <h3>Status da pesquisa</h3>
+            <div class="opcoes-linha">
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="realizada">
+                <span>Pesquisa realizada</span>
+              </label>
 
-  let resposta = {
-    codigo,
-    cliente: nome,
-    bairro,
-    telefone,
-    email,
-    data,
-    vendedor,
-    tecnico,
-    tipo,
-    atendente: document.getElementById("atendente").value,
-    pergunta1: document.getElementById("pergunta1")?.value || null,
-    pergunta2: document.getElementById("pergunta2")?.value || null,
-    pergunta3: document.getElementById("pergunta3")?.value || null,
-    indicacao: document.getElementById("indicacao")?.value || null,
-    dadosCorretos: document.getElementById("dadosCorretos")?.value || null,
-    problemaResolvido: document.getElementById("problemaResolvido")?.value || null
-  };
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="nao_quis">
+                <span>Não quis realizar pesquisa</span>
+              </label>
 
-  let { error } = await supabaseClient
-    .from("respostas")
-    .insert([resposta]);
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="retorno">
+                <span>Solicita retorno</span>
+              </label>
 
-  if (error) {
-    alert("Erro ao salvar: " + error.message);
-    return;
-  }
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="sem_contato">
+                <span>Sem contato</span>
+              </label>
+            </div>
+          </div>
 
-  alert("Pesquisa salva com sucesso!");
-  window.location.href = "index.html";
-}
+          <button onclick="enviar()">Enviar</button>
+        `;
+      } else {
+        formulario.innerHTML = `
+          <div class="bloco">
+            <p><strong>Formulário Pós-suporte</strong></p>
+          </div>
 
-</script>
+          <div class="bloco">
+            <h3>Atendente que realizou a pesquisa</h3>
+            <select id="atendente">
+              <option value="">Selecione</option>
+              <option value="Tamara">Tamara</option>
+              <option value="Hudson">Hudson</option>
+              <option value="Lucas">Lucas</option>
+              <option value="Carlos">Carlos</option>
+            </select>
+          </div>
 
+          <div class="bloco">
+            <h3>Técnico que executou o serviço</h3>
+            <input type="text" value="${tecnico || "Não informado"}" disabled>
+          </div>
+
+          <div class="introducao">
+            <p>
+              Olá, gostaria de falar com o Sr.(a) <strong>${nome || "Cliente"}</strong>.<br><br>
+              Meu nome é [seu nome] e sou do setor de Qualidade da Petranet.<br><br>
+              Estamos realizando uma pesquisa de qualidade e gostaríamos de saber como foi a sua experiência com o atendimento técnico que teve recentemente.<br><br>
+              Você teria 3 minutinhos para responder a uma breve pesquisa?
+            </p>
+          </div>
+
+          <div class="bloco">
+            <h3>O problema foi resolvido?</h3>
+            <div class="opcoes-linha">
+              <label class="opcao-box">
+                <input type="radio" name="problemaResolvido" value="sim">
+                <span>Sim</span>
+              </label>
+
+              <label class="opcao-box">
+                <input type="radio" name="problemaResolvido" value="nao">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 5, como você avalia sua experiência com o atendimento de suporte da Petranet?</h3>
+            <div class="escala">
+              <div class="numeros">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              </div>
+              <div class="bolinhas">
+                <input type="radio" name="pergunta1" value="1">
+                <input type="radio" name="pergunta1" value="2">
+                <input type="radio" name="pergunta1" value="3">
+                <input type="radio" name="pergunta1" value="4">
+                <input type="radio" name="pergunta1" value="5">
+              </div>
+            </div>
+          </div>
+
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 5, como você avalia o atendimento prestado pelo técnico?</h3>
+            <div class="escala">
+              <div class="numeros">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              </div>
+              <div class="bolinhas">
+                <input type="radio" name="pergunta2" value="1">
+                <input type="radio" name="pergunta2" value="2">
+                <input type="radio" name="pergunta2" value="3">
+                <input type="radio" name="pergunta2" value="4">
+                <input type="radio" name="pergunta2" value="5">
+              </div>
+            </div>
+          </div>
+
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 5, como você avalia sua experiência geral com a Petranet?</h3>
+            <div class="escala">
+              <div class="numeros">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              </div>
+              <div class="bolinhas">
+                <input type="radio" name="pergunta3" value="1">
+                <input type="radio" name="pergunta3" value="2">
+                <input type="radio" name="pergunta3" value="3">
+                <input type="radio" name="pergunta3" value="4">
+                <input type="radio" name="pergunta3" value="5">
+              </div>
+            </div>
+          </div>
+
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 5, quanto você indicaria a Petranet para um parente ou um amigo?</h3>
+            <div class="escala">
+              <div class="numeros">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+              </div>
+              <div class="bolinhas">
+                <input type="radio" name="indicacao" value="1">
+                <input type="radio" name="indicacao" value="2">
+                <input type="radio" name="indicacao" value="3">
+                <input type="radio" name="indicacao" value="4">
+                <input type="radio" name="indicacao" value="5">
+              </div>
+            </div>
+          </div>
+
+          <div class="bloco">
+            <h3>Comentário</h3>
+            <textarea id="comentario"></textarea>
+          </div>
+
+          <div class="bloco">
+            <h3>Status da pesquisa</h3>
+            <div class="opcoes-linha">
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="realizada">
+                <span>Pesquisa realizada</span>
+              </label>
+
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="nao_quis">
+                <span>Não quis realizar pesquisa</span>
+              </label>
+
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="retorno">
+                <span>Solicita retorno</span>
+              </label>
+
+              <label class="opcao-box">
+                <input type="radio" name="statusPesquisa" value="sem_contato">
+                <span>Sem contato</span>
+              </label>
+            </div>
+          </div>
+
+          <button onclick="enviar()">Enviar</button>
+        `;
+      }
+    }
+
+    async function enviar() {
+      const atendente = document.getElementById("atendente").value;
+      const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value;
+      const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value;
+      const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value;
+      const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value;
+
+      if (!atendente) {
+        alert("Selecione o atendente que realizou a pesquisa!");
+        return;
+      }
+
+      if (!statusPesquisa) {
+        alert("Selecione o status da pesquisa!");
+        return;
+      }
+
+      if (statusPesquisa === "realizada") {
+        if (!pergunta1 || !pergunta2 || !pergunta3) {
+          alert("Preencha todas as avaliações!");
+          return;
+        }
+      }
+
+      let resposta = {
+        cliente: nome || null,
+        tipo: tipo || null,
+        tecnico: tecnico || "Não informado",
+        atendente: atendente,
+        pergunta1: pergunta1 ? Number(pergunta1) : null,
+        pergunta2: pergunta2 ? Number(pergunta2) : null,
+        pergunta3: pergunta3 ? Number(pergunta3) : null,
+        comentario: document.getElementById("comentario").value || "",
+        status: statusPesquisa,
+        data: new Date().toISOString().slice(0, 10),
+        dadosCorretos: null,
+        canais: null,
+        problemaResolvido: null,
+        indicacao: null
+      };
+
+      if (tipo === "Pós Venda") {
+        resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
+        resposta.canais = document.querySelector('input[name="canais"]:checked')?.value || null;
+      } else {
+        resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
+
+        const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value;
+        resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
+      }
+
+      const { error } = await supabaseClient
+        .from("respostas")
+        .insert([resposta]);
+
+      if (error) {
+        console.error("Erro ao salvar resposta:", error);
+        alert("Erro ao salvar no Supabase: " + error.message);
+        return;
+      }
+
+      alert("Pesquisa salva com sucesso!");
+      window.location.href = "index.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("usuarioLogado");
+      window.location.href = "login.html";
+    }
+
+    carregarFormulario();
+  </script>
 </body>
 </html>
