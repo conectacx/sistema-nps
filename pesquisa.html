@@ -308,8 +308,9 @@
       if (tipo === "Pós Venda") {
         formulario.innerHTML = `
           <div class="bloco">
-            <h3>Atendente que realizou a pesquisa</h3>
-            <input type="text" id="atendente" readonly>
+  <h3>Atendente que realizou a pesquisa</h3>
+  <input type="text" id="atendente" readonly>
+</div>
 
           <div class="bloco">
             <h3>Técnico que executou o serviço</h3>
@@ -482,15 +483,9 @@
           </div>
 
           <div class="bloco">
-            <h3>Atendente que realizou a pesquisa</h3>
-            <input type="text" id="atendente" readonly>
-              <option value="">Selecione</option>
-              <option value="Tamara">Tamara</option>
-              <option value="Hudson">Hudson</option>
-              <option value="Lucas">Lucas</option>
-              <option value="Carlos">Carlos</option>
-            </select>
-          </div>
+  <h3>Atendente que realizou a pesquisa</h3>
+  <input type="text" id="atendente" readonly>
+</div>
 
           <div class="bloco">
             <h3>Técnico que executou o serviço</h3>
@@ -617,14 +612,13 @@
 
           <button onclick="enviar()">Enviar</button>
         `;
+      }
 
-        const campoAtendente = document.getElementById("atendente");
-if (campoAtendente) {
-  campoAtendente.value = usuarioLogado.nome || usuarioLogado.usuario || "";
-}
+      const campoAtendente = document.getElementById("atendente");
+      if (campoAtendente && usuarioLogado) {
+        campoAtendente.value = usuarioLogado.nome || usuarioLogado.usuario || "";
       }
     }
-
     async function enviar() {
       const atendente = document.getElementById("atendente").value;
       const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value;
