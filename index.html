@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Sistema NPS</title>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background-color: #f4f6f9;
       padding: 30px;
       margin: 0;
@@ -62,16 +62,11 @@
       padding: 6px;
       margin-top: 10px;
     }
-
-    .mensagem-vazia {
-      text-align: center;
-      color: #666;
-      padding: 20px;
-    }
   </style>
 </head>
 
 <body>
+
   <div class="container">
     <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap;">
       <h1 style="margin:0;">Lista de Atendimentos</h1>
@@ -85,7 +80,7 @@
     </div>
 
     <label>Tipo de Pesquisa:</label>
-    <select id="filtroTipo" onchange="filtrarTipo(this.value)">
+    <select onchange="filtrarTipo(this.value)">
       <option value="todos">Todos</option>
       <option value="Pós Venda">Pós Venda</option>
       <option value="Pós Suporte">Pós Suporte</option>
@@ -105,7 +100,11 @@
           <th>Ação</th>
         </tr>
       </thead>
-      <tbody id="tabela"></tbody>
+      <tbody id="tabela">
+        <tr>
+          <td colspan="9" style="text-align:center; color:#666;">Carregando...</td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
@@ -114,28 +113,30 @@
   <script>
     const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
     const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
+
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
     let atendimentos = [];
-    let atendimentosFiltrados = [];
 
     if (!usuarioLogado) {
       window.location.href = "login.html";
     }
 
     if (usuarioLogado.perfil === "admin") {
-      const btnUsuarios = document.getElementById("btnUsuarios");
+      let btnUsuarios = document.getElementById("btnUsuarios");
       if (btnUsuarios) {
         btnUsuarios.style.display = "inline-block";
       }
     }
 
     function normalizarTipo(tipo) {
-      const texto = String(tipo || "")
+      let texto = String(tipo || "")
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
+        .replace(/-/g, " ")
+        .replace(/\s+/g, " ")
         .trim();
 
       if (texto.includes("venda")) return "Pós Venda";
@@ -144,23 +145,32 @@
     }
 
     async function carregarClientes() {
-      const tabela = document.getElementById("tabela");
-      tabela.innerHTML = `<tr><td colspan="9" class="mensagem-vazia">Carregando...</td></tr>`;
+      let tabela = document.getElementById("tabela");
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="9" style="text-align:center; color:#666;">Carregando...</td>
+        </tr>
+      `;
 
-      const { data, error } = await supabaseClient
+      let { data, error } = await supabaseClient
         .from("clientes")
         .select("*")
         .order("id", { ascending: true });
 
       if (error) {
-        console.error("Erro ao buscar clientes:", error);
-        tabela.innerHTML = `<tr><td colspan="9" class="mensagem-vazia">Erro ao carregar clientes: ${error.message}</td></tr>`;
+        console.error("Erro ao carregar clientes:", error);
+        tabela.innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align:center; color:#b91c1c;">
+              Erro ao carregar clientes: ${error.message}
+            </td>
+          </tr>
+        `;
         return;
       }
 
       atendimentos = (data || []).map(function(item) {
         return {
-          id: item.id,
           codigo: item.codigo || "",
           nome: item.nome || "",
           bairro: item.bairro || "",
@@ -169,39 +179,45 @@
           data: item.data || "",
           vendedor: item.vendedor || "",
           tecnico: item.tecnico || "",
-          tipo: normalizarTipo(item.tipo),
-          endereco: item.endereco || ""
+          tipo: normalizarTipo(item.tipo)
         };
       });
 
-      atendimentosFiltrados = [...atendimentos];
-      carregarTabela(atendimentosFiltrados);
+      carregarTabela(atendimentos);
     }
 
     function carregarTabela(lista) {
-      const tabela = document.getElementById("tabela");
+      let tabela = document.getElementById("tabela");
       tabela.innerHTML = "";
 
-      if (!lista.length) {
-        tabela.innerHTML = `<tr><td colspan="9" class="mensagem-vazia">Nenhum atendimento encontrado.</td></tr>`;
+      if (!lista || lista.length === 0) {
+        tabela.innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align:center; color:#666;">
+              Nenhum atendimento encontrado.
+            </td>
+          </tr>
+        `;
         return;
       }
 
-      lista.forEach(function(a) {
-        const telefoneFormatado = String(a.telefone || "").replaceAll(",", "<br>");
+      lista.forEach(function (a) {
+        let telefonesFormatados = String(a.telefone || "").replaceAll(",", "<br>");
 
         let linha = `
           <tr>
             <td>${a.codigo}</td>
             <td>${a.nome}</td>
             <td>${a.bairro}</td>
-            <td>${telefoneFormatado}</td>
+            <td>${telefonesFormatados}</td>
             <td>${a.email}</td>
             <td>${a.data}</td>
             <td>${a.vendedor}</td>
             <td>${a.tecnico}</td>
             <td>
-              <button onclick="realizarPesquisa(${a.id})">Realizar</button>
+              <button onclick="realizarPesquisa('${String(a.nome).replace(/'/g, "\\'")}', '${String(a.tipo).replace(/'/g, "\\'")}', '${String(a.tecnico).replace(/'/g, "\\'")}')">
+                Realizar
+              </button>
             </td>
           </tr>
         `;
@@ -212,41 +228,22 @@
 
     function filtrarTipo(tipo) {
       if (tipo === "todos") {
-        atendimentosFiltrados = [...atendimentos];
-      } else {
-        atendimentosFiltrados = atendimentos.filter(function(a) {
-          return a.tipo === tipo;
-        });
-      }
-
-      carregarTabela(atendimentosFiltrados);
-    }
-
-    function realizarPesquisa(id) {
-      const atendimento = atendimentos.find(function(item) {
-        return item.id === id;
-      });
-
-      if (!atendimento) {
-        alert("Cliente não encontrado.");
+        carregarTabela(atendimentos);
         return;
       }
 
-      const params = new URLSearchParams({
-        id: atendimento.id,
-        codigo: atendimento.codigo || "",
-        nome: atendimento.nome || "",
-        bairro: atendimento.bairro || "",
-        telefone: atendimento.telefone || "",
-        email: atendimento.email || "",
-        data: atendimento.data || "",
-        vendedor: atendimento.vendedor || "",
-        tecnico: atendimento.tecnico || "",
-        tipo: atendimento.tipo || "",
-        endereco: atendimento.endereco || ""
+      let filtrados = atendimentos.filter(function (a) {
+        return a.tipo === tipo;
       });
 
-      window.location.href = "pesquisa.html?" + params.toString();
+      carregarTabela(filtrados);
+    }
+
+    function realizarPesquisa(nome, tipo, tecnico) {
+      window.location.href =
+        "pesquisa.html?nome=" + encodeURIComponent(nome) +
+        "&tipo=" + encodeURIComponent(tipo) +
+        "&tecnico=" + encodeURIComponent(tecnico);
     }
 
     function logout() {
@@ -256,5 +253,6 @@
 
     carregarClientes();
   </script>
+
 </body>
 </html>
