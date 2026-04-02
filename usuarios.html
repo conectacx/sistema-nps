@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciar Usuários</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 30px;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .titulo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #1f3c88;
+    }
+
+    .acoes-topo {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+    }
+
+    .subtitulo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1f3c88;
+      margin-bottom: 20px;
+    }
+
+    .grid-form {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .campo label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .campo input,
+    .campo select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    .botoes-form {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background-color: #1f3c88;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #16306d;
+    }
+
+    .btn-secundario {
+      background-color: #6c757d;
+    }
+
+    .btn-secundario:hover {
+      background-color: #565e64;
+    }
+
+    .btn-verde {
+      background-color: #00b050;
+    }
+
+    .btn-verde:hover {
+      background-color: #009245;
+    }
+
+    .btn-vermelho {
+      background-color: #dc3545;
+    }
+
+    .btn-vermelho:hover {
+      background-color: #b02a37;
+    }
+
+    .btn-amarelo {
+      background-color: #f4b400;
+      color: #111;
+    }
+
+    .btn-amarelo:hover {
+      background-color: #d89d00;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+    }
+
+    th {
+      background-color: #1f3c88;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .acoes-tabela {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .badge-admin {
+      background: #e8f0ff;
+      color: #1f3c88;
+    }
+
+    .badge-gestor {
+      background: #e8fff2;
+      color: #15803d;
+    }
+
+    .badge-atendente {
+      background: #fff7e6;
+      color: #b45309;
+    }
+
+    .mensagem {
+      margin-top: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      min-height: 20px;
+    }
+
+    .mensagem-sucesso {
+      color: #15803d;
+    }
+
+    .mensagem-erro {
+      color: #b91c1c;
+    }
+
+    @media (max-width: 1000px) {
+      .grid-form {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .grid-form {
+        grid-template-columns: 1fr;
+      }
+
+      .titulo {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="topo">
+      <div class="titulo">Gerenciar Usuários</div>
+
+      <div class="acoes-topo">
+        <button class="btn-secundario" onclick="voltar()">Voltar</button>
+        <button onclick="logout()">Sair</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="subtitulo" id="tituloFormulario">Cadastrar novo usuário</div>
+
+      <div class="grid-form">
+        <div class="campo">
+          <label>Nome</label>
+          <input type="text" id="nome" placeholder="Ex: Tamara">
+        </div>
+
+        <div class="campo">
+          <label>Usuário</label>
+          <input type="text" id="usuario" placeholder="Ex: tamara">
+        </div>
+
+        <div class="campo">
+          <label>Senha</label>
+          <input type="text" id="senha" placeholder="Digite a senha">
+        </div>
+
+        <div class="campo">
+          <label>Perfil</label>
+          <select id="perfil">
+            <option value="">Selecione</option>
+            <option value="admin">Admin</option>
+            <option value="gestor">Gestor</option>
+            <option value="atendente">Atendente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="botoes-form">
+        <button class="btn-verde" onclick="salvarUsuario()">Salvar</button>
+        <button class="btn-secundario" onclick="limparFormulario()">Cancelar</button>
+      </div>
+
+      <div id="mensagem" class="mensagem"></div>
+    </div>
+
+    <div class="card">
+      <div class="subtitulo">Usuários cadastrados</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 22%;">Nome</th>
+            <th style="width: 22%;">Usuário</th>
+            <th style="width: 18%;">Senha</th>
+            <th style="width: 18%;">Perfil</th>
+            <th style="width: 20%;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaUsuarios"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script>
+    const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    let editandoId = null;
+
+    if (!usuarioLogado) {
+      window.location.href = "login.html";
+      throw new Error("Usuário não logado");
+    }
+
+    if (usuarioLogado.perfil !== "admin") {
+      alert("Você não tem permissão para acessar esta página.");
+      window.location.href = "relatorio.html";
+      throw new Error("Acesso negado");
+    }
+
+    function normalizarUsuario(texto) {
+      return String(texto || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function mostrarMensagem(texto, tipo) {
+      let mensagem = document.getElementById("mensagem");
+      mensagem.innerText = texto;
+      mensagem.className = "mensagem " + (tipo === "erro" ? "mensagem-erro" : "mensagem-sucesso");
+    }
+
+    function limparMensagem() {
+      let mensagem = document.getElementById("mensagem");
+      mensagem.innerText = "";
+      mensagem.className = "mensagem";
+    }
+
+    function obterBadgePerfil(perfil) {
+      if (perfil === "admin") {
+        return '<span class="badge badge-admin">Admin</span>';
+      }
+
+      if (perfil === "gestor") {
+        return '<span class="badge badge-gestor">Gestor</span>';
+      }
+
+      return '<span class="badge badge-atendente">Atendente</span>';
+    }
+
+    function limparFormulario() {
+      document.getElementById("nome").value = "";
+      document.getElementById("usuario").value = "";
+      document.getElementById("senha").value = "";
+      document.getElementById("perfil").value = "";
+      document.getElementById("tituloFormulario").innerText = "Cadastrar novo usuário";
+      editandoId = null;
+      limparMensagem();
+    }
+
+    async function carregarTabelaUsuarios() {
+      let tabela = document.getElementById("tabelaUsuarios");
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align:center; color:#666;">
+            Carregando usuários...
+          </td>
+        </tr>
+      `;
+
+      let { data, error } = await supabaseClient
+        .from("usuarios")
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) {
+        tabela.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; color:#b91c1c;">
+              Erro ao carregar usuários.
+            </td>
+          </tr>
+        `;
+        mostrarMensagem("Erro ao carregar usuários: " + error.message, "erro");
+        return;
+      }
+
+      tabela.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        tabela.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; color:#666;">
+              Nenhum usuário cadastrado.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      data.forEach(function(usuario) {
+        tabela.innerHTML += `
+          <tr>
+            <td>${usuario.nome || ""}</td>
+            <td>${usuario.usuario || ""}</td>
+            <td>${usuario.senha || ""}</td>
+            <td>${obterBadgePerfil(usuario.perfil)}</td>
+            <td>
+              <div class="acoes-tabela">
+                <button class="btn-amarelo" onclick="editarUsuario(${usuario.id})">Editar</button>
+                <button class="btn-vermelho" onclick="excluirUsuario(${usuario.id}, '${String(usuario.nome || "").replace(/'/g, "\\'")}')">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function salvarUsuario() {
+      let nome = document.getElementById("nome").value.trim();
+      let usuario = normalizarUsuario(document.getElementById("usuario").value);
+      let senha = document.getElementById("senha").value.trim();
+      let perfil = document.getElementById("perfil").value;
+
+      if (!nome || !usuario || !senha || !perfil) {
+        mostrarMensagem("Preencha todos os campos.", "erro");
+        return;
+      }
+
+      limparMensagem();
+
+      let consulta = supabaseClient
+        .from("usuarios")
+        .select("id, usuario");
+
+      let { data: usuariosExistentes, error: erroConsulta } = await consulta;
+
+      if (erroConsulta) {
+        mostrarMensagem("Erro ao validar usuário: " + erroConsulta.message, "erro");
+        return;
+      }
+
+      let usuarioExistente = (usuariosExistentes || []).find(function(item) {
+        return normalizarUsuario(item.usuario) === usuario && item.id !== editandoId;
+      });
+
+      if (usuarioExistente) {
+        mostrarMensagem("Já existe um usuário com esse login.", "erro");
+        return;
+      }
+
+      if (editandoId) {
+        let { error } = await supabaseClient
+          .from("usuarios")
+          .update({
+            nome: nome,
+            usuario: usuario,
+            senha: senha,
+            perfil: perfil
+          })
+          .eq("id", editandoId);
+
+        if (error) {
+          mostrarMensagem("Erro ao atualizar usuário: " + error.message, "erro");
+          return;
+        }
+
+        if (usuarioLogado && usuarioLogado.id === editandoId) {
+          usuarioLogado = {
+            ...usuarioLogado,
+            nome: nome,
+            usuario: usuario,
+            senha: senha,
+            perfil: perfil
+          };
+          localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+        }
+
+        mostrarMensagem("Usuário atualizado com sucesso!", "sucesso");
+      } else {
+        let { error } = await supabaseClient
+          .from("usuarios")
+          .insert([{
+            nome: nome,
+            usuario: usuario,
+            senha: senha,
+            perfil: perfil
+          }]);
+
+        if (error) {
+          mostrarMensagem("Erro ao cadastrar usuário: " + error.message, "erro");
+          return;
+        }
+
+        mostrarMensagem("Usuário cadastrado com sucesso!", "sucesso");
+      }
+
+      limparFormulario();
+      await carregarTabelaUsuarios();
+    }
+
+    async function editarUsuario(id) {
+      limparMensagem();
+
+      let { data, error } = await supabaseClient
+        .from("usuarios")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error || !data) {
+        mostrarMensagem("Erro ao carregar usuário para edição.", "erro");
+        return;
+      }
+
+      document.getElementById("nome").value = data.nome || "";
+      document.getElementById("usuario").value = data.usuario || "";
+      document.getElementById("senha").value = data.senha || "";
+      document.getElementById("perfil").value = data.perfil || "";
+      document.getElementById("tituloFormulario").innerText = "Editar usuário";
+
+      editandoId = id;
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    async function excluirUsuario(id, nome) {
+      if (usuarioLogado && usuarioLogado.id === id) {
+        alert("Você não pode excluir o usuário que está logado.");
+        return;
+      }
+
+      let confirmar = window.confirm("Deseja realmente excluir o usuário " + nome + "?");
+      if (!confirmar) return;
+
+      let { error } = await supabaseClient
+        .from("usuarios")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        mostrarMensagem("Erro ao excluir usuário: " + error.message, "erro");
+        return;
+      }
+
+      mostrarMensagem("Usuário excluído com sucesso!", "sucesso");
+
+      if (editandoId === id) {
+        limparFormulario();
+      }
+
+      await carregarTabelaUsuarios();
+    }
+
+    function voltar() {
+      if (usuarioLogado.perfil === "atendente") {
+        window.location.href = "index.html";
+      } else {
+        window.location.href = "relatorio.html";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("usuarioLogado");
+      window.location.href = "login.html";
+    }
+
+    carregarTabelaUsuarios();
+  </script>
+</body>
+</html>

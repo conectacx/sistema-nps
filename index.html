@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema NPS</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      padding: 30px;
+      margin: 0;
+    }
+
+    h1 {
+      color: #1f3c88;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1500px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th {
+      background-color: #1f3c88;
+      color: white;
+      padding: 10px;
+      text-align: left;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+
+    button {
+      background-color: #1f3c88;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #16306d;
+    }
+
+    select {
+      padding: 6px;
+      margin-top: 10px;
+    }
+
+    .mensagem-vazia {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap;">
+      <h1 style="margin:0;">Lista de Atendimentos</h1>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="btnUsuarios" onclick="window.location.href='usuarios.html'" style="display:none;">
+          Gerenciar usuários
+        </button>
+        <button onclick="logout()">Sair</button>
+      </div>
+    </div>
+
+    <label>Tipo de Pesquisa:</label>
+    <select id="filtroTipo" onchange="filtrarTipo(this.value)">
+      <option value="todos">Todos</option>
+      <option value="Pós Venda">Pós Venda</option>
+      <option value="Pós Suporte">Pós Suporte</option>
+    </select>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nome</th>
+          <th>Bairro</th>
+          <th>Telefones</th>
+          <th>Email</th>
+          <th>Data</th>
+          <th>Vendedor</th>
+          <th>Técnico</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody id="tabela"></tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script>
+    const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+    let atendimentos = [];
+    let atendimentosFiltrados = [];
+
+    if (!usuarioLogado) {
+      window.location.href = "login.html";
+    }
+
+    if (usuarioLogado.perfil === "admin") {
+      const btnUsuarios = document.getElementById("btnUsuarios");
+      if (btnUsuarios) {
+        btnUsuarios.style.display = "inline-block";
+      }
+    }
+
+    function normalizarTipo(tipo) {
+      const texto = String(tipo || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+      if (texto.includes("venda")) return "Pós Venda";
+      if (texto.includes("suporte")) return "Pós Suporte";
+      return tipo || "";
+    }
+
+    async function carregarClientes() {
+      const tabela = document.getElementById("tabela");
+      tabela.innerHTML = `<tr><td colspan="9" class="mensagem-vazia">Carregando...</td></tr>`;
+
+      const { data, error } = await supabaseClient
+        .from("clientes")
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Erro ao buscar clientes:", error);
+        tabela.innerHTML = `<tr><td colspan="9" class="mensagem-vazia">Erro ao carregar clientes: ${error.message}</td></tr>`;
+        return;
+      }
+
+      atendimentos = (data || []).map(function(item) {
+        return {
+          id: item.id,
+          codigo: item.codigo || "",
+          nome: item.nome || "",
+          bairro: item.bairro || "",
+          telefone: item.telefone || "",
+          email: item.email || "",
+          data: item.data || "",
+          vendedor: item.vendedor || "",
+          tecnico: item.tecnico || "",
+          tipo: normalizarTipo(item.tipo),
+          endereco: item.endereco || ""
+        };
+      });
+
+      atendimentosFiltrados = [...atendimentos];
+      carregarTabela(atendimentosFiltrados);
+    }
+
+    function carregarTabela(lista) {
+      const tabela = document.getElementById("tabela");
+      tabela.innerHTML = "";
+
+      if (!lista.length) {
+        tabela.innerHTML = `<tr><td colspan="9" class="mensagem-vazia">Nenhum atendimento encontrado.</td></tr>`;
+        return;
+      }
+
+      lista.forEach(function(a) {
+        const telefoneFormatado = String(a.telefone || "").replaceAll(",", "<br>");
+
+        let linha = `
+          <tr>
+            <td>${a.codigo}</td>
+            <td>${a.nome}</td>
+            <td>${a.bairro}</td>
+            <td>${telefoneFormatado}</td>
+            <td>${a.email}</td>
+            <td>${a.data}</td>
+            <td>${a.vendedor}</td>
+            <td>${a.tecnico}</td>
+            <td>
+              <button onclick="realizarPesquisa(${a.id})">Realizar</button>
+            </td>
+          </tr>
+        `;
+
+        tabela.innerHTML += linha;
+      });
+    }
+
+    function filtrarTipo(tipo) {
+      if (tipo === "todos") {
+        atendimentosFiltrados = [...atendimentos];
+      } else {
+        atendimentosFiltrados = atendimentos.filter(function(a) {
+          return a.tipo === tipo;
+        });
+      }
+
+      carregarTabela(atendimentosFiltrados);
+    }
+
+    function realizarPesquisa(id) {
+      const atendimento = atendimentos.find(function(item) {
+        return item.id === id;
+      });
+
+      if (!atendimento) {
+        alert("Cliente não encontrado.");
+        return;
+      }
+
+      const params = new URLSearchParams({
+        id: atendimento.id,
+        codigo: atendimento.codigo || "",
+        nome: atendimento.nome || "",
+        bairro: atendimento.bairro || "",
+        telefone: atendimento.telefone || "",
+        email: atendimento.email || "",
+        data: atendimento.data || "",
+        vendedor: atendimento.vendedor || "",
+        tecnico: atendimento.tecnico || "",
+        tipo: atendimento.tipo || "",
+        endereco: atendimento.endereco || ""
+      });
+
+      window.location.href = "pesquisa.html?" + params.toString();
+    }
+
+    function logout() {
+      localStorage.removeItem("usuarioLogado");
+      window.location.href = "login.html";
+    }
+
+    carregarClientes();
+  </script>
+</body>
+</html>

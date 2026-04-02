@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Sistema NPS</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1f3c88, #4f6edc);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .login-box img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #1f3c88;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1f3c88;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #16306d;
+        }
+
+        .erro {
+            color: red;
+            font-size: 13px;
+            margin-top: 10px;
+            min-height: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-box">
+        <img src="logo.png" alt="Logo">
+
+        <h2>Login</h2>
+
+        <input type="text" id="usuario" placeholder="Usuário">
+        <input type="password" id="senha" placeholder="Senha">
+
+        <button onclick="entrar()">Entrar</button>
+
+        <div id="erro" class="erro"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+    <script>
+        const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function normalizarUsuario(texto) {
+            return String(texto || "")
+                .trim()
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        async function entrar() {
+            const login = document.getElementById("usuario").value;
+            const senha = document.getElementById("senha").value;
+            const erro = document.getElementById("erro");
+
+            erro.innerText = "";
+
+            if (!login || !senha) {
+                erro.innerText = "Preencha usuário e senha!";
+                return;
+            }
+
+            const loginNormalizado = normalizarUsuario(login);
+
+            const { data, error } = await supabaseClient
+                .from("usuarios")
+                .select("*")
+                .eq("usuario", loginNormalizado)
+                .eq("senha", senha)
+                .single();
+
+            if (error || !data) {
+                erro.innerText = "Usuário ou senha inválidos!";
+                return;
+            }
+
+            localStorage.setItem("usuarioLogado", JSON.stringify(data));
+
+            if (data.perfil === "atendente") {
+                window.location.href = "index.html";
+            } else {
+                window.location.href = "relatorio.html";
+            }
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                entrar();
+            }
+        });
+    </script>
+</body>
+</html>
