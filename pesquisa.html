@@ -30,7 +30,7 @@
       font-weight: bold;
     }
 
-    select, input, textarea {
+    select, input {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -83,7 +83,7 @@ const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ===== PEGAR PARAMETROS =====
+// ===== PARAMETROS =====
 const params = new URLSearchParams(window.location.search);
 
 const codigo = params.get("codigo");
@@ -96,6 +96,7 @@ const vendedor = params.get("vendedor");
 const tecnico = params.get("tecnico");
 const tipo = params.get("tipo");
 
+// ===== USUARIO LOGADO =====
 let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
 if (!usuarioLogado) {
@@ -103,7 +104,7 @@ if (!usuarioLogado) {
   window.location.href = "login.html";
 }
 
-// Preencher atendente automaticamente
+// preencher atendente
 document.getElementById("atendente").value = usuarioLogado.nome;
 
 // ===== MOSTRAR DADOS =====
@@ -115,18 +116,7 @@ document.getElementById("data").innerText = data || "Não informado";
 document.getElementById("vendedor").innerText = vendedor || "Não informado";
 document.getElementById("tecnico").innerText = tecnico || "Não informado";
 
-// ===== CARREGAR ATENDENTES DO BANCO =====
-
-let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
-if (!usuarioLogado) {
-  alert("Usuário não logado");
-  window.location.href = "login.html";
-}
-
-document.getElementById("atendente").value = usuarioLogado.nome;
-
-// ===== GERAR PERGUNTAS =====
+// ===== PERGUNTAS =====
 function gerarPerguntas() {
   let div = document.getElementById("perguntas");
 
@@ -138,17 +128,17 @@ function gerarPerguntas() {
         <option value="Não">Não</option>
       </select>
 
-      <label>Como avalia o atendimento?</label>
+      <label>Atendimento:</label>
       <select id="pergunta1">
         ${gerarNotas()}
       </select>
 
-      <label>Como avalia o técnico?</label>
+      <label>Técnico:</label>
       <select id="pergunta2">
         ${gerarNotas()}
       </select>
 
-      <label>De 0 a 10, quanto indicaria?</label>
+      <label>NPS (0 a 10):</label>
       <select id="pergunta3">
         ${gerarNotasNPS()}
       </select>
@@ -161,17 +151,17 @@ function gerarPerguntas() {
         <option value="Não">Não</option>
       </select>
 
-      <label>Como avalia o atendimento?</label>
+      <label>Atendimento:</label>
       <select id="pergunta1">
         ${gerarNotas()}
       </select>
 
-      <label>Como avalia o suporte?</label>
+      <label>Suporte:</label>
       <select id="pergunta2">
         ${gerarNotas()}
       </select>
 
-      <label>De 0 a 10, quanto indicaria?</label>
+      <label>NPS (0 a 10):</label>
       <select id="indicacao">
         ${gerarNotasNPS()}
       </select>
@@ -224,7 +214,7 @@ async function enviar() {
     .insert([resposta]);
 
   if (error) {
-    alert("Erro ao salvar: " + error.message);
+    alert("Erro: " + error.message);
     return;
   }
 
