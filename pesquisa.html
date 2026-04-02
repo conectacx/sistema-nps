@@ -690,7 +690,7 @@ if (error) {
       status_pesquisa: "concluido",
       ultima_tentativa_por: atendente
     })
-    .eq("id", Number(clienteId));
+    .eq("id", clienteId);
 
   if (erroCliente) {
     console.error("Erro ao atualizar cliente:", erroCliente);
