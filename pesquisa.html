@@ -272,14 +272,12 @@
     <div id="formulario"></div>
   </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <script>
     const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
     const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
-
-    const { createClient } = supabase;
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
@@ -682,12 +680,37 @@
         return;
       }
 
+      const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
+        .from("clientes")
+        .select("tentativas_sem_contato")
+        .eq("id", clienteId)
+        .single();
+
+      if (erroBuscaCliente) {
+        console.error("Erro ao buscar cliente:", erroBuscaCliente);
+        alert("A pesquisa foi salva, mas deu erro ao buscar os dados do cliente: " + erroBuscaCliente.message);
+        return;
+      }
+
+      let dadosAtualizacaoCliente = {
+        ultima_tentativa_por: atendente
+      };
+
+      if (statusPesquisa === "realizada" || statusPesquisa === "nao_quis") {
+        dadosAtualizacaoCliente.status_pesquisa = "concluido";
+        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+      } else if (statusPesquisa === "retorno") {
+        dadosAtualizacaoCliente.status_pesquisa = "pendente";
+        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+      } else if (statusPesquisa === "sem_contato") {
+        const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+        dadosAtualizacaoCliente.status_pesquisa = "pendente";
+        dadosAtualizacaoCliente.tentativas_sem_contato = tentativasAtuais + 1;
+      }
+
       const { error: erroCliente } = await supabaseClient
         .from("clientes")
-        .update({
-          status_pesquisa: "concluido",
-          ultima_tentativa_por: atendente
-        })
+        .update(dadosAtualizacaoCliente)
         .eq("id", clienteId);
 
       if (erroCliente) {
