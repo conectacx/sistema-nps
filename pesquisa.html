@@ -681,8 +681,81 @@ if (error) {
   return;
 }
 
-      
-  alert("ID do cliente: " + clienteId);
+if (clienteId) {
+  const { data: clienteAtual, error: erroBuscarCliente } = await supabaseClient
+    .from("clientes")
+    .select("tentativas_sem_contato, atendente_responsavel")
+    .eq("id", clienteId)
+    .single();
+
+  if (erroBuscarCliente) {
+    console.error("Erro ao buscar cliente:", erroBuscarCliente);
+    alert("A pesquisa foi salva, mas deu erro ao consultar a fila: " + erroBuscarCliente.message);
+    return;
+  }
+
+  if (statusPesquisa === "sem_contato") {
+    const tentativasAtuais = clienteAtual?.tentativas_sem_contato || 0;
+    const novasTentativas = tentativasAtuais + 1;
+
+    if (novasTentativas >= 4) {
+      const { error: erroCliente } = await supabaseClient
+        .from("clientes")
+        .update({
+          status_pesquisa: "encerrado_sem_contato",
+          tentativas_sem_contato: novasTentativas,
+          ultima_tentativa_por: atendente
+        })
+        .eq("id", clienteId);
+
+      if (erroCliente) {
+        console.error("Erro ao atualizar cliente:", erroCliente);
+        alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+        return;
+      }
+    } else {
+      const ordemAtendentes = ["Tamara", "Carlos", "Hudson", "Lucas"];
+      const indiceAtual = ordemAtendentes.indexOf(atendente);
+      const proximoAtendente =
+        indiceAtual === -1
+          ? ordemAtendentes[0]
+          : ordemAtendentes[(indiceAtual + 1) % ordemAtendentes.length];
+
+      const { error: erroCliente } = await supabaseClient
+        .from("clientes")
+        .update({
+          atendente_responsavel: proximoAtendente,
+          status_pesquisa: "pendente",
+          tentativas_sem_contato: novasTentativas,
+          ultima_tentativa_por: atendente
+        })
+        .eq("id", clienteId);
+
+      if (erroCliente) {
+        console.error("Erro ao atualizar cliente:", erroCliente);
+        alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+        return;
+      }
+    }
+  } else {
+    const { error: erroCliente } = await supabaseClient
+      .from("clientes")
+      .update({
+        status_pesquisa: "concluido",
+        ultima_tentativa_por: atendente
+      })
+      .eq("id", clienteId);
+
+    if (erroCliente) {
+      console.error("Erro ao atualizar cliente:", erroCliente);
+      alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+      return;
+    }
+  }
+}
+
+alert("Pesquisa salva com sucesso!");
+window.location.href = "index.html";
       
   const { error: erroCliente } = await supabaseClient
     .from("clientes")
