@@ -620,11 +620,11 @@
       }
     }
     async function enviar() {
-  const atendente = document.getElementById("atendente").value;
-  const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value;
-  const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value;
-  const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value;
-  const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value;
+  const atendente = document.getElementById("atendente")?.value || "";
+  const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value || null;
+  const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value || null;
+  const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value || null;
+  const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value || null;
 
   if (!atendente) {
     alert("Selecione o atendente que realizou a pesquisa!");
@@ -644,13 +644,7 @@
   }
 
   let resposta = {
-    cliente_id: clienteId ? Number(clienteId) : null,
-    codigo: codigo || null,
     cliente: nome || null,
-    bairro: bairro || null,
-    telefone: telefone || null,
-    email: email || null,
-    vendedor: vendedor || null,
     tipo: tipo || null,
     tecnico: tecnico || "Não informado",
     atendente: atendente,
@@ -672,7 +666,7 @@
   } else {
     resposta.problemaResolvido = document.querySelector('input[name="problemaResolvido"]:checked')?.value || null;
 
-    const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value;
+    const indicacaoSelecionada = document.querySelector('input[name="indicacao"]:checked')?.value || null;
     resposta.indicacao = indicacaoSelecionada ? Number(indicacaoSelecionada) : null;
   }
 
@@ -686,29 +680,9 @@
     return;
   }
 
-  if (clienteId) {
-    const { error: erroCliente } = await supabaseClient
-      .from("clientes")
-      .update({
-        status_pesquisa: "concluido",
-        ultima_tentativa_por: atendente
-      })
-      .eq("id", Number(clienteId));
-
-    if (erroCliente) {
-      console.error("Erro ao atualizar cliente:", erroCliente);
-      alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
-      return;
-    }
-  }
-
   alert("Pesquisa salva com sucesso!");
   window.location.href = "index.html";
 }
-
-      alert("Pesquisa salva com sucesso!");
-      window.location.href = "index.html";
-    }
 
     function logout() {
       localStorage.removeItem("usuarioLogado");
