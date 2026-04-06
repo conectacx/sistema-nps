@@ -243,6 +243,14 @@
     .canal-item a:hover {
       text-decoration: underline;
     }
+
+    .caixa-destaque {
+      background: #fff9db;
+      border-left: 4px solid #eab308;
+      padding: 12px;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 
@@ -298,11 +306,199 @@
     const tecnico = parametros.get("tecnico");
     const tipo = parametros.get("tipo");
     const endereco = parametros.get("endereco");
+    const modo = parametros.get("modo") || "normal";
+    const motivoTratativaOriginal = parametros.get("motivoTratativa") || "";
+    const horarioRetornoOriginal = parametros.get("horarioRetorno") || "";
+    const tipoRetornoOriginal = parametros.get("tipoRetorno") || "";
 
     document.getElementById("cliente").innerText = "Cliente: " + (nome || "Não informado");
     document.getElementById("tipo").innerText = "Tipo: " + (tipo || "Não informado");
 
-    function carregarFormulario() {
+    function formatarTextoRetorno(tipoRetorno, horarioRetorno) {
+      if (!horarioRetorno) return "";
+      return tipoRetorno === "apos" ? `Após ${horarioRetorno}` : `Às ${horarioRetorno}`;
+    }
+
+    function definirResponsavelTratativa(atendentePesquisa, horarioRetorno) {
+      const [horaTexto, minutoTexto] = String(horarioRetorno || "").split(":");
+      const hora = Number(horaTexto || 0);
+      const minuto = Number(minutoTexto || 0);
+      const totalMinutos = (hora * 60) + minuto;
+
+      const inicioHudson = (7 * 60) + 45;
+      const inicioLucas = (11 * 60);
+      const meioTurno = (14 * 60);
+      const fimHudson = (16 * 60) + 30;
+      const fimLucas = (20 * 60);
+
+      const atendente = String(atendentePesquisa || "").trim().toLowerCase();
+
+      if (totalMinutos < inicioHudson || totalMinutos > fimLucas) {
+        return {
+          erro: "O horário informado está fora do período disponível para retorno."
+        };
+      }
+
+      if (totalMinutos >= inicioHudson && totalMinutos < inicioLucas) {
+        if (atendente === "hudson") {
+          return { responsavel: "Tamara" };
+        }
+        return { responsavel: "Hudson" };
+      }
+
+      if (totalMinutos >= inicioLucas && totalMinutos <= fimHudson) {
+        if (atendente === "hudson") {
+          return { responsavel: "Lucas" };
+        }
+
+        if (atendente === "lucas") {
+          return { responsavel: "Hudson" };
+        }
+
+        if (atendente === "tamara" || atendente === "carlos") {
+          return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
+        }
+
+        return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
+      }
+
+      if (totalMinutos > fimHudson && totalMinutos <= fimLucas) {
+        if (atendente === "lucas") {
+          return {
+            erro: "Esse horário ficaria somente com o Lucas disponível, e a tratativa não pode voltar para quem realizou a pesquisa."
+          };
+        }
+        return { responsavel: "Lucas" };
+      }
+
+      return {
+        erro: "Não foi possível definir o responsável para esse horário."
+      };
+    }
+
+    function definirResponsavelRetorno(atendenteAtual, horarioRetorno) {
+      const [horaTexto, minutoTexto] = String(horarioRetorno || "").split(":");
+      const hora = Number(horaTexto || 0);
+      const minuto = Number(minutoTexto || 0);
+      const totalMinutos = (hora * 60) + minuto;
+
+      const atendente = String(atendenteAtual || "").trim().toLowerCase();
+
+      if (atendente === "hudson") {
+        return totalMinutos <= (16 * 60) ? "Hudson" : "Lucas";
+      }
+
+      if (atendente === "tamara") {
+        return totalMinutos <= (16 * 60) ? "Tamara" : "Carlos";
+      }
+
+      if (atendente === "lucas") {
+        return totalMinutos < (13 * 60) ? "Hudson" : "Lucas";
+      }
+
+      if (atendente === "carlos") {
+        return totalMinutos < (13 * 60) ? "Tamara" : "Carlos";
+      }
+
+      return atendenteAtual || "";
+    }
+
+    function montarFormularioTratativa() {
+      const formulario = document.getElementById("formulario");
+      const retornoCombinado = formatarTextoRetorno(tipoRetornoOriginal, horarioRetornoOriginal);
+
+      formulario.innerHTML = `
+        <div class="bloco">
+          <h3>Atendente que realizou a tratativa</h3>
+          <input type="text" id="atendenteTratativa" readonly>
+        </div>
+
+        <div class="bloco">
+          <h3>Técnico que executou o serviço</h3>
+          <input type="text" value="${tecnico || "Não informado"}" disabled>
+        </div>
+
+        <div class="bloco">
+          <h3>Dados do cliente</h3>
+          <div class="dados">
+            <p><strong>Código:</strong> ${codigo || "Não informado"}</p>
+            <p><strong>Nome completo:</strong> ${nome || "Não informado"}</p>
+            <p><strong>Endereço:</strong> ${endereco || "Não informado"}</p>
+            <p><strong>Bairro:</strong> ${bairro || "Não informado"}</p>
+            <p><strong>Email:</strong> ${email || "Não informado"}</p>
+            <p><strong>Telefones:</strong> ${telefone || "Não informado"}</p>
+            <p><strong>Data:</strong> ${dataCliente || "Não informado"}</p>
+            <p><strong>Vendedor:</strong> ${vendedor || "Não informado"}</p>
+          </div>
+        </div>
+
+        <div class="bloco">
+          <h3>Motivo da tratativa</h3>
+          <div class="caixa-destaque">${motivoTratativaOriginal || "Não informado"}</div>
+        </div>
+
+        ${retornoCombinado ? `
+          <div class="bloco">
+            <h3>Retorno combinado anteriormente</h3>
+            <div class="caixa-destaque">${retornoCombinado}</div>
+          </div>
+        ` : ""}
+
+        <div class="bloco">
+          <h3>Comentário da tratativa</h3>
+          <textarea id="comentarioTratativa"></textarea>
+        </div>
+
+        <div class="bloco">
+          <h3>Status da tratativa</h3>
+          <div class="opcoes-linha">
+            <label class="opcao-box">
+              <input type="radio" name="statusTratativa" value="tratativa_resolvida">
+              <span>Tratativa resolvida</span>
+            </label>
+
+            <label class="opcao-box">
+              <input type="radio" name="statusTratativa" value="tratativa_retorno">
+              <span>Necessário novo retorno</span>
+            </label>
+
+            <label class="opcao-box">
+              <input type="radio" name="statusTratativa" value="tratativa_sem_contato">
+              <span>Sem contato</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bloco" id="tratativaTipoRetornoBox" style="display:none;">
+          <h3>Tipo de retorno</h3>
+          <div class="opcoes-linha">
+            <label class="opcao-box">
+              <input type="radio" name="tratativaTipoRetorno" value="especifico">
+              <span>Em horário específico</span>
+            </label>
+
+            <label class="opcao-box">
+              <input type="radio" name="tratativaTipoRetorno" value="apos">
+              <span>Após determinado horário</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bloco" id="tratativaCampoRetorno" style="display:none;">
+          <h3>Horário para retorno</h3>
+          <input type="time" id="tratativaHorarioRetorno">
+        </div>
+
+        <button onclick="enviarTratativa()">Enviar</button>
+      `;
+
+      const campoAtendente = document.getElementById("atendenteTratativa");
+      if (campoAtendente && usuarioLogado) {
+        campoAtendente.value = usuarioLogado.nome || usuarioLogado.usuario || "";
+      }
+    }
+
+    function carregarFormularioNormal() {
       const formulario = document.getElementById("formulario");
 
       if (tipo === "Pós Venda") {
@@ -757,63 +953,170 @@
       ) {
         atualizarCamposDinamicos();
       }
+
+      if (e.target.name === "statusTratativa") {
+        const statusTratativa = e.target.value;
+        const tipoBox = document.getElementById("tratativaTipoRetornoBox");
+        const campoBox = document.getElementById("tratativaCampoRetorno");
+        const horario = document.getElementById("tratativaHorarioRetorno");
+        const radios = document.querySelectorAll('input[name="tratativaTipoRetorno"]');
+
+        if (!tipoBox || !campoBox) return;
+
+        if (statusTratativa === "tratativa_retorno") {
+          tipoBox.style.display = "block";
+          campoBox.style.display = "block";
+        } else {
+          tipoBox.style.display = "none";
+          campoBox.style.display = "none";
+          if (horario) horario.value = "";
+          radios.forEach(function(item) {
+            item.checked = false;
+          });
+        }
+      }
     });
 
-    function definirResponsavelTratativa(atendentePesquisa, horarioRetorno) {
-      const [horaTexto, minutoTexto] = String(horarioRetorno || "").split(":");
-      const hora = Number(horaTexto || 0);
-      const minuto = Number(minutoTexto || 0);
-      const totalMinutos = (hora * 60) + minuto;
+    async function enviarTratativa() {
+      const atendente = document.getElementById("atendenteTratativa")?.value || "";
+      const comentario = document.getElementById("comentarioTratativa")?.value || "";
+      const statusTratativa = document.querySelector('input[name="statusTratativa"]:checked')?.value || null;
+      const horarioRetorno = document.getElementById("tratativaHorarioRetorno")?.value || "";
+      const tipoRetorno = document.querySelector('input[name="tratativaTipoRetorno"]:checked')?.value || null;
 
-      const inicioHudson = (7 * 60) + 45;   // 07:45
-      const inicioLucas = (11 * 60);        // 11:00
-      const meioTurno = (14 * 60);          // 14:00
-      const fimHudson = (16 * 60) + 30;     // 16:30
-      const fimLucas = (20 * 60);           // 20:00
-
-      const atendente = String(atendentePesquisa || "").trim().toLowerCase();
-
-      if (totalMinutos < inicioHudson || totalMinutos > fimLucas) {
-        return {
-          erro: "O horário informado está fora do período de trabalho disponível para retorno."
-        };
+      if (!atendente) {
+        alert("Selecione o atendente que realizou a tratativa!");
+        return;
       }
 
-      if (totalMinutos >= inicioHudson && totalMinutos < inicioLucas) {
-        if (atendente === "hudson") {
-          return { responsavel: "Tamara" };
-        }
-        return { responsavel: "Hudson" };
+      if (!statusTratativa) {
+        alert("Selecione o status da tratativa!");
+        return;
       }
 
-      if (totalMinutos >= inicioLucas && totalMinutos <= fimHudson) {
-        if (atendente === "hudson") {
-          return { responsavel: "Lucas" };
+      if (statusTratativa === "tratativa_retorno") {
+        if (!horarioRetorno) {
+          alert("Informe o horário para retorno!");
+          return;
         }
 
-        if (atendente === "lucas") {
-          return { responsavel: "Hudson" };
+        if (!tipoRetorno) {
+          alert("Selecione o tipo de retorno!");
+          return;
         }
 
-        if (atendente === "tamara" || atendente === "carlos") {
-          return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
+        const validacaoTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+        if (validacaoTratativa.erro) {
+          alert(validacaoTratativa.erro);
+          return;
         }
-
-        return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
       }
 
-      if (totalMinutos > fimHudson && totalMinutos <= fimLucas) {
-        if (atendente === "lucas") {
-          return {
-            erro: "Esse horário ficaria somente com o Lucas disponível, e a tratativa não pode voltar para quem realizou a pesquisa."
-          };
-        }
-        return { responsavel: "Lucas" };
-      }
-
-      return {
-        erro: "Não foi possível definir o responsável para esse horário."
+      const resposta = {
+        cliente: nome || null,
+        tipo: tipo || null,
+        tecnico: tecnico || "Não informado",
+        atendente: atendente,
+        pergunta1: null,
+        pergunta2: null,
+        pergunta3: null,
+        comentario: comentario,
+        status: statusTratativa,
+        data: new Date().toISOString().slice(0, 10),
+        dadosCorretos: null,
+        canais: null,
+        problemaResolvido: null,
+        indicacao: null,
+        horario_retorno: statusTratativa === "tratativa_retorno" ? horarioRetorno : null,
+        tipo_retorno: statusTratativa === "tratativa_retorno" ? tipoRetorno : null,
+        necessita_tratativa: "sim",
+        motivo_tratativa: motivoTratativaOriginal || null
       };
+
+      const { error } = await supabaseClient
+        .from("respostas")
+        .insert([resposta]);
+
+      if (error) {
+        console.error("Erro ao salvar tratativa:", error);
+        alert("Erro ao salvar no Supabase: " + error.message);
+        return;
+      }
+
+      const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
+        .from("clientes")
+        .select("tentativas_sem_contato, atendente_responsavel")
+        .eq("id", clienteId)
+        .single();
+
+      if (erroBuscaCliente) {
+        console.error("Erro ao buscar cliente:", erroBuscaCliente);
+        alert("A tratativa foi salva, mas deu erro ao buscar os dados do cliente: " + erroBuscaCliente.message);
+        return;
+      }
+
+      let dadosAtualizacaoCliente = {
+        ultima_tentativa_por: atendente
+      };
+
+      if (statusTratativa === "tratativa_resolvida") {
+        dadosAtualizacaoCliente.status_pesquisa = "concluido";
+        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+      } else if (statusTratativa === "tratativa_retorno") {
+        const regraTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+
+        if (regraTratativa.erro) {
+          alert(regraTratativa.erro);
+          return;
+        }
+
+        dadosAtualizacaoCliente.status_pesquisa = "pendente";
+        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+        dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
+      } else if (statusTratativa === "tratativa_sem_contato") {
+        const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+        const novasTentativas = tentativasAtuais + 1;
+
+        const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+        const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
+
+        let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+          return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
+        });
+
+        if (indiceAtual === -1) {
+          indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+            return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
+          });
+        }
+
+        dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
+
+        if (novasTentativas >= 4) {
+          dadosAtualizacaoCliente.status_pesquisa = "concluido";
+          dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
+        } else {
+          const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
+          const proximoAtendente = filaAtendentes[proximoIndice];
+
+          dadosAtualizacaoCliente.status_pesquisa = "pendente";
+          dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
+        }
+      }
+
+      const { error: erroCliente } = await supabaseClient
+        .from("clientes")
+        .update(dadosAtualizacaoCliente)
+        .eq("id", clienteId);
+
+      if (erroCliente) {
+        console.error("Erro ao atualizar cliente:", erroCliente);
+        alert("A tratativa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+        return;
+      }
+
+      alert("Tratativa salva com sucesso!");
+      window.location.href = "index.html";
     }
 
     async function enviar() {
@@ -975,24 +1278,7 @@
         dadosAtualizacaoCliente.status_pesquisa = "concluido";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
       } else if (statusPesquisa === "retorno") {
-        const [horaTexto, minutoTexto] = horarioRetorno.split(":");
-        const hora = Number(horaTexto || 0);
-        const minuto = Number(minutoTexto || 0);
-        const totalMinutos = (hora * 60) + minuto;
-
-        const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim().toLowerCase();
-        let novoResponsavel = atendente;
-
-        if (atendenteAtual === "hudson") {
-          novoResponsavel = totalMinutos <= (16 * 60) ? "Hudson" : "Lucas";
-        } else if (atendenteAtual === "tamara") {
-          novoResponsavel = totalMinutos <= (16 * 60) ? "Tamara" : "Carlos";
-        } else if (atendenteAtual === "lucas") {
-          novoResponsavel = totalMinutos < (13 * 60) ? "Hudson" : "Lucas";
-        } else if (atendenteAtual === "carlos") {
-          novoResponsavel = totalMinutos < (13 * 60) ? "Tamara" : "Carlos";
-        }
-
+        const novoResponsavel = definirResponsavelRetorno(clienteAtual?.atendente_responsavel || atendente, horarioRetorno);
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
         dadosAtualizacaoCliente.atendente_responsavel = novoResponsavel;
@@ -1047,8 +1333,12 @@
       window.location.href = "login.html";
     }
 
-    carregarFormulario();
-    atualizarCamposDinamicos();
+    if (modo === "tratativa") {
+      montarFormularioTratativa();
+    } else {
+      carregarFormularioNormal();
+      atualizarCamposDinamicos();
+    }
   </script>
 </body>
 </html>
