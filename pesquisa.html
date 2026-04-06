@@ -474,6 +474,11 @@
             </div>
           </div>
 
+          <div class="bloco" id="campoRetorno" style="display:none;">
+            <h3>Horário para retorno</h3>
+            <input type="time" id="horarioRetorno">
+          </div>
+
           <button onclick="enviar()">Enviar</button>
         `;
       } else {
@@ -610,6 +615,11 @@
             </div>
           </div>
 
+          <div class="bloco" id="campoRetorno" style="display:none;">
+            <h3>Horário para retorno</h3>
+            <input type="time" id="horarioRetorno">
+          </div>
+
           <button onclick="enviar()">Enviar</button>
         `;
       }
@@ -619,6 +629,23 @@
         campoAtendente.value = usuarioLogado.nome || usuarioLogado.usuario || "";
       }
     }
+
+    document.addEventListener("change", function(e) {
+      if (e.target.name === "statusPesquisa") {
+        const valor = e.target.value;
+        const campo = document.getElementById("campoRetorno");
+        const horario = document.getElementById("horarioRetorno");
+
+        if (!campo) return;
+
+        if (valor === "retorno") {
+          campo.style.display = "block";
+        } else {
+          campo.style.display = "none";
+          if (horario) horario.value = "";
+        }
+      }
+    });
 
     async function enviar() {
       const atendente = document.getElementById("atendente")?.value || "";
@@ -635,6 +662,14 @@
       if (!statusPesquisa) {
         alert("Selecione o status da pesquisa!");
         return;
+      }
+
+      if (statusPesquisa === "retorno") {
+        const horarioRetorno = document.getElementById("horarioRetorno")?.value;
+        if (!horarioRetorno) {
+          alert("Informe o horário para retorno!");
+          return;
+        }
       }
 
       if (statusPesquisa === "realizada") {
@@ -658,8 +693,13 @@
         dadosCorretos: null,
         canais: null,
         problemaResolvido: null,
-        indicacao: null
+        indicacao: null,
+        horario_retorno: null
       };
+
+      if (statusPesquisa === "retorno") {
+        resposta.horario_retorno = document.getElementById("horarioRetorno")?.value || null;
+      }
 
       if (tipo === "Pós Venda") {
         resposta.dadosCorretos = document.querySelector('input[name="dadosCorretos"]:checked')?.value || null;
@@ -681,10 +721,10 @@
       }
 
       const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
-  .from("clientes")
-  .select("tentativas_sem_contato, atendente_responsavel")
-  .eq("id", clienteId)
-  .single();
+        .from("clientes")
+        .select("tentativas_sem_contato, atendente_responsavel")
+        .eq("id", clienteId)
+        .single();
 
       if (erroBuscaCliente) {
         console.error("Erro ao buscar cliente:", erroBuscaCliente);
@@ -692,7 +732,7 @@
         return;
       }
 
-            let dadosAtualizacaoCliente = {
+      let dadosAtualizacaoCliente = {
         ultima_tentativa_por: atendente
       };
 
@@ -702,53 +742,47 @@
       } else if (statusPesquisa === "retorno") {
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-           } else if (statusPesquisa === "sem_contato") {
-  const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
-  const novasTentativas = tentativasAtuais + 1;
+      } else if (statusPesquisa === "sem_contato") {
+        const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+        const novasTentativas = tentativasAtuais + 1;
 
-  const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
-  const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
+        const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+        const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
 
-  let indiceAtual = filaAtendentes.findIndex(function(nome) {
-    return nome.trim().toLowerCase() === atendenteAtual.toLowerCase();
-  });
+        let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+          return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
+        });
 
-  if (indiceAtual === -1) {
-    indiceAtual = filaAtendentes.findIndex(function(nome) {
-      return nome.trim().toLowerCase() === String(atendente).trim().toLowerCase();
-    });
-  }
+        if (indiceAtual === -1) {
+          indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+            return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
+          });
+        }
 
-  dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
+        dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
 
-  if (novasTentativas >= 4) {
-    dadosAtualizacaoCliente.status_pesquisa = "concluido";
-    dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
-  } else {
-    const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
-    const proximoAtendente = filaAtendentes[proximoIndice];
+        if (novasTentativas >= 4) {
+          dadosAtualizacaoCliente.status_pesquisa = "concluido";
+          dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
+        } else {
+          const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
+          const proximoAtendente = filaAtendentes[proximoIndice];
 
-    dadosAtualizacaoCliente.status_pesquisa = "pendente";
-    dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
-  }
-}
+          dadosAtualizacaoCliente.status_pesquisa = "pendente";
+          dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
+        }
+      }
 
-      console.log("Dados que serão enviados para atualizar o cliente:", dadosAtualizacaoCliente);
+      const { error: erroCliente } = await supabaseClient
+        .from("clientes")
+        .update(dadosAtualizacaoCliente)
+        .eq("id", clienteId);
 
-const { data: clienteAtualizado, error: erroCliente } = await supabaseClient
-  .from("clientes")
-  .update(dadosAtualizacaoCliente)
-  .eq("id", clienteId)
-  .select()
-  .single();
-
-if (erroCliente) {
-  console.error("Erro ao atualizar cliente:", erroCliente);
-  alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
-  return;
-}
-
-console.log("Cliente atualizado no banco:", clienteAtualizado);
+      if (erroCliente) {
+        console.error("Erro ao atualizar cliente:", erroCliente);
+        alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+        return;
+      }
 
       alert("Pesquisa salva com sucesso!");
       window.location.href = "index.html";
