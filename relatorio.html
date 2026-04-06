@@ -181,6 +181,137 @@
       font-weight: bold;
       color: #333;
     }
+
+    .tratativas-resumo {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .tratativa-card {
+      background: #f7f9fc;
+      border-radius: 10px;
+      padding: 18px;
+      border-left: 5px solid #1f3c88;
+    }
+
+    .tratativa-card.pendente {
+      border-left-color: #f4b400;
+    }
+
+    .tratativa-card.concluida {
+      border-left-color: #00b050;
+    }
+
+    .tratativa-card .titulo {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .tratativa-card .valor {
+      font-size: 28px;
+      font-weight: bold;
+      color: #1f3c88;
+    }
+
+    .tratativa-card.pendente .valor {
+      color: #b45309;
+    }
+
+    .tratativa-card.concluida .valor {
+      color: #15803d;
+    }
+
+    .btn-tratativas {
+      background: #1f3c88;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-tratativas:hover {
+      background: #16306d;
+    }
+
+    .tabela-tratativas-box {
+      display: none;
+      margin-top: 18px;
+      overflow-x: auto;
+    }
+
+    .tabela-tratativas {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .tabela-tratativas th {
+      background: #1f3c88;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .tabela-tratativas td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e5e5;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status-pendente {
+      background: #fff4d6;
+      color: #b45309;
+    }
+
+    .status-concluida {
+      background: #e8fff2;
+      color: #15803d;
+    }
+
+    .texto-vazio {
+      color: #888;
+      font-size: 14px;
+      padding: 12px 0;
+    }
+
+    @media (max-width: 1100px) {
+      .cards,
+      .tratativas-resumo {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .graficos-avaliacao {
+        flex-direction: column;
+      }
+
+      .grafico-item {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .cards,
+      .tratativas-resumo {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -232,6 +363,53 @@
         Exportar Excel
       </button>
     </div>
+
+    <section class="dashboard">
+      <div class="dashboard-topo">
+        <div>
+          <div class="dashboard-titulo">Controle de Tratativas</div>
+          <div class="dashboard-subtitulo">Acompanhe quantas tratativas estão pendentes e quantas já foram concluídas</div>
+        </div>
+      </div>
+
+      <div class="tratativas-resumo">
+        <div class="tratativa-card">
+          <div class="titulo">Total de Clientes com Tratativa</div>
+          <div class="valor" id="totalTratativas">0</div>
+        </div>
+
+        <div class="tratativa-card pendente">
+          <div class="titulo">Tratativas Pendentes</div>
+          <div class="valor" id="tratativasPendentes">0</div>
+        </div>
+
+        <div class="tratativa-card concluida">
+          <div class="titulo">Tratativas Concluídas</div>
+          <div class="valor" id="tratativasConcluidas">0</div>
+        </div>
+      </div>
+
+      <div>
+        <button class="btn-tratativas" id="btnToggleTratativas" onclick="toggleTratativas()">Ver tratativas</button>
+      </div>
+
+      <div class="tabela-tratativas-box" id="boxTratativas">
+        <table class="tabela-tratativas">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Técnico</th>
+              <th>Motivo</th>
+              <th>Status</th>
+              <th>Abertura</th>
+              <th>Conclusão</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaTratativas"></tbody>
+        </table>
+      </div>
+    </section>
 
     <section class="dashboard">
       <div class="dashboard-topo">
@@ -346,6 +524,25 @@
     const SUPABASE_URL = "https://etfdhxdgczpkglgoggyt.supabase.co";
     const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let listaTratativasAtual = [];
+
+    function toggleTratativas() {
+      let box = document.getElementById("boxTratativas");
+      let botao = document.getElementById("btnToggleTratativas");
+
+      if (!box || !botao) return;
+
+      if (box.style.display === "none" || box.style.display === "") {
+        box.style.display = "block";
+        botao.innerText = "Ocultar tratativas";
+      } else {
+        box.style.display = "none";
+        botao.innerText = "Ver tratativas";
+      }
+    }
+
+    window.toggleTratativas = toggleTratativas;
 
     window.addEventListener("DOMContentLoaded", async function () {
       let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -487,6 +684,7 @@
           return (
             status === "nao quis" ||
             status === "nao quis realizar" ||
+            status === "nao quis realizar pesquisa" ||
             status === "nao quis realizar pesquisa" ||
             status === "nao_quis"
           );
@@ -837,6 +1035,125 @@
         box.style.justifyContent = "flex-start";
       }
 
+      function montarListaTratativas(lista) {
+        let mapa = {};
+
+        lista.forEach(function(item) {
+          let status = normalizarTexto(item.status);
+          let abriuTratativa = String(item.necessita_tratativa || "").toLowerCase() === "sim";
+          let ehLinhaTratativa =
+            status === "tratativa resolvida" ||
+            status === "tratativa retorno" ||
+            status === "tratativa sem contato" ||
+            status === "tratativa_resolvida" ||
+            status === "tratativa_retorno" ||
+            status === "tratativa_sem_contato";
+
+          if (!abriuTratativa && !ehLinhaTratativa) return;
+
+          let chave = [
+            item.cliente || "",
+            item.tipo || "",
+            item.tecnico || "",
+            item.motivo_tratativa || ""
+          ].join("||");
+
+          if (!mapa[chave]) {
+            mapa[chave] = {
+              cliente: item.cliente || "",
+              tipo: item.tipo || "",
+              tecnico: item.tecnico || "",
+              motivo: item.motivo_tratativa || "",
+              statusAtual: "pendente",
+              abertura: item.data || "",
+              conclusao: "",
+              ordem: item.id || 0
+            };
+          }
+
+          if (abriuTratativa) {
+            mapa[chave].cliente = item.cliente || mapa[chave].cliente;
+            mapa[chave].tipo = item.tipo || mapa[chave].tipo;
+            mapa[chave].tecnico = item.tecnico || mapa[chave].tecnico;
+            mapa[chave].motivo = item.motivo_tratativa || mapa[chave].motivo;
+            mapa[chave].abertura = item.data || mapa[chave].abertura;
+            mapa[chave].statusAtual = "pendente";
+          }
+
+          if (ehLinhaTratativa) {
+            if (status === "tratativa resolvida" || status === "tratativa_resolvida") {
+              mapa[chave].statusAtual = "concluida";
+              mapa[chave].conclusao = item.data || "";
+            } else {
+              mapa[chave].statusAtual = "pendente";
+            }
+          }
+
+          mapa[chave].ordem = item.id || mapa[chave].ordem;
+        });
+
+        return Object.values(mapa).sort(function(a, b) {
+          if (a.statusAtual !== b.statusAtual) {
+            return a.statusAtual === "pendente" ? -1 : 1;
+          }
+
+          return (b.ordem || 0) - (a.ordem || 0);
+        });
+      }
+
+      function renderizarTratativas(lista) {
+        listaTratativasAtual = montarListaTratativas(lista);
+
+        let total = listaTratativasAtual.length;
+        let pendentes = listaTratativasAtual.filter(function(item) {
+          return item.statusAtual === "pendente";
+        }).length;
+
+        let concluidas = listaTratativasAtual.filter(function(item) {
+          return item.statusAtual === "concluida";
+        }).length;
+
+        let campoTotal = document.getElementById("totalTratativas");
+        let campoPendentes = document.getElementById("tratativasPendentes");
+        let campoConcluidas = document.getElementById("tratativasConcluidas");
+        let tabela = document.getElementById("tabelaTratativas");
+
+        if (campoTotal) campoTotal.innerText = total;
+        if (campoPendentes) campoPendentes.innerText = pendentes;
+        if (campoConcluidas) campoConcluidas.innerText = concluidas;
+
+        if (!tabela) return;
+
+        tabela.innerHTML = "";
+
+        if (listaTratativasAtual.length === 0) {
+          tabela.innerHTML = `
+            <tr>
+              <td colspan="7" class="texto-vazio">Nenhuma tratativa encontrada no período selecionado.</td>
+            </tr>
+          `;
+          return;
+        }
+
+        listaTratativasAtual.forEach(function(item) {
+          tabela.innerHTML += `
+            <tr>
+              <td>${item.cliente || ""}</td>
+              <td>${item.tipo || ""}</td>
+              <td>${item.tecnico || ""}</td>
+              <td>${item.motivo || ""}</td>
+              <td>
+                <span class="status-badge ${item.statusAtual === "concluida" ? "status-concluida" : "status-pendente"}">
+                  ${item.statusAtual === "concluida" ? "Concluída" : "Pendente"}
+                </span>
+              </td>
+              <td>${item.abertura || ""}</td>
+              <td>${item.conclusao || ""}</td>
+            </tr>
+          `;
+        });
+      }
+
       function aplicarFiltro() {
         let dataInicio = document.getElementById("dataInicio").value;
         let dataFim = document.getElementById("dataFim").value;
@@ -862,6 +1179,12 @@
         location.reload();
       }
 
+      function limparCampoCSV(valor) {
+        return String(valor || "")
+          .replace(/;/g, ",")
+          .replace(/\r?\n|\r/g, " ");
+      }
+
       async function exportarExcel() {
         let dados = await obterRespostas();
 
@@ -870,19 +1193,20 @@
           return;
         }
 
-        let csv = "Cliente;Tipo;Atendente;Tecnico;Pergunta1;Pergunta2;Pergunta3;Status;Data\n";
+        let csv = "Cliente;Tipo;Atendente;Tecnico;Pergunta1;Pergunta2;Pergunta3;Status;Data;Comentario\n";
 
         dados.forEach(function(item) {
           csv += [
-            item.cliente || "",
-            item.tipo || "",
-            item.atendente || "",
-            item.tecnico || "",
-            item.pergunta1 || "",
-            item.pergunta2 || "",
-            item.pergunta3 || "",
-            item.status || "",
-            item.data || ""
+            limparCampoCSV(item.cliente),
+            limparCampoCSV(item.tipo),
+            limparCampoCSV(item.atendente),
+            limparCampoCSV(item.tecnico),
+            limparCampoCSV(item.pergunta1),
+            limparCampoCSV(item.pergunta2),
+            limparCampoCSV(item.pergunta3),
+            limparCampoCSV(item.status),
+            limparCampoCSV(item.data),
+            limparCampoCSV(item.comentario)
           ].join(";") + "\n";
         });
 
@@ -895,15 +1219,17 @@
 
       async function carregarDashboard() {
         let secoes = document.querySelectorAll(".dashboard");
-        if (secoes.length < 2) return;
+        if (secoes.length < 3) return;
 
         let respostas = await obterRespostas();
 
         let posVenda = filtrarPorTipo(respostas, "Pós Venda");
         let posSuporte = filtrarPorTipo(respostas, "Pós Suporte");
 
-        atualizarCards(secoes[0], posVenda);
-        atualizarCards(secoes[1], posSuporte);
+        renderizarTratativas(respostas);
+
+        atualizarCards(secoes[1], posVenda);
+        atualizarCards(secoes[2], posSuporte);
 
         criarGrafico("grafico1", contarAvaliacoes(posVenda, "pergunta1"));
         criarGrafico("grafico2", contarAvaliacoes(posVenda, "pergunta2"));
