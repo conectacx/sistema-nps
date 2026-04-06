@@ -681,10 +681,10 @@
       }
 
       const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
-        .from("clientes")
-        .select("tentativas_sem_contato")
-        .eq("id", clienteId)
-        .single();
+  .from("clientes")
+  .select("tentativas_sem_contato, atendente_responsavel")
+  .eq("id", clienteId)
+  .single();
 
       if (erroBuscaCliente) {
         console.error("Erro ao buscar cliente:", erroBuscaCliente);
@@ -692,7 +692,7 @@
         return;
       }
 
-      let dadosAtualizacaoCliente = {
+            let dadosAtualizacaoCliente = {
         ultima_tentativa_por: atendente
       };
 
@@ -704,8 +704,23 @@
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
       } else if (statusPesquisa === "sem_contato") {
         const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+
+        const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+        const atendenteAtual = (clienteAtual?.atendente_responsavel || atendente || "").trim();
+
+        let indiceAtual = filaAtendentes.findIndex(nome => nome === atendenteAtual);
+
+        if (indiceAtual === -1) {
+          indiceAtual = filaAtendentes.findIndex(nome => nome === atendente);
+        }
+
+        const proximoIndice = indiceAtual === -1
+          ? 0
+          : (indiceAtual + 1) % filaAtendentes.length;
+
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
         dadosAtualizacaoCliente.tentativas_sem_contato = tentativasAtuais + 1;
+        dadosAtualizacaoCliente.atendente_responsavel = filaAtendentes[proximoIndice];
       }
 
       const { error: erroCliente } = await supabaseClient
