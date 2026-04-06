@@ -702,37 +702,49 @@
       } else if (statusPesquisa === "retorno") {
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-      } else if (statusPesquisa === "sem_contato") {
+            } else if (statusPesquisa === "sem_contato") {
         const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
 
         const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
-        const atendenteAtual = (clienteAtual?.atendente_responsavel || atendente || "").trim();
+        const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
 
-        let indiceAtual = filaAtendentes.findIndex(nome => nome === atendenteAtual);
+        let indiceAtual = filaAtendentes.findIndex(function(nome) {
+          return nome.trim().toLowerCase() === atendenteAtual.toLowerCase();
+        });
 
         if (indiceAtual === -1) {
-          indiceAtual = filaAtendentes.findIndex(nome => nome === atendente);
+          indiceAtual = filaAtendentes.findIndex(function(nome) {
+            return nome.trim().toLowerCase() === String(atendente).trim().toLowerCase();
+          });
         }
 
-        const proximoIndice = indiceAtual === -1
-          ? 0
-          : (indiceAtual + 1) % filaAtendentes.length;
+        const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
+        const proximoAtendente = filaAtendentes[proximoIndice];
+
+        console.log("Atendente atual do cliente:", atendenteAtual);
+        console.log("Próximo atendente definido:", proximoAtendente);
 
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
         dadosAtualizacaoCliente.tentativas_sem_contato = tentativasAtuais + 1;
-        dadosAtualizacaoCliente.atendente_responsavel = filaAtendentes[proximoIndice];
+        dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
       }
 
-      const { error: erroCliente } = await supabaseClient
-        .from("clientes")
-        .update(dadosAtualizacaoCliente)
-        .eq("id", clienteId);
+      console.log("Dados que serão enviados para atualizar o cliente:", dadosAtualizacaoCliente);
 
-      if (erroCliente) {
-        console.error("Erro ao atualizar cliente:", erroCliente);
-        alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
-        return;
-      }
+const { data: clienteAtualizado, error: erroCliente } = await supabaseClient
+  .from("clientes")
+  .update(dadosAtualizacaoCliente)
+  .eq("id", clienteId)
+  .select()
+  .single();
+
+if (erroCliente) {
+  console.error("Erro ao atualizar cliente:", erroCliente);
+  alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+  return;
+}
+
+console.log("Cliente atualizado no banco:", clienteAtualizado);
 
       alert("Pesquisa salva com sucesso!");
       window.location.href = "index.html";
