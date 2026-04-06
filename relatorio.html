@@ -365,51 +365,60 @@
     </div>
 
     <section class="dashboard">
-      <div class="dashboard-topo">
-        <div>
-          <div class="dashboard-titulo">Controle de Tratativas</div>
-          <div class="dashboard-subtitulo">Acompanhe quantas tratativas estão pendentes e quantas já foram concluídas</div>
-        </div>
-      </div>
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+  ">
 
-      <div class="tratativas-resumo">
-        <div class="tratativa-card">
-          <div class="titulo">Total de Clientes com Tratativa</div>
-          <div class="valor" id="totalTratativas">0</div>
-        </div>
+    <div style="
+      font-size:18px;
+      font-weight:bold;
+      color:#1f3c88;
+    ">
+      Tratativas:
+      <span id="totalTratativas">0</span>
+      |
+      Pendentes:
+      <span id="tratativasPendentes" style="color:#b45309;">0</span>
+      |
+      Concluídas:
+      <span id="tratativasConcluidas" style="color:#15803d;">0</span>
+    </div>
 
-        <div class="tratativa-card pendente">
-          <div class="titulo">Tratativas Pendentes</div>
-          <div class="valor" id="tratativasPendentes">0</div>
-        </div>
+    <button id="btnToggleTratativas" onclick="toggleTratativas()" style="
+      background:#1f3c88;
+      color:white;
+      border:none;
+      padding:6px 12px;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:bold;
+    ">
+      Ver
+    </button>
 
-        <div class="tratativa-card concluida">
-          <div class="titulo">Tratativas Concluídas</div>
-          <div class="valor" id="tratativasConcluidas">0</div>
-        </div>
-      </div>
+  </div>
 
-      <div>
-        <button class="btn-tratativas" id="btnToggleTratativas" onclick="toggleTratativas()">Ver tratativas</button>
-      </div>
-
-      <div class="tabela-tratativas-box" id="boxTratativas">
-        <table class="tabela-tratativas">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Tipo</th>
-              <th>Técnico</th>
-              <th>Motivo</th>
-              <th>Status</th>
-              <th>Abertura</th>
-              <th>Conclusão</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaTratativas"></tbody>
-        </table>
-      </div>
-    </section>
+  <div class="tabela-tratativas-box" id="boxTratativas">
+    <table class="tabela-tratativas">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Tipo</th>
+          <th>Técnico</th>
+          <th>Motivo</th>
+          <th>Status</th>
+          <th>Abertura</th>
+          <th>Conclusão</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaTratativas"></tbody>
+    </table>
+  </div>
+</section>
 
     <section class="dashboard">
       <div class="dashboard-topo">
