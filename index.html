@@ -73,6 +73,14 @@
       background-color: #fff6bf;
       font-weight: 600;
     }
+
+    .texto-menor {
+      display: block;
+      font-size: 12px;
+      font-weight: normal;
+      margin-top: 4px;
+      color: #444;
+    }
   </style>
 </head>
 
@@ -154,20 +162,19 @@
       return tipo || "";
     }
 
-    async function buscarHorariosRetorno(nomesClientes) {
+    async function buscarInfoPendencia(nomesClientes) {
       if (!nomesClientes || nomesClientes.length === 0) {
         return {};
       }
 
       const { data, error } = await supabaseClient
         .from("respostas")
-        .select("cliente, horario_retorno, tipo_retorno")
-        .not("horario_retorno", "is", null)
+        .select("cliente, status, horario_retorno, tipo_retorno, necessita_tratativa, motivo_tratativa")
         .in("cliente", nomesClientes)
         .order("id", { ascending: false });
 
       if (error) {
-        console.error("Erro ao buscar horários de retorno:", error);
+        console.error("Erro ao buscar informações de retorno/tratativa:", error);
         return {};
       }
 
@@ -175,10 +182,17 @@
 
       (data || []).forEach(function(item) {
         const chave = item.cliente || "";
-        if (!mapa[chave] && item.horario_retorno) {
+        if (!mapa[chave]) {
+          const statusTexto = String(item.status || "");
+          const ehTratativa =
+            String(item.necessita_tratativa || "").toLowerCase() === "sim" ||
+            statusTexto.startsWith("tratativa");
+
           mapa[chave] = {
-            horario: item.horario_retorno,
-            tipo: item.tipo_retorno || "especifico"
+            horario: item.horario_retorno || "",
+            tipo: item.tipo_retorno || "",
+            ehTratativa: ehTratativa,
+            motivo: item.motivo_tratativa || ""
           };
         }
       });
@@ -229,9 +243,11 @@
         return item.nome || "";
       }).filter(Boolean);
 
-      const mapaRetornos = await buscarHorariosRetorno(nomesClientes);
+      const mapaInfos = await buscarInfoPendencia(nomesClientes);
 
       atendimentos = lista.map(function(item) {
+        const info = mapaInfos[item.nome || ""] || {};
+
         return {
           id: item.id,
           codigo: item.codigo || "",
@@ -246,12 +262,35 @@
           endereco: item.endereco || "",
           atendente_responsavel: item.atendente_responsavel || "",
           status_pesquisa: item.status_pesquisa || "",
-          horario_retorno: mapaRetornos[item.nome || ""]?.horario || "",
-          tipo_retorno: mapaRetornos[item.nome || ""]?.tipo || ""
+          horario_retorno: info.horario || "",
+          tipo_retorno: info.tipo || "",
+          eh_tratativa: info.ehTratativa || false,
+          motivo_tratativa: info.motivo || ""
         };
       });
 
       carregarTabela(atendimentos);
+    }
+
+    function montarTextoRetorno(item) {
+      let textoBase = "";
+
+      if (item.horario_retorno) {
+        if (item.tipo_retorno === "apos") {
+          textoBase = `Após ${item.horario_retorno}`;
+        } else {
+          textoBase = `Às ${item.horario_retorno}`;
+        }
+      }
+
+      if (item.eh_tratativa) {
+        if (textoBase) {
+          return `Tratativa necessária<span class="texto-menor">${textoBase}</span>`;
+        }
+        return `Tratativa necessária`;
+      }
+
+      return textoBase;
     }
 
     function carregarTabela(lista) {
@@ -271,17 +310,9 @@
 
       lista.forEach(function (a) {
         let telefonesFormatados = String(a.telefone || "").replaceAll(",", "<br>");
-        let textoRetorno = "";
-        let classeRetorno = "";
-
-        if (a.horario_retorno) {
-          if (a.tipo_retorno === "apos") {
-            textoRetorno = `Após ${a.horario_retorno}`;
-          } else {
-            textoRetorno = `Às ${a.horario_retorno}`;
-          }
-          classeRetorno = "retorno-amarelo";
-        }
+        let textoRetorno = montarTextoRetorno(a);
+        let classeRetorno = (a.horario_retorno || a.eh_tratativa) ? "retorno-amarelo" : "";
+        let modo = a.eh_tratativa ? "tratativa" : "normal";
 
         let linha = `
           <tr>
@@ -306,7 +337,11 @@
                 '${String(a.vendedor).replace(/'/g, "\\'")}',
                 '${String(a.tecnico).replace(/'/g, "\\'")}',
                 '${String(a.tipo).replace(/'/g, "\\'")}',
-                '${String(a.endereco).replace(/'/g, "\\'")}'
+                '${String(a.endereco).replace(/'/g, "\\'")}',
+                '${String(modo).replace(/'/g, "\\'")}',
+                '${String(a.motivo_tratativa || "").replace(/'/g, "\\'")}',
+                '${String(a.horario_retorno || "").replace(/'/g, "\\'")}',
+                '${String(a.tipo_retorno || "").replace(/'/g, "\\'")}'
               )">
                 Realizar
               </button>
@@ -331,7 +366,7 @@
       carregarTabela(filtrados);
     }
 
-    function realizarPesquisa(id, codigo, nome, bairro, telefone, email, data, vendedor, tecnico, tipo, endereco) {
+    function realizarPesquisa(id, codigo, nome, bairro, telefone, email, data, vendedor, tecnico, tipo, endereco, modo, motivoTratativa, horarioRetorno, tipoRetorno) {
       window.location.href =
         "pesquisa.html?id=" + encodeURIComponent(id) +
         "&codigo=" + encodeURIComponent(codigo) +
@@ -343,7 +378,11 @@
         "&vendedor=" + encodeURIComponent(vendedor) +
         "&tecnico=" + encodeURIComponent(tecnico) +
         "&tipo=" + encodeURIComponent(tipo) +
-        "&endereco=" + encodeURIComponent(endereco);
+        "&endereco=" + encodeURIComponent(endereco) +
+        "&modo=" + encodeURIComponent(modo || "normal") +
+        "&motivoTratativa=" + encodeURIComponent(motivoTratativa || "") +
+        "&horarioRetorno=" + encodeURIComponent(horarioRetorno || "") +
+        "&tipoRetorno=" + encodeURIComponent(tipoRetorno || "");
     }
 
     function logout() {
