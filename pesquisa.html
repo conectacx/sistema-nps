@@ -702,32 +702,36 @@
       } else if (statusPesquisa === "retorno") {
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-            } else if (statusPesquisa === "sem_contato") {
-        const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+           } else if (statusPesquisa === "sem_contato") {
+  const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+  const novasTentativas = tentativasAtuais + 1;
 
-        const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
-        const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
+  const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+  const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
 
-        let indiceAtual = filaAtendentes.findIndex(function(nome) {
-          return nome.trim().toLowerCase() === atendenteAtual.toLowerCase();
-        });
+  let indiceAtual = filaAtendentes.findIndex(function(nome) {
+    return nome.trim().toLowerCase() === atendenteAtual.toLowerCase();
+  });
 
-        if (indiceAtual === -1) {
-          indiceAtual = filaAtendentes.findIndex(function(nome) {
-            return nome.trim().toLowerCase() === String(atendente).trim().toLowerCase();
-          });
-        }
+  if (indiceAtual === -1) {
+    indiceAtual = filaAtendentes.findIndex(function(nome) {
+      return nome.trim().toLowerCase() === String(atendente).trim().toLowerCase();
+    });
+  }
 
-        const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
-        const proximoAtendente = filaAtendentes[proximoIndice];
+  dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
 
-        console.log("Atendente atual do cliente:", atendenteAtual);
-        console.log("Próximo atendente definido:", proximoAtendente);
+  if (novasTentativas >= 4) {
+    dadosAtualizacaoCliente.status_pesquisa = "concluido";
+    dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
+  } else {
+    const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
+    const proximoAtendente = filaAtendentes[proximoIndice];
 
-        dadosAtualizacaoCliente.status_pesquisa = "pendente";
-        dadosAtualizacaoCliente.tentativas_sem_contato = tentativasAtuais + 1;
-        dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
-      }
+    dadosAtualizacaoCliente.status_pesquisa = "pendente";
+    dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
+  }
+}
 
       console.log("Dados que serão enviados para atualizar o cliente:", dadosAtualizacaoCliente);
 
