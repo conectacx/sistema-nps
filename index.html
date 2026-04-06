@@ -128,24 +128,20 @@
       window.location.href = "login.html";
     }
 
-    if (usuarioLogado.perfil === "admin") {
-      let btnUsuarios = document.getElementById("btnUsuarios");
-      if (btnUsuarios) {
-        btnUsuarios.style.display = "inline-block";
-      }
-    }
-
     document.getElementById("infoUsuario").innerText =
       "Usuário logado: " + (usuarioLogado.nome || usuarioLogado.usuario || "Não informado");
 
-    function normalizarTipo(tipo) {
-      let texto = String(tipo || "")
+    function normalizarTexto(texto) {
+      return String(texto || "")
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .replace(/-/g, " ")
         .replace(/\s+/g, " ")
         .trim();
+    }
+
+    function normalizarTipo(tipo) {
+      let texto = normalizarTexto(tipo).replace(/-/g, " ");
 
       if (texto.includes("venda")) return "Pós Venda";
       if (texto.includes("suporte")) return "Pós Suporte";
@@ -160,18 +156,11 @@
         </tr>
       `;
 
-      let query = supabaseClient
+      let { data, error } = await supabaseClient
         .from("clientes")
         .select("*")
         .eq("status_pesquisa", "pendente")
-        .order("id", { ascending: true })
-        .limit(5);
-
-      if (usuarioLogado.perfil === "atendente") {
-        query = query.eq("atendente_responsavel", usuarioLogado.nome);
-      }
-
-      let { data, error } = await query;
+        .order("id", { ascending: true });
 
       if (error) {
         console.error("Erro ao carregar clientes:", error);
@@ -185,7 +174,20 @@
         return;
       }
 
-      atendimentos = (data || []).map(function(item) {
+      let lista = data || [];
+
+      if (usuarioLogado.perfil === "atendente") {
+        const nomeUsuario = normalizarTexto(usuarioLogado.nome || usuarioLogado.usuario);
+
+        lista = lista.filter(function(item) {
+          const nomeBanco = normalizarTexto(item.atendente_responsavel);
+          return nomeBanco === nomeUsuario;
+        });
+      }
+
+      lista = lista.slice(0, 5);
+
+      atendimentos = lista.map(function(item) {
         return {
           id: item.id,
           codigo: item.codigo || "",
