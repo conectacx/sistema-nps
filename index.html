@@ -103,12 +103,13 @@
           <th>Data</th>
           <th>Vendedor</th>
           <th>Técnico</th>
+          <th>Retorno</th>
           <th>Ação</th>
         </tr>
       </thead>
       <tbody id="tabela">
         <tr>
-          <td colspan="9" style="text-align:center; color:#666;">Carregando...</td>
+          <td colspan="10" style="text-align:center; color:#666;">Carregando...</td>
         </tr>
       </tbody>
     </table>
@@ -148,11 +149,40 @@
       return tipo || "";
     }
 
+    async function buscarHorariosRetorno(nomesClientes) {
+      if (!nomesClientes || nomesClientes.length === 0) {
+        return {};
+      }
+
+      const { data, error } = await supabaseClient
+        .from("respostas")
+        .select("cliente, status, horario_retorno, data")
+        .eq("status", "retorno")
+        .in("cliente", nomesClientes)
+        .order("id", { ascending: false });
+
+      if (error) {
+        console.error("Erro ao buscar horários de retorno:", error);
+        return {};
+      }
+
+      const mapa = {};
+
+      (data || []).forEach(function(item) {
+        const chave = item.cliente || "";
+        if (!mapa[chave] && item.horario_retorno) {
+          mapa[chave] = item.horario_retorno;
+        }
+      });
+
+      return mapa;
+    }
+
     async function carregarClientes() {
       let tabela = document.getElementById("tabela");
       tabela.innerHTML = `
         <tr>
-          <td colspan="9" style="text-align:center; color:#666;">Carregando...</td>
+          <td colspan="10" style="text-align:center; color:#666;">Carregando...</td>
         </tr>
       `;
 
@@ -166,7 +196,7 @@
         console.error("Erro ao carregar clientes:", error);
         tabela.innerHTML = `
           <tr>
-            <td colspan="9" style="text-align:center; color:#b91c1c;">
+            <td colspan="10" style="text-align:center; color:#b91c1c;">
               Erro ao carregar clientes: ${error.message}
             </td>
           </tr>
@@ -187,6 +217,12 @@
 
       lista = lista.slice(0, 5);
 
+      const nomesClientes = lista.map(function(item) {
+        return item.nome || "";
+      }).filter(Boolean);
+
+      const mapaRetornos = await buscarHorariosRetorno(nomesClientes);
+
       atendimentos = lista.map(function(item) {
         return {
           id: item.id,
@@ -201,7 +237,8 @@
           tipo: normalizarTipo(item.tipo),
           endereco: item.endereco || "",
           atendente_responsavel: item.atendente_responsavel || "",
-          status_pesquisa: item.status_pesquisa || ""
+          status_pesquisa: item.status_pesquisa || "",
+          horario_retorno: mapaRetornos[item.nome || ""] || ""
         };
       });
 
@@ -215,7 +252,7 @@
       if (!lista || lista.length === 0) {
         tabela.innerHTML = `
           <tr>
-            <td colspan="9" style="text-align:center; color:#666;">
+            <td colspan="10" style="text-align:center; color:#666;">
               Nenhum atendimento pendente encontrado.
             </td>
           </tr>
@@ -225,6 +262,7 @@
 
       lista.forEach(function (a) {
         let telefonesFormatados = String(a.telefone || "").replaceAll(",", "<br>");
+        let textoRetorno = a.horario_retorno ? `Retornar às ${a.horario_retorno}` : "";
 
         let linha = `
           <tr>
@@ -236,6 +274,7 @@
             <td>${a.data}</td>
             <td>${a.vendedor}</td>
             <td>${a.tecnico}</td>
+            <td>${textoRetorno}</td>
             <td>
               <button onclick="realizarPesquisa(
                 '${a.id}',
