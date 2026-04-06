@@ -161,8 +161,8 @@
 
       const { data, error } = await supabaseClient
         .from("respostas")
-        .select("cliente, status, horario_retorno, tipo_retorno")
-        .eq("status", "retorno")
+        .select("cliente, horario_retorno, tipo_retorno")
+        .not("horario_retorno", "is", null)
         .in("cliente", nomesClientes)
         .order("id", { ascending: false });
 
