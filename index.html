@@ -68,6 +68,11 @@
       color: #555;
       margin-top: 8px;
     }
+
+    .retorno-amarelo {
+      background-color: #fff6bf;
+      font-weight: 600;
+    }
   </style>
 </head>
 
@@ -156,7 +161,7 @@
 
       const { data, error } = await supabaseClient
         .from("respostas")
-        .select("cliente, status, horario_retorno, data")
+        .select("cliente, status, horario_retorno, tipo_retorno")
         .eq("status", "retorno")
         .in("cliente", nomesClientes)
         .order("id", { ascending: false });
@@ -171,7 +176,10 @@
       (data || []).forEach(function(item) {
         const chave = item.cliente || "";
         if (!mapa[chave] && item.horario_retorno) {
-          mapa[chave] = item.horario_retorno;
+          mapa[chave] = {
+            horario: item.horario_retorno,
+            tipo: item.tipo_retorno || "especifico"
+          };
         }
       });
 
@@ -238,7 +246,8 @@
           endereco: item.endereco || "",
           atendente_responsavel: item.atendente_responsavel || "",
           status_pesquisa: item.status_pesquisa || "",
-          horario_retorno: mapaRetornos[item.nome || ""] || ""
+          horario_retorno: mapaRetornos[item.nome || ""]?.horario || "",
+          tipo_retorno: mapaRetornos[item.nome || ""]?.tipo || ""
         };
       });
 
@@ -262,7 +271,17 @@
 
       lista.forEach(function (a) {
         let telefonesFormatados = String(a.telefone || "").replaceAll(",", "<br>");
-        let textoRetorno = a.horario_retorno ? `Retornar às ${a.horario_retorno}` : "";
+        let textoRetorno = "";
+        let classeRetorno = "";
+
+        if (a.horario_retorno) {
+          if (a.tipo_retorno === "apos") {
+            textoRetorno = `Após ${a.horario_retorno}`;
+          } else {
+            textoRetorno = `Às ${a.horario_retorno}`;
+          }
+          classeRetorno = "retorno-amarelo";
+        }
 
         let linha = `
           <tr>
@@ -274,7 +293,7 @@
             <td>${a.data}</td>
             <td>${a.vendedor}</td>
             <td>${a.tecnico}</td>
-            <td>${textoRetorno}</td>
+            <td class="${classeRetorno}">${textoRetorno}</td>
             <td>
               <button onclick="realizarPesquisa(
                 '${a.id}',
