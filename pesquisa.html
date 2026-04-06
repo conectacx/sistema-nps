@@ -474,6 +474,26 @@
             </div>
           </div>
 
+          <div class="bloco" id="tratativaBox" style="display:none;">
+            <h3>Necessário tratativa?</h3>
+            <div class="opcoes-linha">
+              <label class="opcao-box">
+                <input type="radio" name="necessitaTratativa" value="sim">
+                <span>Sim</span>
+              </label>
+
+              <label class="opcao-box">
+                <input type="radio" name="necessitaTratativa" value="nao">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="bloco" id="motivoTratativaBox" style="display:none;">
+            <h3>Motivo da tratativa</h3>
+            <textarea id="motivoTratativa"></textarea>
+          </div>
+
           <div class="bloco" id="tipoRetornoBox" style="display:none;">
             <h3>Tipo de retorno</h3>
             <div class="opcoes-linha">
@@ -630,6 +650,26 @@
             </div>
           </div>
 
+          <div class="bloco" id="tratativaBox" style="display:none;">
+            <h3>Necessário tratativa?</h3>
+            <div class="opcoes-linha">
+              <label class="opcao-box">
+                <input type="radio" name="necessitaTratativa" value="sim">
+                <span>Sim</span>
+              </label>
+
+              <label class="opcao-box">
+                <input type="radio" name="necessitaTratativa" value="nao">
+                <span>Não</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="bloco" id="motivoTratativaBox" style="display:none;">
+            <h3>Motivo da tratativa</h3>
+            <textarea id="motivoTratativa"></textarea>
+          </div>
+
           <div class="bloco" id="tipoRetornoBox" style="display:none;">
             <h3>Tipo de retorno</h3>
             <div class="opcoes-linha">
@@ -660,29 +700,121 @@
       }
     }
 
-    document.addEventListener("change", function(e) {
-      if (e.target.name === "statusPesquisa") {
-        const valor = e.target.value;
-        const campo = document.getElementById("campoRetorno");
-        const tipo = document.getElementById("tipoRetornoBox");
-        const horario = document.getElementById("horarioRetorno");
-        const tiposSelecionados = document.querySelectorAll('input[name="tipoRetorno"]');
+    function atualizarCamposDinamicos() {
+      const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value || "";
+      const necessitaTratativa = document.querySelector('input[name="necessitaTratativa"]:checked')?.value || "";
 
-        if (!campo || !tipo) return;
+      const tratativaBox = document.getElementById("tratativaBox");
+      const motivoTratativaBox = document.getElementById("motivoTratativaBox");
+      const tipoRetornoBox = document.getElementById("tipoRetornoBox");
+      const campoRetorno = document.getElementById("campoRetorno");
+      const horarioRetorno = document.getElementById("horarioRetorno");
+      const motivoTratativa = document.getElementById("motivoTratativa");
+      const radiosTipoRetorno = document.querySelectorAll('input[name="tipoRetorno"]');
+      const radiosTratativa = document.querySelectorAll('input[name="necessitaTratativa"]');
 
-        if (valor === "retorno") {
-          campo.style.display = "block";
-          tipo.style.display = "block";
-        } else {
-          campo.style.display = "none";
-          tipo.style.display = "none";
-          if (horario) horario.value = "";
-          tiposSelecionados.forEach(function(item) {
-            item.checked = false;
-          });
+      if (!tratativaBox || !motivoTratativaBox || !tipoRetornoBox || !campoRetorno) return;
+
+      tratativaBox.style.display = "none";
+      motivoTratativaBox.style.display = "none";
+      tipoRetornoBox.style.display = "none";
+      campoRetorno.style.display = "none";
+
+      if (statusPesquisa !== "realizada") {
+        radiosTratativa.forEach(function(item) {
+          item.checked = false;
+        });
+        if (motivoTratativa) motivoTratativa.value = "";
+      }
+
+      if (statusPesquisa !== "retorno" && statusPesquisa !== "realizada") {
+        if (horarioRetorno) horarioRetorno.value = "";
+        radiosTipoRetorno.forEach(function(item) {
+          item.checked = false;
+        });
+      }
+
+      if (statusPesquisa === "realizada") {
+        tratativaBox.style.display = "block";
+
+        if (necessitaTratativa === "sim") {
+          motivoTratativaBox.style.display = "block";
+          tipoRetornoBox.style.display = "block";
+          campoRetorno.style.display = "block";
         }
       }
+
+      if (statusPesquisa === "retorno") {
+        tipoRetornoBox.style.display = "block";
+        campoRetorno.style.display = "block";
+      }
+    }
+
+    document.addEventListener("change", function(e) {
+      if (
+        e.target.name === "statusPesquisa" ||
+        e.target.name === "necessitaTratativa"
+      ) {
+        atualizarCamposDinamicos();
+      }
     });
+
+    function definirResponsavelTratativa(atendentePesquisa, horarioRetorno) {
+      const [horaTexto, minutoTexto] = String(horarioRetorno || "").split(":");
+      const hora = Number(horaTexto || 0);
+      const minuto = Number(minutoTexto || 0);
+      const totalMinutos = (hora * 60) + minuto;
+
+      const inicioHudson = (7 * 60) + 45;   // 07:45
+      const inicioLucas = (11 * 60);        // 11:00
+      const meioTurno = (14 * 60);          // 14:00
+      const fimHudson = (16 * 60) + 30;     // 16:30
+      const fimLucas = (20 * 60);           // 20:00
+
+      const atendente = String(atendentePesquisa || "").trim().toLowerCase();
+
+      if (totalMinutos < inicioHudson || totalMinutos > fimLucas) {
+        return {
+          erro: "O horário informado está fora do período de trabalho disponível para retorno."
+        };
+      }
+
+      if (totalMinutos >= inicioHudson && totalMinutos < inicioLucas) {
+        if (atendente === "hudson") {
+          return { responsavel: "Tamara" };
+        }
+        return { responsavel: "Hudson" };
+      }
+
+      if (totalMinutos >= inicioLucas && totalMinutos <= fimHudson) {
+        if (atendente === "hudson") {
+          return { responsavel: "Lucas" };
+        }
+
+        if (atendente === "lucas") {
+          return { responsavel: "Hudson" };
+        }
+
+        if (atendente === "tamara" || atendente === "carlos") {
+          return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
+        }
+
+        return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
+      }
+
+      if (totalMinutos > fimHudson && totalMinutos <= fimLucas) {
+        if (atendente === "lucas") {
+          return {
+            erro: "Esse horário ficaria somente com o Lucas disponível, e a tratativa não pode voltar para quem realizou a pesquisa."
+          };
+        }
+        return { responsavel: "Lucas" };
+      }
+
+      return {
+        erro: "Não foi possível definir o responsável para esse horário."
+      };
+    }
 
     async function enviar() {
       const atendente = document.getElementById("atendente")?.value || "";
@@ -691,6 +823,9 @@
       const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value || null;
       const statusPesquisa = document.querySelector('input[name="statusPesquisa"]:checked')?.value || null;
       const tipoRetorno = document.querySelector('input[name="tipoRetorno"]:checked')?.value || null;
+      const necessitaTratativa = document.querySelector('input[name="necessitaTratativa"]:checked')?.value || null;
+      const horarioRetorno = document.getElementById("horarioRetorno")?.value || "";
+      const motivoTratativa = document.getElementById("motivoTratativa")?.value?.trim() || "";
 
       if (!atendente) {
         alert("Selecione o atendente que realizou a pesquisa!");
@@ -703,8 +838,6 @@
       }
 
       if (statusPesquisa === "retorno") {
-        const horarioRetorno = document.getElementById("horarioRetorno")?.value;
-
         if (!horarioRetorno) {
           alert("Informe o horário para retorno!");
           return;
@@ -720,6 +853,34 @@
         if (!pergunta1 || !pergunta2 || !pergunta3) {
           alert("Preencha todas as avaliações!");
           return;
+        }
+
+        if (!necessitaTratativa) {
+          alert("Informe se é necessária tratativa!");
+          return;
+        }
+
+        if (necessitaTratativa === "sim") {
+          if (!motivoTratativa) {
+            alert("Descreva o motivo da tratativa!");
+            return;
+          }
+
+          if (!horarioRetorno) {
+            alert("Informe o horário para retorno!");
+            return;
+          }
+
+          if (!tipoRetorno) {
+            alert("Selecione o tipo de retorno!");
+            return;
+          }
+
+          const validacaoTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+          if (validacaoTratativa.erro) {
+            alert(validacaoTratativa.erro);
+            return;
+          }
         }
       }
 
@@ -739,12 +900,24 @@
         problemaResolvido: null,
         indicacao: null,
         horario_retorno: null,
-        tipo_retorno: null
+        tipo_retorno: null,
+        necessita_tratativa: null,
+        motivo_tratativa: null
       };
 
       if (statusPesquisa === "retorno") {
-        resposta.horario_retorno = document.getElementById("horarioRetorno")?.value || null;
+        resposta.horario_retorno = horarioRetorno || null;
         resposta.tipo_retorno = tipoRetorno;
+      }
+
+      if (statusPesquisa === "realizada") {
+        resposta.necessita_tratativa = necessitaTratativa || null;
+
+        if (necessitaTratativa === "sim") {
+          resposta.horario_retorno = horarioRetorno || null;
+          resposta.tipo_retorno = tipoRetorno;
+          resposta.motivo_tratativa = motivoTratativa || null;
+        }
       }
 
       if (tipo === "Pós Venda") {
@@ -782,11 +955,26 @@
         ultima_tentativa_por: atendente
       };
 
-      if (statusPesquisa === "realizada" || statusPesquisa === "nao_quis") {
+      if (statusPesquisa === "realizada") {
+        if (necessitaTratativa === "sim") {
+          const regraTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+
+          if (regraTratativa.erro) {
+            alert(regraTratativa.erro);
+            return;
+          }
+
+          dadosAtualizacaoCliente.status_pesquisa = "pendente";
+          dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+          dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
+        } else {
+          dadosAtualizacaoCliente.status_pesquisa = "concluido";
+          dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+        }
+      } else if (statusPesquisa === "nao_quis") {
         dadosAtualizacaoCliente.status_pesquisa = "concluido";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
       } else if (statusPesquisa === "retorno") {
-        const horarioRetorno = document.getElementById("horarioRetorno")?.value || "";
         const [horaTexto, minutoTexto] = horarioRetorno.split(":");
         const hora = Number(horaTexto || 0);
         const minuto = Number(minutoTexto || 0);
@@ -860,6 +1048,7 @@
     }
 
     carregarFormulario();
+    atualizarCamposDinamicos();
   </script>
 </body>
 </html>
