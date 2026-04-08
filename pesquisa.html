@@ -403,6 +403,20 @@
       return atendenteAtual || "";
     }
 
+    function montarCampoTecnico() {
+      return `
+        <select id="tecnico">
+          <option value="">Selecione</option>
+          <option value="Lucas">Lucas</option>
+          <option value="Gustavo">Gustavo</option>
+          <option value="Thiago">Thiago</option>
+          <option value="Cleiton">Cleiton</option>
+          <option value="Fernando">Fernando</option>
+          <option value="Vitor">Vitor</option>
+        </select>
+      `;
+    }
+
     function montarFormularioTratativa() {
       const formulario = document.getElementById("formulario");
       const retornoCombinado = formatarTextoRetorno(tipoRetornoOriginal, horarioRetornoOriginal);
@@ -415,7 +429,7 @@
 
         <div class="bloco">
           <h3>Técnico que executou o serviço</h3>
-          <input type="text" value="${tecnico || "Não informado"}" disabled>
+          ${montarCampoTecnico()}
         </div>
 
         <div class="bloco">
@@ -510,7 +524,7 @@
 
           <div class="bloco">
             <h3>Técnico que executou o serviço</h3>
-            <input type="text" value="${tecnico || "Não informado"}" disabled>
+            ${montarCampoTecnico()}
           </div>
 
           <div class="introducao">
@@ -725,7 +739,7 @@
 
           <div class="bloco">
             <h3>Técnico que executou o serviço</h3>
-            <input type="text" value="${tecnico || "Não informado"}" disabled>
+            ${montarCampoTecnico()}
           </div>
 
           <div class="introducao">
@@ -983,9 +997,15 @@
       const statusTratativa = document.querySelector('input[name="statusTratativa"]:checked')?.value || null;
       const horarioRetorno = document.getElementById("tratativaHorarioRetorno")?.value || "";
       const tipoRetorno = document.querySelector('input[name="tratativaTipoRetorno"]:checked')?.value || null;
+      const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
 
       if (!atendente) {
         alert("Selecione o atendente que realizou a tratativa!");
+        return;
+      }
+
+      if (!tecnicoSelecionado) {
+        alert("Selecione o técnico!");
         return;
       }
 
@@ -1015,7 +1035,7 @@
       const resposta = {
         cliente: nome || null,
         tipo: tipo || null,
-        tecnico: tecnico || "Não informado",
+        tecnico: tecnicoSelecionado,
         atendente: atendente,
         pergunta1: null,
         pergunta2: null,
@@ -1121,6 +1141,7 @@
 
     async function enviar() {
       const atendente = document.getElementById("atendente")?.value || "";
+      const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
       const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value || null;
       const pergunta2 = document.querySelector('input[name="pergunta2"]:checked')?.value || null;
       const pergunta3 = document.querySelector('input[name="pergunta3"]:checked')?.value || null;
@@ -1132,6 +1153,11 @@
 
       if (!atendente) {
         alert("Selecione o atendente que realizou a pesquisa!");
+        return;
+      }
+
+      if (!tecnicoSelecionado) {
+        alert("Selecione o técnico!");
         return;
       }
 
@@ -1190,7 +1216,7 @@
       let resposta = {
         cliente: nome || null,
         tipo: tipo || null,
-        tecnico: tecnico || "Não informado",
+        tecnico: tecnicoSelecionado,
         atendente: atendente,
         pergunta1: pergunta1 ? Number(pergunta1) : null,
         pergunta2: pergunta2 ? Number(pergunta2) : null,
