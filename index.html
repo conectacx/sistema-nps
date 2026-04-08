@@ -111,18 +111,14 @@
           <th>Código</th>
           <th>Nome</th>
           <th>Bairro</th>
-          <th>Telefones</th>
-          <th>Email</th>
           <th>Data</th>
-          <th>Vendedor</th>
-          <th>Técnico</th>
           <th>Retorno</th>
           <th>Ação</th>
         </tr>
       </thead>
       <tbody id="tabela">
         <tr>
-          <td colspan="10" style="text-align:center; color:#666;">Carregando...</td>
+          <td colspan="6" style="text-align:center; color:#666;">Carregando...</td>
         </tr>
       </tbody>
     </table>
@@ -204,7 +200,7 @@
       let tabela = document.getElementById("tabela");
       tabela.innerHTML = `
         <tr>
-          <td colspan="10" style="text-align:center; color:#666;">Carregando...</td>
+          <td colspan="6" style="text-align:center; color:#666;">Carregando...</td>
         </tr>
       `;
 
@@ -218,7 +214,7 @@
         console.error("Erro ao carregar clientes:", error);
         tabela.innerHTML = `
           <tr>
-            <td colspan="10" style="text-align:center; color:#b91c1c;">
+            <td colspan="6" style="text-align:center; color:#b91c1c;">
               Erro ao carregar clientes: ${error.message}
             </td>
           </tr>
@@ -300,7 +296,7 @@
       if (!lista || lista.length === 0) {
         tabela.innerHTML = `
           <tr>
-            <td colspan="10" style="text-align:center; color:#666;">
+            <td colspan="6" style="text-align:center; color:#666;">
               Nenhum atendimento pendente encontrado.
             </td>
           </tr>
@@ -308,8 +304,7 @@
         return;
       }
 
-      lista.forEach(function (a) {
-        let telefonesFormatados = String(a.telefone || "").replaceAll(",", "<br>");
+      lista.forEach(function(a) {
         let textoRetorno = montarTextoRetorno(a);
         let classeRetorno = (a.horario_retorno || a.eh_tratativa) ? "retorno-amarelo" : "";
         let modo = a.eh_tratativa ? "tratativa" : "normal";
@@ -319,11 +314,7 @@
             <td>${a.codigo}</td>
             <td>${a.nome}</td>
             <td>${a.bairro}</td>
-            <td>${telefonesFormatados}</td>
-            <td>${a.email}</td>
             <td>${a.data}</td>
-            <td>${a.vendedor}</td>
-            <td>${a.tecnico}</td>
             <td class="${classeRetorno}">${textoRetorno}</td>
             <td>
               <button onclick="realizarPesquisa(
@@ -359,7 +350,7 @@
         return;
       }
 
-      let filtrados = atendimentos.filter(function (a) {
+      let filtrados = atendimentos.filter(function(a) {
         return a.tipo === tipo;
       });
 
