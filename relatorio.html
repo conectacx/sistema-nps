@@ -337,49 +337,91 @@
     </div>
 
     <section class="dashboard">
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        flex-wrap:wrap;
-        gap:15px;
-      ">
-        <div style="
-          font-size:18px;
-          font-weight:bold;
-          color:#1f3c88;
-        ">
-          Tratativas:
-          <span id="totalTratativas">0</span>
-          |
-          Pendentes:
-          <span id="tratativasPendentes" style="color:#b45309;">0</span>
-          |
-          Concluídas:
-          <span id="tratativasConcluidas" style="color:#15803d;">0</span>
-        </div>
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+  ">
+    <div style="
+      font-size:18px;
+      font-weight:bold;
+      color:#1f3c88;
+    ">
+      Tratativas:
+      <span id="totalTratativas">0</span>
+      |
+      Pendentes:
+      <span id="tratativasPendentes" style="color:#b45309;">0</span>
+      |
+      Concluídas:
+      <span id="tratativasConcluidas" style="color:#15803d;">0</span>
+    </div>
 
-        <button id="btnToggleTratativas" onclick="toggleTratativas()" class="btn-tratativas">
-          Ver
-        </button>
-      </div>
+    <button id="btnToggleTratativas" onclick="toggleTratativas()" class="btn-tratativas">
+      Ver
+    </button>
+  </div>
 
-      <div class="tabela-tratativas-box" id="boxTratativas">
-        <table class="tabela-tratativas">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Tipo</th>
-              <th>Técnico</th>
-              <th>Motivo</th>
-              <th>Status</th>
-              <th>Abertura</th>
-              <th>Conclusão</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaTratativas"></tbody>
-        </table>
-      </div>
+  <div class="tabela-tratativas-box" id="boxTratativas">
+    <table class="tabela-tratativas">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Tipo</th>
+          <th>Técnico</th>
+          <th>Motivo</th>
+          <th>Status</th>
+          <th>Abertura</th>
+          <th>Conclusão</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaTratativas"></tbody>
+    </table>
+  </div>
+
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:10px;
+    flex-wrap:wrap;
+    gap:10px;
+  ">
+    <div style="
+      font-size:16px;
+      font-weight:bold;
+      color:#b91c1c;
+    ">
+      Avaliações críticas:
+      <span id="totalCriticos">0</span>
+    </div>
+
+    <button id="btnToggleCriticos" onclick="toggleCriticos()" class="btn-criticos">
+      Ver
+    </button>
+  </div>
+
+  <div class="tabela-tratativas-box" id="boxCriticos">
+    <table class="tabela-tratativas">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Tipo</th>
+          <th>Atendente</th>
+          <th>Técnico</th>
+          <th>P1</th>
+          <th>P2</th>
+          <th>P3</th>
+          <th>Data</th>
+          <th>Comentário</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaCriticos"></tbody>
+    </table>
+  </div>
+</section>
 
       <div style="
         display:flex;
