@@ -714,51 +714,52 @@
       }
 
       function obterResumoPorAtendente(lista) {
-        let resumo = {};
+  let resumo = {};
 
-        lista.forEach(function(item) {
-          let nomeAtendente = item.atendente || "Não informado";
-          let status = normalizarTexto(item.status);
+  lista.forEach(function(item) {
+    let nomeOriginal = String(item.atendente || "Não informado").trim();
+    let chaveAtendente = normalizarTexto(nomeOriginal) || "nao informado";
+    let status = normalizarTexto(item.status);
 
-          if (!resumo[nomeAtendente]) {
-            resumo[nomeAtendente] = {
-              atendente: nomeAtendente,
-              total: 0,
-              realizadas: 0,
-              naoQuis: 0,
-              retorno: 0,
-              semContato: 0
-            };
-          }
+    if (!resumo[chaveAtendente]) {
+      resumo[chaveAtendente] = {
+        atendente: nomeOriginal || "Não informado",
+        total: 0,
+        realizadas: 0,
+        naoQuis: 0,
+        retorno: 0,
+        semContato: 0
+      };
+    }
 
-          resumo[nomeAtendente].total += 1;
+    resumo[chaveAtendente].total += 1;
 
-          if (status === "realizada" || status === "pesquisa realizada") {
-            resumo[nomeAtendente].realizadas += 1;
-          }
+    if (status === "realizada" || status === "pesquisa realizada") {
+      resumo[chaveAtendente].realizadas += 1;
+    }
 
-          if (
-            status === "nao quis" ||
-            status === "nao quis realizar" ||
-            status === "nao quis realizar pesquisa" ||
-            status === "nao_quis"
-          ) {
-            resumo[nomeAtendente].naoQuis += 1;
-          }
+    if (
+      status === "nao quis" ||
+      status === "nao quis realizar" ||
+      status === "nao quis realizar pesquisa" ||
+      status === "nao_quis"
+    ) {
+      resumo[chaveAtendente].naoQuis += 1;
+    }
 
-          if (status === "retorno" || status === "solicita retorno") {
-            resumo[nomeAtendente].retorno += 1;
-          }
+    if (status === "retorno" || status === "solicita retorno") {
+      resumo[chaveAtendente].retorno += 1;
+    }
 
-          if (status === "sem contato" || status === "sem_contato") {
-            resumo[nomeAtendente].semContato += 1;
-          }
-        });
+    if (status === "sem contato" || status === "sem_contato") {
+      resumo[chaveAtendente].semContato += 1;
+    }
+  });
 
-        return Object.values(resumo).sort(function(a, b) {
-          return b.total - a.total;
-        });
-      }
+  return Object.values(resumo).sort(function(a, b) {
+    return b.total - a.total;
+  });
+}
 
       function obterMediaPorTecnico(lista) {
         let resumo = {};
