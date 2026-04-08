@@ -86,6 +86,7 @@
       border-radius: 10px;
       min-height: 260px;
       padding: 18px;
+      box-sizing: border-box;
     }
 
     .grafico-titulo {
@@ -107,6 +108,7 @@
       background-color: #fff;
       width: 100%;
       overflow: hidden;
+      box-sizing: border-box;
     }
 
     .graficos-avaliacao {
@@ -123,6 +125,7 @@
       border-radius: 10px;
       border: 1px solid #e3e8f0;
       transition: all 0.2s ease;
+      box-sizing: border-box;
     }
 
     .grafico-item:hover {
@@ -293,135 +296,116 @@
       <div class="titulo-pagina" style="margin-bottom:0;">Painel de Gestão</div>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button id="btnUsuarios" onclick="window.location.href='usuarios.html'" style="
-          background:#00b050;
-          color:white;
-          border:none;
-          padding:8px 14px;
-          border-radius:6px;
-          cursor:pointer;
-        ">
+        <button
+          id="btnUsuarios"
+          onclick="window.location.href='usuarios.html'"
+          style="background:#00b050;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;"
+        >
           Gerenciar usuários
         </button>
 
-        <button onclick="logout()" style="
-          background:#1f3c88;
-          color:white;
-          border:none;
-          padding:8px 14px;
-          border-radius:6px;
-          cursor:pointer;
-        ">
+        <button
+          onclick="logout()"
+          style="background:#1f3c88;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;"
+        >
           Sair
         </button>
       </div>
     </div>
 
-    <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center; flex-wrap: wrap;">
+    <div style="display:flex; gap:10px; margin-bottom:20px; align-items:center; flex-wrap:wrap;">
       <label style="font-weight:bold;">Período:</label>
       <input type="date" id="dataInicio">
       <span>até</span>
       <input type="date" id="dataFim">
 
-      <button id="btnFiltrar" style="background:#1f3c88;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+      <button
+        id="btnFiltrar"
+        style="background:#1f3c88;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;"
+      >
         Filtrar
       </button>
 
-      <button id="btnLimparFiltro" style="background:#ccc;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+      <button
+        id="btnLimparFiltro"
+        style="background:#ccc;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;"
+      >
         Limpar
       </button>
 
-      <button id="btnExportar" style="background:#00b050;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+      <button
+        id="btnExportar"
+        style="background:#00b050;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;"
+      >
         Exportar Excel
       </button>
     </div>
 
     <section class="dashboard">
-  <div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:15px;
-  ">
-    <div style="
-      font-size:18px;
-      font-weight:bold;
-      color:#1f3c88;
-    ">
-      Tratativas:
-      <span id="totalTratativas">0</span>
-      |
-      Pendentes:
-      <span id="tratativasPendentes" style="color:#b45309;">0</span>
-      |
-      Concluídas:
-      <span id="tratativasConcluidas" style="color:#15803d;">0</span>
-    </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
+        <div style="font-size:18px;font-weight:bold;color:#1f3c88;">
+          Tratativas:
+          <span id="totalTratativas">0</span>
+          |
+          Pendentes:
+          <span id="tratativasPendentes" style="color:#b45309;">0</span>
+          |
+          Concluídas:
+          <span id="tratativasConcluidas" style="color:#15803d;">0</span>
+        </div>
 
-    <button id="btnToggleTratativas" onclick="toggleTratativas()" class="btn-tratativas">
-      Ver
-    </button>
-  </div>
+        <button id="btnToggleTratativas" onclick="toggleTratativas()" class="btn-tratativas">
+          Ver
+        </button>
+      </div>
 
-  <div class="tabela-tratativas-box" id="boxTratativas">
-    <table class="tabela-tratativas">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Tipo</th>
-          <th>Técnico</th>
-          <th>Motivo</th>
-          <th>Status</th>
-          <th>Abertura</th>
-          <th>Conclusão</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaTratativas"></tbody>
-    </table>
-  </div>
+      <div class="tabela-tratativas-box" id="boxTratativas">
+        <table class="tabela-tratativas">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Técnico</th>
+              <th>Motivo</th>
+              <th>Status</th>
+              <th>Abertura</th>
+              <th>Conclusão</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaTratativas"></tbody>
+        </table>
+      </div>
 
-  <div style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:10px;
-    flex-wrap:wrap;
-    gap:10px;
-  ">
-    <div style="
-      font-size:16px;
-      font-weight:bold;
-      color:#b91c1c;
-    ">
-      Avaliações críticas:
-      <span id="totalCriticos">0</span>
-    </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:16px;font-weight:bold;color:#b91c1c;">
+          Avaliações críticas:
+          <span id="totalCriticos">0</span>
+        </div>
 
-    <button id="btnToggleCriticos" onclick="toggleCriticos()" class="btn-criticos">
-      Ver
-    </button>
-  </div>
+        <button id="btnToggleCriticos" onclick="toggleCriticos()" class="btn-criticos">
+          Ver
+        </button>
+      </div>
 
-  <div class="tabela-tratativas-box" id="boxCriticos">
-    <table class="tabela-tratativas">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Tipo</th>
-          <th>Atendente</th>
-          <th>Técnico</th>
-          <th>P1</th>
-          <th>P2</th>
-          <th>P3</th>
-          <th>Data</th>
-          <th>Comentário</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaCriticos"></tbody>
-    </table>
-  </div>
-</section>
+      <div class="tabela-tratativas-box" id="boxCriticos">
+        <table class="tabela-tratativas">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Atendente</th>
+              <th>Técnico</th>
+              <th>P1</th>
+              <th>P2</th>
+              <th>P3</th>
+              <th>Data</th>
+              <th>Comentário</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaCriticos"></tbody>
+        </table>
+      </div>
+    </section>
 
     <section class="dashboard">
       <div class="dashboard-topo">
@@ -438,8 +422,8 @@
         <div class="card"><div class="card-titulo">Sem Contato</div><div class="card-valor">0</div></div>
       </div>
 
-      <div style="display: flex; gap: 20px; align-items: flex-start;">
-        <div style="flex: 1.1; display: flex; flex-direction: column; gap: 16px;">
+      <div style="display:flex; gap:20px; align-items:flex-start;">
+        <div style="flex:1.1; display:flex; flex-direction:column; gap:16px;">
           <div class="grafico-box">
             <div class="grafico-titulo">Avaliações</div>
 
@@ -467,7 +451,7 @@
           </div>
         </div>
 
-        <div style="flex: 0.9;">
+        <div style="flex:0.9;">
           <div class="grafico-box">
             <div class="grafico-titulo">NPS Pós-venda</div>
             <div id="npsPosVenda"></div>
@@ -491,8 +475,8 @@
         <div class="card"><div class="card-titulo">Sem Contato</div><div class="card-valor">0</div></div>
       </div>
 
-      <div style="display: flex; gap: 20px; align-items: flex-start;">
-        <div style="flex: 1.1; display: flex; flex-direction: column; gap: 16px;">
+      <div style="display:flex; gap:20px; align-items:flex-start;">
+        <div style="flex:1.1; display:flex; flex-direction:column; gap:16px;">
           <div class="grafico-box">
             <div class="grafico-titulo">Avaliações</div>
 
@@ -520,7 +504,7 @@
           </div>
         </div>
 
-        <div style="flex: 0.9;">
+        <div style="flex:0.9;">
           <div class="grafico-box">
             <div class="grafico-titulo">NPS Pós-suporte</div>
             <div id="npsPosSuporte"></div>
@@ -641,7 +625,7 @@
       function filtrarPorTipo(lista, tipoPesquisa) {
         let tipoNormalizado = normalizarTexto(tipoPesquisa);
 
-        return lista.filter(function (item) {
+        return lista.filter(function(item) {
           let tipoItem = normalizarTexto(item.tipo);
 
           if (tipoNormalizado === "pos venda") return tipoItem === "pos venda";
@@ -654,7 +638,7 @@
       function contarAvaliacoes(lista, campo) {
         let contagem = [0, 0, 0, 0, 0];
 
-        lista.forEach(function (item) {
+        lista.forEach(function(item) {
           let valor = Number(item[campo]);
           if (valor >= 1 && valor <= 5) {
             contagem[valor - 1]++;
@@ -673,7 +657,7 @@
         let numerosAntigos = container.parentElement.querySelector(".numeros");
         if (numerosAntigos) numerosAntigos.remove();
 
-        valores.forEach(function (valor) {
+        valores.forEach(function(valor) {
           let barra = document.createElement("div");
           barra.className = "barra";
           barra.style.height = (valor * 8) + "px";
@@ -703,12 +687,12 @@
 
         let total = lista.length;
 
-        let realizadas = lista.filter(function (item) {
+        let realizadas = lista.filter(function(item) {
           let status = normalizarTexto(item.status);
           return status === "realizada" || status === "pesquisa realizada";
         }).length;
 
-        let naoQuis = lista.filter(function (item) {
+        let naoQuis = lista.filter(function(item) {
           let status = normalizarTexto(item.status);
           return (
             status === "nao quis" ||
@@ -718,7 +702,7 @@
           );
         }).length;
 
-        let semContato = lista.filter(function (item) {
+        let semContato = lista.filter(function(item) {
           let status = normalizarTexto(item.status);
           return status === "sem contato" || status === "sem_contato";
         }).length;
@@ -732,7 +716,7 @@
       function obterResumoPorAtendente(lista) {
         let resumo = {};
 
-        lista.forEach(function (item) {
+        lista.forEach(function(item) {
           let nomeAtendente = item.atendente || "Não informado";
           let status = normalizarTexto(item.status);
 
@@ -771,7 +755,7 @@
           }
         });
 
-        return Object.values(resumo).sort(function (a, b) {
+        return Object.values(resumo).sort(function(a, b) {
           return b.total - a.total;
         });
       }
@@ -779,7 +763,7 @@
       function obterMediaPorTecnico(lista) {
         let resumo = {};
 
-        lista.forEach(function (item) {
+        lista.forEach(function(item) {
           let tecnico = item.tecnico || "Não informado";
           let notaTecnico = Number(item.pergunta2);
           let status = normalizarTexto(item.status);
@@ -800,12 +784,12 @@
           resumo[tecnico].quantidade += 1;
         });
 
-        let resultado = Object.values(resumo).map(function (item) {
+        let resultado = Object.values(resumo).map(function(item) {
           item.media = item.quantidade ? (item.soma / item.quantidade) : 0;
           return item;
         });
 
-        resultado.sort(function (a, b) {
+        resultado.sort(function(a, b) {
           return b.media - a.media;
         });
 
@@ -817,7 +801,7 @@
         let neutros = 0;
         let promotores = 0;
 
-        lista.forEach(function (item) {
+        lista.forEach(function(item) {
           let nota = Number(item.pergunta3);
           if (!(nota >= 1 && nota <= 5)) return;
 
@@ -974,10 +958,10 @@
           </div>
         `;
 
-        setTimeout(function () {
+        setTimeout(function() {
           let ponteiro = document.getElementById(ponteiroId);
           if (ponteiro) {
-            ponteiro.style.transform = 'translateX(-50%) rotate(' + angulo + 'deg)';
+            ponteiro.style.transform = "translateX(-50%) rotate(" + angulo + "deg)";
           }
         }, 100);
       }
@@ -998,7 +982,7 @@
         if (resumoAtendentes.length === 0) {
           html += '<div style="margin-bottom:18px;color:#888;">Nenhuma pesquisa registrada ainda</div>';
         } else {
-          resumoAtendentes.forEach(function (item, index) {
+          resumoAtendentes.forEach(function(item, index) {
             let destaqueAtendente = index === 0;
 
             html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin-bottom:6px;background:' + (destaqueAtendente ? '#eef4ff' : '#f7f9fc') + ';border-radius:8px;border-left:4px solid ' + (destaqueAtendente ? '#d4a017' : '#1f3c88') + ';box-shadow:' + (destaqueAtendente ? '0 3px 10px rgba(0,0,0,0.08)' : 'none') + ';">';
@@ -1023,7 +1007,7 @@
         if (mediasTecnicos.length === 0) {
           html += '<div style="color:#888;">Nenhuma avaliação de técnico registrada ainda</div>';
         } else {
-          mediasTecnicos.forEach(function (item, index) {
+          mediasTecnicos.forEach(function(item, index) {
             let porcentagem = (item.media / 5) * 100;
             let corBarra = "";
             let corTexto = "";
