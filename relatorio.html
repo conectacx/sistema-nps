@@ -1173,54 +1173,103 @@
       }
 
       function renderizarCriticos(lista) {
-        let tabela = document.getElementById("tabelaCriticos");
-        let total = document.getElementById("totalCriticos");
+  let tabela = document.getElementById("tabelaCriticos");
+  let total = document.getElementById("totalCriticos");
 
-        if (!tabela || !total) return;
+  if (!tabela || !total) return;
 
-        listaCriticosAtual = lista.filter(function(item) {
-          let p1 = Number(item.pergunta1);
-          let p2 = Number(item.pergunta2);
-          let p3 = Number(item.pergunta3);
+  function normalizarComentario(texto) {
+    return String(texto || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
+  }
 
-          return (
-            (p1 >= 1 && p1 <= 6) ||
-            (p2 >= 1 && p2 <= 6) ||
-            (p3 >= 1 && p3 <= 6)
-          );
-        }).sort(function(a, b) {
-          return (b.id || 0) - (a.id || 0);
-        });
+  function comentarioMereceAtencao(comentario) {
+    let texto = normalizarComentario(comentario);
 
-        total.innerText = listaCriticosAtual.length;
+    if (!texto) return false;
 
-        tabela.innerHTML = "";
+    let palavrasChave = [
+      "reclamacao",
+      "problema",
+      "recorrencia",
+      "ativar app",
+      "ativacao",
+      "aplicativo",
+      "app",
+      "suporte",
+      "instabilidade",
+      "sem sinal",
+      "lentidao",
+      "cancelar",
+      "cancelamento",
+      "insatisfeito",
+      "ruim",
+      "pessimo",
+      "voltou a dar problema",
+      "nao conseguiu acessar",
+      "nao consegue acessar",
+      "erro no app",
+      "nao funcionou",
+      "não funcionou"
+      "insatisfação"
+"demora"
+    ];
 
-        if (listaCriticosAtual.length === 0) {
-          tabela.innerHTML = `
-            <tr>
-              <td colspan="9" class="texto-vazio">Nenhuma avaliação crítica encontrada.</td>
-            </tr>
-          `;
-          return;
-        }
+    return palavrasChave.some(function(palavra) {
+      return texto.includes(palavra);
+    });
+  }
 
-        listaCriticosAtual.forEach(function(item) {
-          tabela.innerHTML += `
-            <tr>
-              <td>${item.cliente || ""}</td>
-              <td>${item.tipo || ""}</td>
-              <td>${item.atendente || ""}</td>
-              <td>${item.tecnico || ""}</td>
-              <td>${item.pergunta1 || ""}</td>
-              <td>${item.pergunta2 || ""}</td>
-              <td>${item.pergunta3 || ""}</td>
-              <td>${item.data || ""}</td>
-              <td>${item.comentario || ""}</td>
-            </tr>
-          `;
-        });
-      }
+  listaCriticosAtual = lista.filter(function(item) {
+    let p1 = Number(item.pergunta1);
+    let p2 = Number(item.pergunta2);
+    let p3 = Number(item.pergunta3);
+    let comentario = item.comentario || "";
+
+    let temNotaCritica =
+      (p1 >= 1 && p1 <= 6) ||
+      (p2 >= 1 && p2 <= 6) ||
+      (p3 >= 1 && p3 <= 6);
+
+    let temComentarioCritico = comentarioMereceAtencao(comentario);
+
+    return temNotaCritica || temComentarioCritico;
+  }).sort(function(a, b) {
+    return (b.id || 0) - (a.id || 0);
+  });
+
+  total.innerText = listaCriticosAtual.length;
+
+  tabela.innerHTML = "";
+
+  if (listaCriticosAtual.length === 0) {
+    tabela.innerHTML = `
+      <tr>
+        <td colspan="9" class="texto-vazio">Nenhuma avaliação crítica encontrada.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  listaCriticosAtual.forEach(function(item) {
+    tabela.innerHTML += `
+      <tr>
+        <td>${item.cliente || ""}</td>
+        <td>${item.tipo || ""}</td>
+        <td>${item.atendente || ""}</td>
+        <td>${item.tecnico || ""}</td>
+        <td>${item.pergunta1 || ""}</td>
+        <td>${item.pergunta2 || ""}</td>
+        <td>${item.pergunta3 || ""}</td>
+        <td>${item.data || ""}</td>
+        <td>${item.comentario || ""}</td>
+      </tr>
+    `;
+  });
+}
 
       function aplicarFiltro() {
         let dataInicio = document.getElementById("dataInicio").value;
