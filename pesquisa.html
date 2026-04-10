@@ -171,14 +171,18 @@
     .escala {
       display: inline-block;
       margin-top: 10px;
+      max-width: 100%;
+      overflow-x: auto;
+      padding-bottom: 4px;
     }
 
     .numeros,
     .bolinhas {
       display: grid;
-      grid-template-columns: repeat(5, 30px);
+      grid-template-columns: repeat(10, 30px);
       column-gap: 16px;
       justify-content: start;
+      min-width: max-content;
     }
 
     .numeros {
@@ -417,6 +421,29 @@
       `;
     }
 
+    function montarEscala(nomeCampo) {
+      return `
+        <div class="escala">
+          <div class="numeros">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+            <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+          </div>
+          <div class="bolinhas">
+            <input type="radio" name="${nomeCampo}" value="1">
+            <input type="radio" name="${nomeCampo}" value="2">
+            <input type="radio" name="${nomeCampo}" value="3">
+            <input type="radio" name="${nomeCampo}" value="4">
+            <input type="radio" name="${nomeCampo}" value="5">
+            <input type="radio" name="${nomeCampo}" value="6">
+            <input type="radio" name="${nomeCampo}" value="7">
+            <input type="radio" name="${nomeCampo}" value="8">
+            <input type="radio" name="${nomeCampo}" value="9">
+            <input type="radio" name="${nomeCampo}" value="10">
+          </div>
+        </div>
+      `;
+    }
+
     function montarFormularioTratativa() {
       const formulario = document.getElementById("formulario");
       const retornoCombinado = formatarTextoRetorno(tipoRetornoOriginal, horarioRetornoOriginal);
@@ -599,51 +626,18 @@
           </div>
 
           <div class="bloco">
-            <h3>Em uma escala de 1 a 5, como foi sua experiência ao agendar sua instalação com a Petranet?</h3>
-            <div class="escala">
-              <div class="numeros">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-              <div class="bolinhas">
-                <input type="radio" name="pergunta1" value="1">
-                <input type="radio" name="pergunta1" value="2">
-                <input type="radio" name="pergunta1" value="3">
-                <input type="radio" name="pergunta1" value="4">
-                <input type="radio" name="pergunta1" value="5">
-              </div>
-            </div>
+            <h3>Em uma escala de 1 a 10, como foi sua experiência ao agendar sua instalação com a Petranet?</h3>
+            ${montarEscala("pergunta1")}
           </div>
 
           <div class="bloco">
-            <h3>Em uma escala de 1 a 5, como você avalia a qualidade do atendimento e do serviço prestado pelo técnico que realizou sua instalação?</h3>
-            <div class="escala">
-              <div class="numeros">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-              <div class="bolinhas">
-                <input type="radio" name="pergunta2" value="1">
-                <input type="radio" name="pergunta2" value="2">
-                <input type="radio" name="pergunta2" value="3">
-                <input type="radio" name="pergunta2" value="4">
-                <input type="radio" name="pergunta2" value="5">
-              </div>
-            </div>
+            <h3>Em uma escala de 1 a 10, como você avalia a qualidade do atendimento e do serviço prestado pelo técnico que realizou sua instalação?</h3>
+            ${montarEscala("pergunta2")}
           </div>
 
           <div class="bloco">
-            <h3>Em uma escala de 1 a 5, como você avalia sua experiência com a Petranet até o momento?</h3>
-            <div class="escala">
-              <div class="numeros">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-              <div class="bolinhas">
-                <input type="radio" name="pergunta3" value="1">
-                <input type="radio" name="pergunta3" value="2">
-                <input type="radio" name="pergunta3" value="3">
-                <input type="radio" name="pergunta3" value="4">
-                <input type="radio" name="pergunta3" value="5">
-              </div>
-            </div>
+            <h3>Em uma escala de 1 a 10, como você avalia sua experiência com a Petranet até o momento?</h3>
+            ${montarEscala("pergunta3")}
           </div>
 
           <div class="bloco">
@@ -759,67 +753,23 @@
           </div>
 
           <div class="bloco">
-            <h3>Em uma escala de 1 a 5, como você avalia sua experiência com o atendimento de suporte da Petranet?</h3>
-            <div class="escala">
-              <div class="numeros">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-              <div class="bolinhas">
-                <input type="radio" name="pergunta1" value="1">
-                <input type="radio" name="pergunta1" value="2">
-                <input type="radio" name="pergunta1" value="3">
-                <input type="radio" name="pergunta1" value="4">
-                <input type="radio" name="pergunta1" value="5">
-              </div>
-            </div>
+            <h3>Em uma escala de 1 a 10, como você avalia sua experiência com o atendimento de suporte da Petranet?</h3>
+            ${montarEscala("pergunta1")}
           </div>
 
           <div class="bloco">
-            <h3>Em uma escala de 1 a 5, como você avalia o atendimento prestado pelo técnico?</h3>
-            <div class="escala">
-              <div class="numeros">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-              <div class="bolinhas">
-                <input type="radio" name="pergunta2" value="1">
-                <input type="radio" name="pergunta2" value="2">
-                <input type="radio" name="pergunta2" value="3">
-                <input type="radio" name="pergunta2" value="4">
-                <input type="radio" name="pergunta2" value="5">
-              </div>
-            </div>
+            <h3>Em uma escala de 1 a 10, como você avalia o atendimento prestado pelo técnico?</h3>
+            ${montarEscala("pergunta2")}
           </div>
 
           <div class="bloco">
-            <h3>Em uma escala de 1 a 5, como você avalia sua experiência geral com a Petranet?</h3>
-            <div class="escala">
-              <div class="numeros">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-              <div class="bolinhas">
-                <input type="radio" name="pergunta3" value="1">
-                <input type="radio" name="pergunta3" value="2">
-                <input type="radio" name="pergunta3" value="3">
-                <input type="radio" name="pergunta3" value="4">
-                <input type="radio" name="pergunta3" value="5">
-              </div>
-            </div>
+            <h3>Em uma escala de 1 a 10, como você avalia sua experiência geral com a Petranet?</h3>
+            ${montarEscala("pergunta3")}
           </div>
 
           <div class="bloco">
-            <h3>Em uma escala de 1 a 5, quanto você indicaria a Petranet para um parente ou um amigo?</h3>
-            <div class="escala">
-              <div class="numeros">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-              <div class="bolinhas">
-                <input type="radio" name="indicacao" value="1">
-                <input type="radio" name="indicacao" value="2">
-                <input type="radio" name="indicacao" value="3">
-                <input type="radio" name="indicacao" value="4">
-                <input type="radio" name="indicacao" value="5">
-              </div>
-            </div>
+            <h3>Em uma escala de 1 a 10, quanto você indicaria a Petranet para um parente ou um amigo?</h3>
+            ${montarEscala("indicacao")}
           </div>
 
           <div class="bloco">
