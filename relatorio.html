@@ -113,13 +113,14 @@
 
     .graficos-avaliacao {
       display: flex;
-      gap: 40px;
+      gap: 20px;
       justify-content: space-between;
+      overflow-x: auto;
     }
 
     .grafico-item {
       flex: 1;
-      max-width: 280px;
+      min-width: 280px;
       background: #f8faff;
       padding: 15px;
       border-radius: 10px;
@@ -145,17 +146,19 @@
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      height: 140px;
+      gap: 4px;
+      height: 160px;
       margin-top: 10px;
       margin-bottom: 10px;
     }
 
     .barra {
-      width: 18%;
+      flex: 1;
       background: linear-gradient(180deg, #2f4fa3, #1f3c88);
       border-radius: 6px 6px 0 0;
       position: relative;
       transition: all 0.2s ease;
+      min-width: 18px;
     }
 
     .barra:hover {
@@ -174,15 +177,17 @@
     .numeros {
       display: flex;
       justify-content: space-between;
+      gap: 4px;
       width: 100%;
     }
 
     .numeros span {
-      width: 18%;
+      flex: 1;
       text-align: center;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       color: #333;
+      min-width: 18px;
     }
 
     .btn-tratativas {
@@ -636,11 +641,11 @@
       }
 
       function contarAvaliacoes(lista, campo) {
-        let contagem = [0, 0, 0, 0, 0];
+        let contagem = new Array(10).fill(0);
 
         lista.forEach(function(item) {
           let valor = Number(item[campo]);
-          if (valor >= 1 && valor <= 5) {
+          if (valor >= 1 && valor <= 10) {
             contagem[valor - 1]++;
           }
         });
@@ -672,7 +677,7 @@
         let numeros = document.createElement("div");
         numeros.className = "numeros";
 
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 10; i++) {
           let n = document.createElement("span");
           n.innerText = i;
           numeros.appendChild(n);
@@ -714,52 +719,52 @@
       }
 
       function obterResumoPorAtendente(lista) {
-  let resumo = {};
+        let resumo = {};
 
-  lista.forEach(function(item) {
-    let nomeOriginal = String(item.atendente || "Não informado").trim();
-    let chaveAtendente = normalizarTexto(nomeOriginal) || "nao informado";
-    let status = normalizarTexto(item.status);
+        lista.forEach(function(item) {
+          let nomeOriginal = String(item.atendente || "Não informado").trim();
+          let chaveAtendente = normalizarTexto(nomeOriginal) || "nao informado";
+          let status = normalizarTexto(item.status);
 
-    if (!resumo[chaveAtendente]) {
-      resumo[chaveAtendente] = {
-        atendente: nomeOriginal || "Não informado",
-        total: 0,
-        realizadas: 0,
-        naoQuis: 0,
-        retorno: 0,
-        semContato: 0
-      };
-    }
+          if (!resumo[chaveAtendente]) {
+            resumo[chaveAtendente] = {
+              atendente: nomeOriginal || "Não informado",
+              total: 0,
+              realizadas: 0,
+              naoQuis: 0,
+              retorno: 0,
+              semContato: 0
+            };
+          }
 
-    resumo[chaveAtendente].total += 1;
+          resumo[chaveAtendente].total += 1;
 
-    if (status === "realizada" || status === "pesquisa realizada") {
-      resumo[chaveAtendente].realizadas += 1;
-    }
+          if (status === "realizada" || status === "pesquisa realizada") {
+            resumo[chaveAtendente].realizadas += 1;
+          }
 
-    if (
-      status === "nao quis" ||
-      status === "nao quis realizar" ||
-      status === "nao quis realizar pesquisa" ||
-      status === "nao_quis"
-    ) {
-      resumo[chaveAtendente].naoQuis += 1;
-    }
+          if (
+            status === "nao quis" ||
+            status === "nao quis realizar" ||
+            status === "nao quis realizar pesquisa" ||
+            status === "nao_quis"
+          ) {
+            resumo[chaveAtendente].naoQuis += 1;
+          }
 
-    if (status === "retorno" || status === "solicita retorno") {
-      resumo[chaveAtendente].retorno += 1;
-    }
+          if (status === "retorno" || status === "solicita retorno") {
+            resumo[chaveAtendente].retorno += 1;
+          }
 
-    if (status === "sem contato" || status === "sem_contato") {
-      resumo[chaveAtendente].semContato += 1;
-    }
-  });
+          if (status === "sem contato" || status === "sem_contato") {
+            resumo[chaveAtendente].semContato += 1;
+          }
+        });
 
-  return Object.values(resumo).sort(function(a, b) {
-    return b.total - a.total;
-  });
-}
+        return Object.values(resumo).sort(function(a, b) {
+          return b.total - a.total;
+        });
+      }
 
       function obterMediaPorTecnico(lista) {
         let resumo = {};
@@ -770,7 +775,7 @@
           let status = normalizarTexto(item.status);
 
           if (status !== "realizada" && status !== "pesquisa realizada") return;
-          if (!(notaTecnico >= 1 && notaTecnico <= 5)) return;
+          if (!(notaTecnico >= 1 && notaTecnico <= 10)) return;
 
           if (!resumo[tecnico]) {
             resumo[tecnico] = {
@@ -804,13 +809,13 @@
 
         lista.forEach(function(item) {
           let nota = Number(item.pergunta3);
-          if (!(nota >= 1 && nota <= 5)) return;
+          if (!(nota >= 1 && nota <= 10)) return;
 
-          if (nota <= 3) {
+          if (nota <= 6) {
             detratores++;
-          } else if (nota === 4) {
+          } else if (nota <= 8) {
             neutros++;
-          } else if (nota === 5) {
+          } else {
             promotores++;
           }
         });
@@ -1009,14 +1014,14 @@
           html += '<div style="color:#888;">Nenhuma avaliação de técnico registrada ainda</div>';
         } else {
           mediasTecnicos.forEach(function(item, index) {
-            let porcentagem = (item.media / 5) * 100;
+            let porcentagem = (item.media / 10) * 100;
             let corBarra = "";
             let corTexto = "";
 
-            if (item.media >= 4.5) {
+            if (item.media >= 9) {
               corBarra = "linear-gradient(90deg, #1f9d55, #15803d)";
               corTexto = "#15803d";
-            } else if (item.media >= 3) {
+            } else if (item.media >= 7) {
               corBarra = "linear-gradient(90deg, #f4b400, #d97706)";
               corTexto = "#b45309";
             } else {
@@ -1179,9 +1184,9 @@
           let p3 = Number(item.pergunta3);
 
           return (
-            (p1 >= 1 && p1 <= 3) ||
-            (p2 >= 1 && p2 <= 3) ||
-            (p3 >= 1 && p3 <= 3)
+            (p1 >= 1 && p1 <= 6) ||
+            (p2 >= 1 && p2 <= 6) ||
+            (p3 >= 1 && p3 <= 6)
           );
         }).sort(function(a, b) {
           return (b.id || 0) - (a.id || 0);
