@@ -610,7 +610,6 @@
     function toggleTratativas() {
       let box = document.getElementById("boxTratativas");
       let botao = document.getElementById("btnToggleTratativas");
-
       if (!box || !botao) return;
 
       if (box.style.display === "none" || box.style.display === "") {
@@ -625,7 +624,6 @@
     function toggleCriticos() {
       let box = document.getElementById("boxCriticos");
       let botao = document.getElementById("btnToggleCriticos");
-
       if (!box || !botao) return;
 
       if (box.style.display === "none" || box.style.display === "") {
@@ -640,7 +638,6 @@
     function toggleElogios() {
       let box = document.getElementById("boxElogios");
       let botao = document.getElementById("btnToggleElogios");
-
       if (!box || !botao) return;
 
       if (box.style.display === "none" || box.style.display === "") {
@@ -703,7 +700,6 @@
           if (!item.data) return false;
 
           let dataItem = item.data;
-
           if (dataInicio && dataItem < dataInicio) return false;
           if (dataFim && dataItem > dataFim) return false;
 
@@ -1269,7 +1265,6 @@
       function renderizarCriticos(lista) {
         let tabela = document.getElementById("tabelaCriticos");
         let total = document.getElementById("totalCriticos");
-
         if (!tabela || !total) return;
 
         function normalizarComentario(texto) {
@@ -1282,7 +1277,6 @@
 
         function comentarioCritico(comentario) {
           let texto = normalizarComentario(comentario);
-
           if (!texto) return false;
 
           let palavrasChave = [
@@ -1367,149 +1361,8 @@
       }
 
       function renderizarElogios(lista) {
-  let tabela = document.getElementById("tabelaElogios");
-  let total = document.getElementById("totalElogios");
-
-  if (!tabela || !total) return;
-
-  function normalizarComentario(texto) {
-    return String(texto || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  }
-
-  function comentarioCritico(comentario) {
-    let texto = normalizarComentario(comentario);
-
-    if (!texto) return false;
-
-    let palavrasChave = [
-      "reclamacao",
-      "problema",
-      "recorrencia",
-      "ativar app",
-      "ativacao",
-      "aplicativo",
-      "app",
-      "suporte",
-      "instabilidade",
-      "sem sinal",
-      "lentidao",
-      "cancelar",
-      "cancelamento",
-      "insatisfeito",
-      "ruim",
-      "pessimo",
-      "voltou a dar problema",
-      "nao conseguiu acessar",
-      "nao consegue acessar",
-      "erro no app",
-      "nao funcionou",
-      "não funcionou",
-      "insatisfacao",
-      "demora",
-      "oscila",
-      "velocidade"
-    ];
-
-    return palavrasChave.some(function(palavra) {
-      return texto.includes(palavra);
-    });
-  }
-
-  function comentarioElogio(comentario) {
-    let texto = normalizarComentario(comentario);
-
-    if (!texto) return false;
-
-    let palavrasChave = [
-      "elogio",
-      "parabenizar",
-      "parabens",
-      "parabéns",
-      "otimo",
-      "ótimo",
-      "excelente",
-      "muito bom",
-      "bom atendimento",
-      "bem atendido",
-      "gostei",
-      "satisfeito",
-      "muito satisfeito",
-      "atendente educado",
-      "tecnico educado",
-      "técnico educado",
-      "rapido",
-      "rápido"
-    ];
-
-    return palavrasChave.some(function(palavra) {
-      return texto.includes(palavra);
-    });
-  }
-
-  listaElogiosAtual = lista.filter(function(item) {
-    let p1 = Number(item.pergunta1);
-    let p2 = Number(item.pergunta2);
-    let p3 = Number(item.pergunta3);
-    let comentario = item.comentario || "";
-
-    let temNotaCritica =
-      (p1 >= 1 && p1 <= 6) ||
-      (p2 >= 1 && p2 <= 6) ||
-      (p3 >= 1 && p3 <= 6);
-
-    let temComentarioCritico = comentarioCritico(comentario);
-
-    if (temNotaCritica || temComentarioCritico) {
-      return false;
-    }
-
-    let temNotasAltas =
-      (p1 >= 9 && p1 <= 10) ||
-      (p2 >= 9 && p2 <= 10) ||
-      (p3 >= 9 && p3 <= 10);
-
-    let temComentarioElogio = comentarioElogio(comentario);
-
-    return temNotasAltas || temComentarioElogio;
-  }).sort(function(a, b) {
-    return (b.id || 0) - (a.id || 0);
-  });
-
-  total.innerText = listaElogiosAtual.length;
-  tabela.innerHTML = "";
-
-  if (listaElogiosAtual.length === 0) {
-    tabela.innerHTML = `
-      <tr>
-        <td colspan="9" class="texto-vazio">Nenhum elogio encontrado.</td>
-      </tr>
-    `;
-    return;
-  }
-
-  listaElogiosAtual.forEach(function(item) {
-    tabela.innerHTML += `
-      <tr>
-        <td>${item.cliente || ""}</td>
-        <td>${item.tipo || ""}</td>
-        <td>${item.atendente || ""}</td>
-        <td>${item.tecnico || ""}</td>
-        <td>${item.pergunta1 || ""}</td>
-        <td>${item.pergunta2 || ""}</td>
-        <td>${item.pergunta3 || ""}</td>
-        <td>${item.data || ""}</td>
-        <td>${item.comentario || ""}</td>
-      </tr>
-    `;
-  });
-} {
         let tabela = document.getElementById("tabelaElogios");
         let total = document.getElementById("totalElogios");
-
         if (!tabela || !total) return;
 
         function normalizarComentario(texto) {
@@ -1520,9 +1373,46 @@
             .trim();
         }
 
+        function comentarioCritico(comentario) {
+          let texto = normalizarComentario(comentario);
+          if (!texto) return false;
+
+          let palavrasChave = [
+            "reclamacao",
+            "problema",
+            "recorrencia",
+            "ativar app",
+            "ativacao",
+            "aplicativo",
+            "app",
+            "suporte",
+            "instabilidade",
+            "sem sinal",
+            "lentidao",
+            "cancelar",
+            "cancelamento",
+            "insatisfeito",
+            "ruim",
+            "pessimo",
+            "voltou a dar problema",
+            "nao conseguiu acessar",
+            "nao consegue acessar",
+            "erro no app",
+            "nao funcionou",
+            "não funcionou",
+            "insatisfacao",
+            "demora",
+            "oscila",
+            "velocidade"
+          ];
+
+          return palavrasChave.some(function(palavra) {
+            return texto.includes(palavra);
+          });
+        }
+
         function comentarioElogio(comentario) {
           let texto = normalizarComentario(comentario);
-
           if (!texto) return false;
 
           let palavrasChave = [
@@ -1556,6 +1446,17 @@
           let p2 = Number(item.pergunta2);
           let p3 = Number(item.pergunta3);
           let comentario = item.comentario || "";
+
+          let temNotaCritica =
+            (p1 >= 1 && p1 <= 6) ||
+            (p2 >= 1 && p2 <= 6) ||
+            (p3 >= 1 && p3 <= 6);
+
+          let temComentarioCritico = comentarioCritico(comentario);
+
+          if (temNotaCritica || temComentarioCritico) {
+            return false;
+          }
 
           let temNotasAltas =
             (p1 >= 9 && p1 <= 10) ||
@@ -1666,7 +1567,6 @@
         if (secoes.length < 3) return;
 
         let respostas = await obterRespostas();
-
         let posVenda = filtrarPorTipo(respostas, "Pós Venda");
         let posSuporte = filtrarPorTipo(respostas, "Pós Suporte");
 
