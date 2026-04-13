@@ -314,7 +314,7 @@
             <td>${a.codigo}</td>
             <td>${a.nome}</td>
             <td>${a.bairro}</td>
-            <td>${a.data}</td>
+            ${formatarDataBR(a.data)}
             <td class="${classeRetorno}">${textoRetorno}</td>
             <td>
               <button onclick="realizarPesquisa(
@@ -382,6 +382,17 @@
     }
 
     carregarClientes();
+
+    function formatarDataBR(data) {
+  if (!data) return "";
+
+  const d = new Date(data);
+  const dia = String(d.getDate()).padStart(2, "0");
+  const mes = String(d.getMonth() + 1).padStart(2, "0");
+  const ano = d.getFullYear();
+
+  return `${dia}/${mes}/${ano}`;
+}
   </script>
 
 </body>
