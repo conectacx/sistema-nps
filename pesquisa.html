@@ -17,7 +17,7 @@
       max-width: 900px;
       margin: 0 auto;
       background-color: #ffffff;
-      padding: 30px;
+      padding: 30px;<button onclick="enviar()">Enviar</button>
       border-radius: 10px;
       box-sizing: border-box;
     }
@@ -526,7 +526,7 @@
           <input type="time" id="tratativaHorarioRetorno">
         </div>
 
-        <button onclick="enviarTratativa()">Enviar</button>
+        <button id="btnEnviarTratativa" onclick="enviarTratativa()">Enviar</button>
       `;
 
       const campoAtendente = document.getElementById("atendenteTratativa");
@@ -710,7 +710,7 @@
             <input type="time" id="horarioRetorno">
           </div>
 
-          <button onclick="enviar()">Enviar</button>
+          <button id="btnEnviarPesquisa" onclick="enviar()">Enviar</button>
         `;
       } else {
         formulario.innerHTML = `
@@ -842,7 +842,7 @@
             <input type="time" id="horarioRetorno">
           </div>
 
-          <button onclick="enviar()">Enviar</button>
+          <button id="btnEnviarPesquisa" onclick="enviar()">Enviar</button>
         `;
       }
 
