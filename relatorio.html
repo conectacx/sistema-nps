@@ -218,10 +218,26 @@
       background: #991b1b;
     }
 
+    .btn-elogios {
+      background: #2f6b1f;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-elogios:hover {
+      background: #255618;
+    }
+
     .tabela-tratativas-box {
       display: none;
       margin-top: 18px;
       overflow-x: auto;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .tabela-tratativas {
@@ -247,6 +263,37 @@
       font-size: 14px;
       vertical-align: top;
     }
+
+    .tabela-feedback {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .tabela-feedback th:nth-child(1),
+    .tabela-feedback td:nth-child(1) { width: 13%; }
+
+    .tabela-feedback th:nth-child(2),
+    .tabela-feedback td:nth-child(2) { width: 8%; }
+
+    .tabela-feedback th:nth-child(3),
+    .tabela-feedback td:nth-child(3) { width: 10%; }
+
+    .tabela-feedback th:nth-child(4),
+    .tabela-feedback td:nth-child(4) { width: 8%; }
+
+    .tabela-feedback th:nth-child(5),
+    .tabela-feedback td:nth-child(5),
+    .tabela-feedback th:nth-child(6),
+    .tabela-feedback td:nth-child(6),
+    .tabela-feedback th:nth-child(7),
+    .tabela-feedback td:nth-child(7) { width: 4%; }
+
+    .tabela-feedback th:nth-child(8),
+    .tabela-feedback td:nth-child(8) { width: 8%; }
+
+    .tabela-feedback th:nth-child(9),
+    .tabela-feedback td:nth-child(9) { width: 41%; }
 
     .status-badge {
       display: inline-block;
@@ -292,15 +339,6 @@
         grid-template-columns: 1fr;
       }
     }
-
-    .tabela-tratativas-box {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.tabela-tratativas {
-  width: 100%;
-}
   </style>
 </head>
 
@@ -402,7 +440,7 @@
       </div>
 
       <div class="tabela-tratativas-box" id="boxCriticos">
-        <table class="tabela-tratativas">
+        <table class="tabela-tratativas tabela-feedback">
           <thead>
             <tr>
               <th>Cliente</th>
@@ -420,35 +458,35 @@
         </table>
       </div>
 
-   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:10px;">
-  <div style="font-size:16px;font-weight:bold;color:#15803d;">
-    Elogios:
-    <span id="totalElogios">0</span>
-  </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:16px;font-weight:bold;color:#15803d;">
+          Elogios:
+          <span id="totalElogios">0</span>
+        </div>
 
-  <button id="btnToggleElogios" onclick="toggleElogios()" style="background:#2f6b1f;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:bold;">
-    Ver
-  </button>
-</div>
+        <button id="btnToggleElogios" onclick="toggleElogios()" class="btn-elogios">
+          Ver
+        </button>
+      </div>
 
-<div class="tabela-tratativas-box" id="boxElogios" style="width:100%;">
-  <table class="tabela-tratativas" style="width:100%;">
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Tipo</th>
-        <th>Atendente</th>
-        <th>Técnico</th>
-        <th>P1</th>
-        <th>P2</th>
-        <th>P3</th>
-        <th>Data</th>
-        <th>Comentário</th>
-      </tr>
-    </thead>
-    <tbody id="tabelaElogios"></tbody>
-  </table>
-</div>
+      <div class="tabela-tratativas-box" id="boxElogios">
+        <table class="tabela-tratativas tabela-feedback">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Atendente</th>
+              <th>Técnico</th>
+              <th>P1</th>
+              <th>P2</th>
+              <th>P3</th>
+              <th>Data</th>
+              <th>Comentário</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaElogios"></tbody>
+        </table>
+      </div>
     </section>
 
     <section class="dashboard">
@@ -502,7 +540,6 @@
           </div>
         </div>
       </div>
-      
     </section>
 
     <section class="dashboard">
@@ -567,8 +604,8 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let listaTratativasAtual = [];
-let listaCriticosAtual = [];
-let listaElogiosAtual = [];
+    let listaCriticosAtual = [];
+    let listaElogiosAtual = [];
 
     function toggleTratativas() {
       let box = document.getElementById("boxTratativas");
@@ -601,23 +638,23 @@ let listaElogiosAtual = [];
     }
 
     function toggleElogios() {
-  let box = document.getElementById("boxElogios");
-  let botao = document.getElementById("btnToggleElogios");
+      let box = document.getElementById("boxElogios");
+      let botao = document.getElementById("btnToggleElogios");
 
-  if (!box || !botao) return;
+      if (!box || !botao) return;
 
-  if (box.style.display === "none" || box.style.display === "") {
-    box.style.display = "block";
-    botao.innerText = "Ocultar";
-  } else {
-    box.style.display = "none";
-    botao.innerText = "Ver";
-  }
-}
+      if (box.style.display === "none" || box.style.display === "") {
+        box.style.display = "block";
+        botao.innerText = "Ocultar";
+      } else {
+        box.style.display = "none";
+        botao.innerText = "Ver";
+      }
+    }
 
     window.toggleTratativas = toggleTratativas;
-window.toggleCriticos = toggleCriticos;
-window.toggleElogios = toggleElogios;
+    window.toggleCriticos = toggleCriticos;
+    window.toggleElogios = toggleElogios;
 
     window.addEventListener("DOMContentLoaded", async function () {
       let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -1230,198 +1267,196 @@ window.toggleElogios = toggleElogios;
       }
 
       function renderizarCriticos(lista) {
-  let tabela = document.getElementById("tabelaCriticos");
-  let total = document.getElementById("totalCriticos");
+        let tabela = document.getElementById("tabelaCriticos");
+        let total = document.getElementById("totalCriticos");
 
-  if (!tabela || !total) return;
+        if (!tabela || !total) return;
 
-  function normalizarComentario(texto) {
-    return String(texto || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  }
+        function normalizarComentario(texto) {
+          return String(texto || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+        }
 
-  function comentarioCritico(comentario) {
-    let texto = normalizarComentario(comentario);
+        function comentarioCritico(comentario) {
+          let texto = normalizarComentario(comentario);
 
-    if (!texto) return false;
+          if (!texto) return false;
 
-    let palavrasChave = [
-      "reclamacao",
-      "problema",
-      "recorrencia",
-      "ativar app",
-      "ativacao",
-      "aplicativo",
-      "app",
-      "suporte",
-      "instabilidade",
-      "sem sinal",
-      "lentidao",
-      "cancelar",
-      "cancelamento",
-      "insatisfeito",
-      "ruim",
-      "pessimo",
-      "voltou a dar problema",
-      "nao conseguiu acessar",
-      "nao consegue acessar",
-      "erro no app",
-      "nao funcionou",
-      "não funcionou",
-      "insatisfacao",
-      "demora",
-      "oscila",
-      "velocidade"
-    ];
+          let palavrasChave = [
+            "reclamacao",
+            "problema",
+            "recorrencia",
+            "ativar app",
+            "ativacao",
+            "aplicativo",
+            "app",
+            "suporte",
+            "instabilidade",
+            "sem sinal",
+            "lentidao",
+            "cancelar",
+            "cancelamento",
+            "insatisfeito",
+            "ruim",
+            "pessimo",
+            "voltou a dar problema",
+            "nao conseguiu acessar",
+            "nao consegue acessar",
+            "erro no app",
+            "nao funcionou",
+            "não funcionou",
+            "insatisfacao",
+            "demora",
+            "oscila",
+            "velocidade"
+          ];
 
-    return palavrasChave.some(function(palavra) {
-      return texto.includes(palavra);
-    });
-  }
+          return palavrasChave.some(function(palavra) {
+            return texto.includes(palavra);
+          });
+        }
 
-  listaCriticosAtual = lista.filter(function(item) {
-    let p1 = Number(item.pergunta1);
-    let p2 = Number(item.pergunta2);
-    let p3 = Number(item.pergunta3);
-    let comentario = item.comentario || "";
+        listaCriticosAtual = lista.filter(function(item) {
+          let p1 = Number(item.pergunta1);
+          let p2 = Number(item.pergunta2);
+          let p3 = Number(item.pergunta3);
+          let comentario = item.comentario || "";
 
-    let temNotaCritica =
-      (p1 >= 1 && p1 <= 6) ||
-      (p2 >= 1 && p2 <= 6) ||
-      (p3 >= 1 && p3 <= 6);
+          let temNotaCritica =
+            (p1 >= 1 && p1 <= 6) ||
+            (p2 >= 1 && p2 <= 6) ||
+            (p3 >= 1 && p3 <= 6);
 
-    let temComentarioCritico = comentarioCritico(comentario);
+          let temComentarioCritico = comentarioCritico(comentario);
 
-    return temNotaCritica || temComentarioCritico;
-  }).sort(function(a, b) {
-    return (b.id || 0) - (a.id || 0);
-  });
+          return temNotaCritica || temComentarioCritico;
+        }).sort(function(a, b) {
+          return (b.id || 0) - (a.id || 0);
+        });
 
-  total.innerText = listaCriticosAtual.length;
+        total.innerText = listaCriticosAtual.length;
+        tabela.innerHTML = "";
 
-  tabela.innerHTML = "";
+        if (listaCriticosAtual.length === 0) {
+          tabela.innerHTML = `
+            <tr>
+              <td colspan="9" class="texto-vazio">Nenhuma avaliação crítica encontrada.</td>
+            </tr>
+          `;
+          return;
+        }
 
-  if (listaCriticosAtual.length === 0) {
-    tabela.innerHTML = `
-      <tr>
-        <td colspan="9" class="texto-vazio">Nenhuma avaliação crítica encontrada.</td>
-      </tr>
-    `;
-    return;
-  }
-
-  listaCriticosAtual.forEach(function(item) {
-    tabela.innerHTML += `
-      <tr>
-        <td>${item.cliente || ""}</td>
-        <td>${item.tipo || ""}</td>
-        <td>${item.atendente || ""}</td>
-        <td>${item.tecnico || ""}</td>
-        <td>${item.pergunta1 || ""}</td>
-        <td>${item.pergunta2 || ""}</td>
-        <td>${item.pergunta3 || ""}</td>
-        <td>${item.data || ""}</td>
-        <td>${item.comentario || ""}</td>
-      </tr>
-    `;
-  });
-}
+        listaCriticosAtual.forEach(function(item) {
+          tabela.innerHTML += `
+            <tr>
+              <td>${item.cliente || ""}</td>
+              <td>${item.tipo || ""}</td>
+              <td>${item.atendente || ""}</td>
+              <td>${item.tecnico || ""}</td>
+              <td>${item.pergunta1 || ""}</td>
+              <td>${item.pergunta2 || ""}</td>
+              <td>${item.pergunta3 || ""}</td>
+              <td>${item.data || ""}</td>
+              <td>${item.comentario || ""}</td>
+            </tr>
+          `;
+        });
+      }
 
       function renderizarElogios(lista) {
-  let tabela = document.getElementById("tabelaElogios");
-  let total = document.getElementById("totalElogios");
+        let tabela = document.getElementById("tabelaElogios");
+        let total = document.getElementById("totalElogios");
 
-  if (!tabela || !total) return;
+        if (!tabela || !total) return;
 
-  function normalizarComentario(texto) {
-    return String(texto || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  }
+        function normalizarComentario(texto) {
+          return String(texto || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+        }
 
-  function comentarioElogio(comentario) {
-    let texto = normalizarComentario(comentario);
+        function comentarioElogio(comentario) {
+          let texto = normalizarComentario(comentario);
 
-    if (!texto) return false;
+          if (!texto) return false;
 
-    let palavrasChave = [
-      "elogio",
-      "parabenizar",
-      "parabens",
-      "parabéns",
-      "otimo",
-      "ótimo",
-      "excelente",
-      "muito bom",
-      "bom atendimento",
-      "bem atendido",
-      "gostei",
-      "satisfeito",
-      "muito satisfeito",
-      "atendente educado",
-      "tecnico educado",
-      "técnico educado",
-      "rapido",
-      "rápido"
-    ];
+          let palavrasChave = [
+            "elogio",
+            "parabenizar",
+            "parabens",
+            "parabéns",
+            "otimo",
+            "ótimo",
+            "excelente",
+            "muito bom",
+            "bom atendimento",
+            "bem atendido",
+            "gostei",
+            "satisfeito",
+            "muito satisfeito",
+            "atendente educado",
+            "tecnico educado",
+            "técnico educado",
+            "rapido",
+            "rápido"
+          ];
 
-    return palavrasChave.some(function(palavra) {
-      return texto.includes(palavra);
-    });
-  }
+          return palavrasChave.some(function(palavra) {
+            return texto.includes(palavra);
+          });
+        }
 
-  listaElogiosAtual = lista.filter(function(item) {
-    let p1 = Number(item.pergunta1);
-    let p2 = Number(item.pergunta2);
-    let p3 = Number(item.pergunta3);
-    let comentario = item.comentario || "";
+        listaElogiosAtual = lista.filter(function(item) {
+          let p1 = Number(item.pergunta1);
+          let p2 = Number(item.pergunta2);
+          let p3 = Number(item.pergunta3);
+          let comentario = item.comentario || "";
 
-    let temNotasAltas =
-      (p1 >= 9 && p1 <= 10) ||
-      (p2 >= 9 && p2 <= 10) ||
-      (p3 >= 9 && p3 <= 10);
+          let temNotasAltas =
+            (p1 >= 9 && p1 <= 10) ||
+            (p2 >= 9 && p2 <= 10) ||
+            (p3 >= 9 && p3 <= 10);
 
-    let temComentarioElogio = comentarioElogio(comentario);
+          let temComentarioElogio = comentarioElogio(comentario);
 
-    return temNotasAltas || temComentarioElogio;
-  }).sort(function(a, b) {
-    return (b.id || 0) - (a.id || 0);
-  });
+          return temNotasAltas || temComentarioElogio;
+        }).sort(function(a, b) {
+          return (b.id || 0) - (a.id || 0);
+        });
 
-  total.innerText = listaElogiosAtual.length;
+        total.innerText = listaElogiosAtual.length;
+        tabela.innerHTML = "";
 
-  tabela.innerHTML = "";
+        if (listaElogiosAtual.length === 0) {
+          tabela.innerHTML = `
+            <tr>
+              <td colspan="9" class="texto-vazio">Nenhum elogio encontrado.</td>
+            </tr>
+          `;
+          return;
+        }
 
-  if (listaElogiosAtual.length === 0) {
-    tabela.innerHTML = `
-      <tr>
-        <td colspan="9" class="texto-vazio">Nenhum elogio encontrado.</td>
-      </tr>
-    `;
-    return;
-  }
-
-  listaElogiosAtual.forEach(function(item) {
-    tabela.innerHTML += `
-      <tr>
-        <td>${item.cliente || ""}</td>
-        <td>${item.tipo || ""}</td>
-        <td>${item.atendente || ""}</td>
-        <td>${item.tecnico || ""}</td>
-        <td>${item.pergunta1 || ""}</td>
-        <td>${item.pergunta2 || ""}</td>
-        <td>${item.pergunta3 || ""}</td>
-        <td>${item.data || ""}</td>
-        <td>${item.comentario || ""}</td>
-      </tr>
-    `;
-  });
-}
+        listaElogiosAtual.forEach(function(item) {
+          tabela.innerHTML += `
+            <tr>
+              <td>${item.cliente || ""}</td>
+              <td>${item.tipo || ""}</td>
+              <td>${item.atendente || ""}</td>
+              <td>${item.tecnico || ""}</td>
+              <td>${item.pergunta1 || ""}</td>
+              <td>${item.pergunta2 || ""}</td>
+              <td>${item.pergunta3 || ""}</td>
+              <td>${item.data || ""}</td>
+              <td>${item.comentario || ""}</td>
+            </tr>
+          `;
+        });
+      }
 
       function aplicarFiltro() {
         let dataInicio = document.getElementById("dataInicio").value;
@@ -1496,8 +1531,8 @@ window.toggleElogios = toggleElogios;
         let posSuporte = filtrarPorTipo(respostas, "Pós Suporte");
 
         renderizarTratativas(respostas);
-renderizarCriticos(respostas);
-
+        renderizarCriticos(respostas);
+        renderizarElogios(respostas);
 
         atualizarCards(secoes[1], posVenda);
         atualizarCards(secoes[2], posSuporte);
