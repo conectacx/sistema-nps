@@ -934,152 +934,161 @@
     });
 
     async function enviarTratativa() {
-      const atendente = document.getElementById("atendenteTratativa")?.value || "";
-      const comentario = document.getElementById("comentarioTratativa")?.value || "";
-      const statusTratativa = document.querySelector('input[name="statusTratativa"]:checked')?.value || null;
-      const horarioRetorno = document.getElementById("tratativaHorarioRetorno")?.value || "";
-      const tipoRetorno = document.querySelector('input[name="tratativaTipoRetorno"]:checked')?.value || null;
-      const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
+  const botao = document.getElementById("btnEnviarTratativa");
+  if (botao && botao.disabled) return;
+  if (botao) botao.disabled = true;
 
-      if (!atendente) {
-        alert("Selecione o atendente que realizou a tratativa!");
+  try {
+    const atendente = document.getElementById("atendenteTratativa")?.value || "";
+    const comentario = document.getElementById("comentarioTratativa")?.value || "";
+    const statusTratativa = document.querySelector('input[name="statusTratativa"]:checked')?.value || null;
+    const horarioRetorno = document.getElementById("tratativaHorarioRetorno")?.value || "";
+    const tipoRetorno = document.querySelector('input[name="tratativaTipoRetorno"]:checked')?.value || null;
+    const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
+
+    if (!atendente) {
+      alert("Selecione o atendente que realizou a tratativa!");
+      return;
+    }
+
+    if (!tecnicoSelecionado) {
+      alert("Selecione o técnico!");
+      return;
+    }
+
+    if (!statusTratativa) {
+      alert("Selecione o status da tratativa!");
+      return;
+    }
+
+    if (statusTratativa === "tratativa_retorno") {
+      if (!horarioRetorno) {
+        alert("Informe o horário para retorno!");
         return;
       }
 
-      if (!tecnicoSelecionado) {
-        alert("Selecione o técnico!");
+      if (!tipoRetorno) {
+        alert("Selecione o tipo de retorno!");
         return;
       }
 
-      if (!statusTratativa) {
-        alert("Selecione o status da tratativa!");
+      const validacaoTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+      if (validacaoTratativa.erro) {
+        alert(validacaoTratativa.erro);
+        return;
+      }
+    }
+
+    const resposta = {
+      cliente: nome || null,
+      tipo: tipo || null,
+      tecnico: tecnicoSelecionado,
+      atendente: atendente,
+      pergunta1: null,
+      pergunta2: null,
+      pergunta3: null,
+      comentario: comentario,
+      status: statusTratativa,
+      data: new Date().toISOString().slice(0, 10),
+      dadosCorretos: null,
+      canais: null,
+      problemaResolvido: null,
+      indicacao: null,
+      horario_retorno: statusTratativa === "tratativa_retorno" ? horarioRetorno : null,
+      tipo_retorno: statusTratativa === "tratativa_retorno" ? tipoRetorno : null,
+      necessita_tratativa: "sim",
+      motivo_tratativa: motivoTratativaOriginal || null
+    };
+
+    const { error } = await supabaseClient
+      .from("respostas")
+      .insert([resposta]);
+
+    if (error) {
+      console.error("Erro ao salvar tratativa:", error);
+      alert("Erro ao salvar no Supabase: " + error.message);
+      return;
+    }
+
+    const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
+      .from("clientes")
+      .select("tentativas_sem_contato, atendente_responsavel")
+      .eq("id", clienteId)
+      .single();
+
+    if (erroBuscaCliente) {
+      console.error("Erro ao buscar cliente:", erroBuscaCliente);
+      alert("A tratativa foi salva, mas deu erro ao buscar os dados do cliente: " + erroBuscaCliente.message);
+      return;
+    }
+
+    let dadosAtualizacaoCliente = {
+      ultima_tentativa_por: atendente
+    };
+
+    if (statusTratativa === "tratativa_resolvida") {
+      dadosAtualizacaoCliente.status_pesquisa = "concluido";
+      dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+    } else if (statusTratativa === "tratativa_retorno") {
+      const regraTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+
+      if (regraTratativa.erro) {
+        alert(regraTratativa.erro);
         return;
       }
 
-      if (statusTratativa === "tratativa_retorno") {
-        if (!horarioRetorno) {
-          alert("Informe o horário para retorno!");
-          return;
-        }
+      dadosAtualizacaoCliente.status_pesquisa = "pendente";
+      dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+      dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
+    } else if (statusTratativa === "tratativa_sem_contato") {
+      const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+      const novasTentativas = tentativasAtuais + 1;
 
-        if (!tipoRetorno) {
-          alert("Selecione o tipo de retorno!");
-          return;
-        }
+      const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+      const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
 
-        const validacaoTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
-        if (validacaoTratativa.erro) {
-          alert(validacaoTratativa.erro);
-          return;
-        }
+      let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+        return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
+      });
+
+      if (indiceAtual === -1) {
+        indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+          return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
+        });
       }
 
-      const resposta = {
-        cliente: nome || null,
-        tipo: tipo || null,
-        tecnico: tecnicoSelecionado,
-        atendente: atendente,
-        pergunta1: null,
-        pergunta2: null,
-        pergunta3: null,
-        comentario: comentario,
-        status: statusTratativa,
-        data: new Date().toISOString().slice(0, 10),
-        dadosCorretos: null,
-        canais: null,
-        problemaResolvido: null,
-        indicacao: null,
-        horario_retorno: statusTratativa === "tratativa_retorno" ? horarioRetorno : null,
-        tipo_retorno: statusTratativa === "tratativa_retorno" ? tipoRetorno : null,
-        necessita_tratativa: "sim",
-        motivo_tratativa: motivoTratativaOriginal || null
-      };
+      dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
 
-      const { error } = await supabaseClient
-        .from("respostas")
-        .insert([resposta]);
-
-      if (error) {
-        console.error("Erro ao salvar tratativa:", error);
-        alert("Erro ao salvar no Supabase: " + error.message);
-        return;
-      }
-
-      const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
-        .from("clientes")
-        .select("tentativas_sem_contato, atendente_responsavel")
-        .eq("id", clienteId)
-        .single();
-
-      if (erroBuscaCliente) {
-        console.error("Erro ao buscar cliente:", erroBuscaCliente);
-        alert("A tratativa foi salva, mas deu erro ao buscar os dados do cliente: " + erroBuscaCliente.message);
-        return;
-      }
-
-      let dadosAtualizacaoCliente = {
-        ultima_tentativa_por: atendente
-      };
-
-      if (statusTratativa === "tratativa_resolvida") {
+      if (novasTentativas >= 4) {
         dadosAtualizacaoCliente.status_pesquisa = "concluido";
-        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-      } else if (statusTratativa === "tratativa_retorno") {
-        const regraTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
-
-        if (regraTratativa.erro) {
-          alert(regraTratativa.erro);
-          return;
-        }
+        dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
+      } else {
+        const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
+        const proximoAtendente = filaAtendentes[proximoIndice];
 
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
-        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-        dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
-      } else if (statusTratativa === "tratativa_sem_contato") {
-        const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
-        const novasTentativas = tentativasAtuais + 1;
-
-        const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
-        const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
-
-        let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-          return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
-        });
-
-        if (indiceAtual === -1) {
-          indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-            return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
-          });
-        }
-
-        dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
-
-        if (novasTentativas >= 4) {
-          dadosAtualizacaoCliente.status_pesquisa = "concluido";
-          dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
-        } else {
-          const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
-          const proximoAtendente = filaAtendentes[proximoIndice];
-
-          dadosAtualizacaoCliente.status_pesquisa = "pendente";
-          dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
-        }
+        dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
       }
-
-      const { error: erroCliente } = await supabaseClient
-        .from("clientes")
-        .update(dadosAtualizacaoCliente)
-        .eq("id", clienteId);
-
-      if (erroCliente) {
-        console.error("Erro ao atualizar cliente:", erroCliente);
-        alert("A tratativa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
-        return;
-      }
-
-      alert("Tratativa salva com sucesso!");
-      window.location.href = "index.html";
     }
+
+    const { error: erroCliente } = await supabaseClient
+      .from("clientes")
+      .update(dadosAtualizacaoCliente)
+      .eq("id", clienteId);
+
+    if (erroCliente) {
+      console.error("Erro ao atualizar cliente:", erroCliente);
+      alert("A tratativa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+      return;
+    }
+
+    alert("Tratativa salva com sucesso!");
+    window.location.href = "index.html";
+
+  } finally {
+    if (botao) botao.disabled = false;
+  }
+}
 
     async function enviar() {
       const atendente = document.getElementById("atendente")?.value || "";
