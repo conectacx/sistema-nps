@@ -1091,8 +1091,6 @@
 }
 
     async function enviar() {
-  if (enviando) return;
-  enviando = true;
       
       const atendente = document.getElementById("atendente")?.value || "";
       const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
@@ -1301,13 +1299,10 @@
       if (erroCliente) {
         console.error("Erro ao atualizar cliente:", erroCliente);
         alert("A pesquisa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
-        enviando = false;
         return;
       }
 
       alert("Pesquisa salva com sucesso!");
-
-enviando = false;
 
 window.location.href = "index.html";
     }
