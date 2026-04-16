@@ -674,9 +674,9 @@
               </label>
 
               <label class="opcao-box">
-                <input type="radio" name="statusPesquisa" value="Não realizada (CNPJ)">
-                <span>Não realizada (CNPJ)</span>
-              </label>
+  <input type="radio" name="statusPesquisa" value="cnpj_nao_realizada">
+  <span>Não realizada (CNPJ)</span>
+</label>
             </div>
           </div>
 
@@ -811,9 +811,9 @@
               </label>
               
               <label class="opcao-box">
-                <input type="radio" name="statusPesquisa" value="Não realizada (CNPJ)">
-                <span>Não realizada (CNPJ)</span>
-              </label>
+  <input type="radio" name="statusPesquisa" value="cnpj_nao_realizada">
+  <span>Não realizada (CNPJ)</span>
+</label>
             </div>
           </div>
 
@@ -1270,9 +1270,9 @@
       } else if (statusPesquisa === "nao_quis") {
         dadosAtualizacaoCliente.status_pesquisa = "concluido";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-        } else if (statusPesquisa === "Não realizada (CNPJ)") {
-        dadosAtualizacaoCliente.status_pesquisa = "concluido";
-        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+        } else if (statusPesquisa === "cnpj_nao_realizada") {
+  dadosAtualizacaoCliente.status_pesquisa = "concluido";
+  dadosAtualizacaoCliente.tentativas_sem_contato = 0;
       } else if (statusPesquisa === "retorno") {
         const novoResponsavel = definirResponsavelRetorno(clienteAtual?.atendente_responsavel || atendente, horarioRetorno);
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
