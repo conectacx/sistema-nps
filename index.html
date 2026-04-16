@@ -226,15 +226,13 @@
         });
       }
 
-      lista = lista.slice(0, 10);
-
-      const nomesClientes = lista.map(function(item) {
+      const nomesClientesTodos = lista.map(function(item) {
         return item.nome || "";
       }).filter(Boolean);
 
-      const mapaInfos = await buscarInfoPendencia(nomesClientes);
+      const mapaInfos = await buscarInfoPendencia(nomesClientesTodos);
 
-      atendimentos = lista.map(function(item) {
+      const listaComInfo = lista.map(function(item) {
         const info = mapaInfos[item.nome || ""] || {};
 
         return {
@@ -251,12 +249,37 @@
           endereco: item.endereco || "",
           atendente_responsavel: item.atendente_responsavel || "",
           status_pesquisa: item.status_pesquisa || "",
+          tentativas_sem_contato: Number(item.tentativas_sem_contato || 0),
+          ultima_tentativa_por: item.ultima_tentativa_por || "",
           horario_retorno: info.horario || "",
           tipo_retorno: info.tipo || "",
           eh_tratativa: info.ehTratativa || false,
           motivo_tratativa: info.motivo || ""
         };
       });
+
+      const acompanhamento = listaComInfo.filter(function(item) {
+        return (
+          !!item.horario_retorno ||
+          item.eh_tratativa === true ||
+          Number(item.tentativas_sem_contato || 0) > 0 ||
+          !!item.ultima_tentativa_por
+        );
+      });
+
+      const novos = listaComInfo.filter(function(item) {
+        return !(
+          !!item.horario_retorno ||
+          item.eh_tratativa === true ||
+          Number(item.tentativas_sem_contato || 0) > 0 ||
+          !!item.ultima_tentativa_por
+        );
+      });
+
+      atendimentos = [
+        ...acompanhamento,
+        ...novos.slice(0, 5)
+      ];
 
       carregarTabela(atendimentos);
     }
@@ -377,15 +400,15 @@
     carregarClientes();
 
     function formatarDataBR(data) {
-  if (!data) return "";
+      if (!data) return "";
 
-  const d = new Date(data);
-  const dia = String(d.getDate()).padStart(2, "0");
-  const mes = String(d.getMonth() + 1).padStart(2, "0");
-  const ano = d.getFullYear();
+      const d = new Date(data);
+      const dia = String(d.getDate()).padStart(2, "0");
+      const mes = String(d.getMonth() + 1).padStart(2, "0");
+      const ano = d.getFullYear();
 
-  return `${dia}/${mes}/${ano}`;
-}
+      return `${dia}/${mes}/${ano}`;
+    }
   </script>
 
 </body>
