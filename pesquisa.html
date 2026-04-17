@@ -17,7 +17,7 @@
       max-width: 900px;
       margin: 0 auto;
       background-color: #ffffff;
-      padding: 30px;<button onclick="enviar()">Enviar</button>
+      padding: 30px;
       border-radius: 10px;
       box-sizing: border-box;
     }
@@ -292,7 +292,6 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-    
 
     if (!usuarioLogado) {
       window.location.href = "login.html";
@@ -319,9 +318,71 @@
     document.getElementById("cliente").innerText = "Cliente: " + (nome || "Não informado");
     document.getElementById("tipo").innerText = "Tipo: " + (tipo || "Não informado");
 
+    function normalizarTexto(texto) {
+      return String(texto || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/-/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
     function formatarTextoRetorno(tipoRetorno, horarioRetorno) {
       if (!horarioRetorno) return "";
       return tipoRetorno === "apos" ? `Após ${horarioRetorno}` : `Às ${horarioRetorno}`;
+    }
+
+    async function obterLimiteTentativasSemContato(nomeCliente) {
+      if (!nomeCliente) return 4;
+
+      const { data, error } = await supabaseClient
+        .from("respostas")
+        .select("status, necessita_tratativa")
+        .eq("cliente", nomeCliente)
+        .order("id", { ascending: false })
+        .limit(10);
+
+      if (error) {
+        console.error("Erro ao identificar origem do sem contato:", error);
+        return 4;
+      }
+
+      const historico = data || [];
+
+      for (const item of historico) {
+        const status = normalizarTexto(item.status);
+        const necessitaTratativa = normalizarTexto(item.necessita_tratativa);
+
+        if (
+          status === "sem contato" ||
+          status === "sem_contato" ||
+          status === "tratativa sem contato" ||
+          status === "tratativa_sem_contato"
+        ) {
+          continue;
+        }
+
+        if (
+          status === "retorno" ||
+          status === "solicita retorno" ||
+          status === "tratativa retorno" ||
+          status === "tratativa_retorno"
+        ) {
+          return 2;
+        }
+
+        if (
+          (status === "realizada" || status === "pesquisa realizada") &&
+          necessitaTratativa === "sim"
+        ) {
+          return 2;
+        }
+
+        return 4;
+      }
+
+      return 4;
     }
 
     function definirResponsavelTratativa(atendentePesquisa, horarioRetorno) {
@@ -418,6 +479,7 @@
           <option value="Cleiton">Cleiton</option>
           <option value="Fernando">Fernando</option>
           <option value="Vitor">Vitor</option>
+          <option value="Sem execução de técnico">Sem execução de técnico</option>
         </select>
       `;
     }
@@ -585,7 +647,6 @@
                 <span>Não</span>
               </label>
 
-
               <label class="opcao-box">
                 <input type="radio" name="dadosCorretos" value="Atualização não realizada">
                 <span>Atualização não realizada</span>
@@ -674,9 +735,9 @@
               </label>
 
               <label class="opcao-box">
-  <input type="radio" name="statusPesquisa" value="cnpj_nao_realizada">
-  <span>Não realizada (CNPJ)</span>
-</label>
+                <input type="radio" name="statusPesquisa" value="cnpj_nao_realizada">
+                <span>Não realizada (CNPJ/Externo)</span>
+              </label>
             </div>
           </div>
 
@@ -777,21 +838,11 @@
             ${montarEscala("pergunta3")}
           </div>
 
- <div class="bloco">
-            <h3>Você indicaria a Petranet para um parente ou um amigo?</h3>
-            <div class="opcoes-linha">
-              <label class="opcao-box">
-                <input type="radio" name="indicação" value="sim">
-                <span>Sim</span>
-              </label>
-
-              <label class="opcao-box">
-                <input type="radio" name="indicação" value="nao">
-                <span>Não</span>
-              </label>
-            </div>
+          <div class="bloco">
+            <h3>Em uma escala de 1 a 10, quanto você indicaria a Petranet para um parente ou um amigo?</h3>
+            ${montarEscala("indicacao")}
           </div>
-          
+
           <div class="bloco">
             <h3>Comentário</h3>
             <textarea id="comentario"></textarea>
@@ -819,11 +870,11 @@
                 <input type="radio" name="statusPesquisa" value="sem_contato">
                 <span>Sem contato</span>
               </label>
-              
+
               <label class="opcao-box">
-  <input type="radio" name="statusPesquisa" value="cnpj_nao_realizada">
-  <span>Não realizada (CNPJ)</span>
-</label>
+                <input type="radio" name="statusPesquisa" value="cnpj_nao_realizada">
+                <span>Não realizada (CNPJ/Externo)</span>
+              </label>
             </div>
           </div>
 
@@ -959,164 +1010,168 @@
     });
 
     async function enviarTratativa() {
-  const botao = document.getElementById("btnEnviarTratativa");
-  if (botao && botao.disabled) return;
-  if (botao) botao.disabled = true;
+      const botao = document.getElementById("btnEnviarTratativa");
+      if (botao && botao.disabled) return;
+      if (botao) botao.disabled = true;
 
-  try {
-    const atendente = document.getElementById("atendenteTratativa")?.value || "";
-    const comentario = document.getElementById("comentarioTratativa")?.value || "";
-    const statusTratativa = document.querySelector('input[name="statusTratativa"]:checked')?.value || null;
-    const horarioRetorno = document.getElementById("tratativaHorarioRetorno")?.value || "";
-    const tipoRetorno = document.querySelector('input[name="tratativaTipoRetorno"]:checked')?.value || null;
-    const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
+      try {
+        const atendente = document.getElementById("atendenteTratativa")?.value || "";
+        const comentario = document.getElementById("comentarioTratativa")?.value || "";
+        const statusTratativa = document.querySelector('input[name="statusTratativa"]:checked')?.value || null;
+        const horarioRetorno = document.getElementById("tratativaHorarioRetorno")?.value || "";
+        const tipoRetorno = document.querySelector('input[name="tratativaTipoRetorno"]:checked')?.value || null;
+        const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
 
-    if (!atendente) {
-      alert("Selecione o atendente que realizou a tratativa!");
-      return;
-    }
+        if (!atendente) {
+          alert("Selecione o atendente que realizou a tratativa!");
+          return;
+        }
 
-    if (!tecnicoSelecionado) {
-      alert("Selecione o técnico!");
-      return;
-    }
+        if (!tecnicoSelecionado) {
+          alert("Selecione o técnico!");
+          return;
+        }
 
-    if (!statusTratativa) {
-      alert("Selecione o status da tratativa!");
-      return;
-    }
+        if (!statusTratativa) {
+          alert("Selecione o status da tratativa!");
+          return;
+        }
 
-    if (statusTratativa === "tratativa_retorno") {
-      if (!horarioRetorno) {
-        alert("Informe o horário para retorno!");
-        return;
+        if (statusTratativa === "tratativa_retorno") {
+          if (!horarioRetorno) {
+            alert("Informe o horário para retorno!");
+            return;
+          }
+
+          if (!tipoRetorno) {
+            alert("Selecione o tipo de retorno!");
+            return;
+          }
+
+          const validacaoTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+          if (validacaoTratativa.erro) {
+            alert(validacaoTratativa.erro);
+            return;
+          }
+        }
+
+        let limiteTentativasSemContato = 4;
+        if (statusTratativa === "tratativa_sem_contato") {
+          limiteTentativasSemContato = await obterLimiteTentativasSemContato(nome);
+        }
+
+        const resposta = {
+          cliente: nome || null,
+          tipo: tipo || null,
+          tecnico: tecnicoSelecionado,
+          atendente: atendente,
+          pergunta1: null,
+          pergunta2: null,
+          pergunta3: null,
+          comentario: comentario,
+          status: statusTratativa,
+          data: new Date().toISOString().slice(0, 10),
+          dadosCorretos: null,
+          canais: null,
+          problemaResolvido: null,
+          indicacao: null,
+          horario_retorno: statusTratativa === "tratativa_retorno" ? horarioRetorno : null,
+          tipo_retorno: statusTratativa === "tratativa_retorno" ? tipoRetorno : null,
+          necessita_tratativa: "sim",
+          motivo_tratativa: motivoTratativaOriginal || null
+        };
+
+        const { error } = await supabaseClient
+          .from("respostas")
+          .insert([resposta]);
+
+        if (error) {
+          console.error("Erro ao salvar tratativa:", error);
+          alert("Erro ao salvar no Supabase: " + error.message);
+          return;
+        }
+
+        const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
+          .from("clientes")
+          .select("tentativas_sem_contato, atendente_responsavel")
+          .eq("id", clienteId)
+          .single();
+
+        if (erroBuscaCliente) {
+          console.error("Erro ao buscar cliente:", erroBuscaCliente);
+          alert("A tratativa foi salva, mas deu erro ao buscar os dados do cliente: " + erroBuscaCliente.message);
+          return;
+        }
+
+        let dadosAtualizacaoCliente = {
+          ultima_tentativa_por: atendente
+        };
+
+        if (statusTratativa === "tratativa_resolvida") {
+          dadosAtualizacaoCliente.status_pesquisa = "concluido";
+          dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+        } else if (statusTratativa === "tratativa_retorno") {
+          const regraTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
+
+          if (regraTratativa.erro) {
+            alert(regraTratativa.erro);
+            return;
+          }
+
+          dadosAtualizacaoCliente.status_pesquisa = "pendente";
+          dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+          dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
+        } else if (statusTratativa === "tratativa_sem_contato") {
+          const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+          const novasTentativas = tentativasAtuais + 1;
+
+          const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+          const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
+
+          let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+            return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
+          });
+
+          if (indiceAtual === -1) {
+            indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+              return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
+            });
+          }
+
+          dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
+
+          if (novasTentativas >= limiteTentativasSemContato) {
+            dadosAtualizacaoCliente.status_pesquisa = "concluido";
+            dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
+          } else {
+            const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
+            const proximoAtendente = filaAtendentes[proximoIndice];
+
+            dadosAtualizacaoCliente.status_pesquisa = "pendente";
+            dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
+          }
+        }
+
+        const { error: erroCliente } = await supabaseClient
+          .from("clientes")
+          .update(dadosAtualizacaoCliente)
+          .eq("id", clienteId);
+
+        if (erroCliente) {
+          console.error("Erro ao atualizar cliente:", erroCliente);
+          alert("A tratativa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
+          return;
+        }
+
+        alert("Tratativa salva com sucesso!");
+        window.location.href = "index.html";
+
+      } finally {
+        if (botao) botao.disabled = false;
       }
-
-      if (!tipoRetorno) {
-        alert("Selecione o tipo de retorno!");
-        return;
-      }
-
-      const validacaoTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
-      if (validacaoTratativa.erro) {
-        alert(validacaoTratativa.erro);
-        return;
-      }
     }
-
-    const resposta = {
-      cliente: nome || null,
-      tipo: tipo || null,
-      tecnico: tecnicoSelecionado,
-      atendente: atendente,
-      pergunta1: null,
-      pergunta2: null,
-      pergunta3: null,
-      comentario: comentario,
-      status: statusTratativa,
-      data: new Date().toISOString().slice(0, 10),
-      dadosCorretos: null,
-      canais: null,
-      problemaResolvido: null,
-      indicacao: null,
-      horario_retorno: statusTratativa === "tratativa_retorno" ? horarioRetorno : null,
-      tipo_retorno: statusTratativa === "tratativa_retorno" ? tipoRetorno : null,
-      necessita_tratativa: "sim",
-      motivo_tratativa: motivoTratativaOriginal || null
-    };
-
-    const { error } = await supabaseClient
-      .from("respostas")
-      .insert([resposta]);
-
-    if (error) {
-      console.error("Erro ao salvar tratativa:", error);
-      alert("Erro ao salvar no Supabase: " + error.message);
-      return;
-    }
-
-    const { data: clienteAtual, error: erroBuscaCliente } = await supabaseClient
-      .from("clientes")
-      .select("tentativas_sem_contato, atendente_responsavel")
-      .eq("id", clienteId)
-      .single();
-
-    if (erroBuscaCliente) {
-      console.error("Erro ao buscar cliente:", erroBuscaCliente);
-      alert("A tratativa foi salva, mas deu erro ao buscar os dados do cliente: " + erroBuscaCliente.message);
-      return;
-    }
-
-    let dadosAtualizacaoCliente = {
-      ultima_tentativa_por: atendente
-    };
-
-    if (statusTratativa === "tratativa_resolvida") {
-      dadosAtualizacaoCliente.status_pesquisa = "concluido";
-      dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-    } else if (statusTratativa === "tratativa_retorno") {
-      const regraTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
-
-      if (regraTratativa.erro) {
-        alert(regraTratativa.erro);
-        return;
-      }
-
-      dadosAtualizacaoCliente.status_pesquisa = "pendente";
-      dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-      dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
-    } else if (statusTratativa === "tratativa_sem_contato") {
-      const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
-      const novasTentativas = tentativasAtuais + 1;
-
-      const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
-      const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
-
-      let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-        return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
-      });
-
-      if (indiceAtual === -1) {
-        indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-          return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
-        });
-      }
-
-      dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
-
-      if (novasTentativas >= 4) {
-        dadosAtualizacaoCliente.status_pesquisa = "concluido";
-        dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
-      } else {
-        const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
-        const proximoAtendente = filaAtendentes[proximoIndice];
-
-        dadosAtualizacaoCliente.status_pesquisa = "pendente";
-        dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
-      }
-    }
-
-    const { error: erroCliente } = await supabaseClient
-      .from("clientes")
-      .update(dadosAtualizacaoCliente)
-      .eq("id", clienteId);
-
-    if (erroCliente) {
-      console.error("Erro ao atualizar cliente:", erroCliente);
-      alert("A tratativa foi salva, mas deu erro ao atualizar a fila: " + erroCliente.message);
-      return;
-    }
-
-    alert("Tratativa salva com sucesso!");
-    window.location.href = "index.html";
-
-  } finally {
-    if (botao) botao.disabled = false;
-  }
-}
 
     async function enviar() {
-      
       const atendente = document.getElementById("atendente")?.value || "";
       const tecnicoSelecionado = document.getElementById("tecnico")?.value || "";
       const pergunta1 = document.querySelector('input[name="pergunta1"]:checked')?.value || null;
@@ -1188,6 +1243,11 @@
             return;
           }
         }
+      }
+
+      let limiteTentativasSemContato = 4;
+      if (statusPesquisa === "sem_contato") {
+        limiteTentativasSemContato = await obterLimiteTentativasSemContato(nome);
       }
 
       let resposta = {
@@ -1280,9 +1340,9 @@
       } else if (statusPesquisa === "nao_quis") {
         dadosAtualizacaoCliente.status_pesquisa = "concluido";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-        } else if (statusPesquisa === "cnpj_nao_realizada") {
-  dadosAtualizacaoCliente.status_pesquisa = "concluido";
-  dadosAtualizacaoCliente.tentativas_sem_contato = 0;
+      } else if (statusPesquisa === "cnpj_nao_realizada") {
+        dadosAtualizacaoCliente.status_pesquisa = "concluido";
+        dadosAtualizacaoCliente.tentativas_sem_contato = 0;
       } else if (statusPesquisa === "retorno") {
         const novoResponsavel = definirResponsavelRetorno(clienteAtual?.atendente_responsavel || atendente, horarioRetorno);
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
@@ -1307,7 +1367,7 @@
 
         dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
 
-        if (novasTentativas >= 4) {
+        if (novasTentativas >= limiteTentativasSemContato) {
           dadosAtualizacaoCliente.status_pesquisa = "concluido";
           dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
         } else {
@@ -1331,8 +1391,7 @@
       }
 
       alert("Pesquisa salva com sucesso!");
-
-window.location.href = "index.html";
+      window.location.href = "index.html";
     }
 
     function logout() {
@@ -1348,13 +1407,13 @@ window.location.href = "index.html";
     }
 
     setTimeout(() => {
-  const campo = document.getElementById("atendente");
-  const texto = document.getElementById("nomeAtendenteTexto");
+      const campo = document.getElementById("atendente");
+      const texto = document.getElementById("nomeAtendenteTexto");
 
-  if (campo && texto) {
-    texto.innerText = campo.value;
-  }
-}, 500);
+      if (campo && texto) {
+        texto.innerText = campo.value;
+      }
+    }, 500);
   </script>
 </body>
 </html>
