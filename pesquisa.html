@@ -1132,35 +1132,26 @@
           dadosAtualizacaoCliente.tentativas_sem_contato = 0;
           dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
         } else if (statusTratativa === "tratativa_sem_contato") {
-          const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
-          const novasTentativas = tentativasAtuais + 1;
+  const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+  const novasTentativas = tentativasAtuais + 1;
 
-          const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
-          const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
+  dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
 
-          let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-            return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
-          });
+  if (novasTentativas >= limiteTentativasSemContato) {
+    dadosAtualizacaoCliente.status_pesquisa = "concluido";
+    dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
+  } else {
+    const regraTratativa = definirResponsavelTratativa(atendente, horarioRetornoOriginal);
 
-          if (indiceAtual === -1) {
-            indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-              return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
-            });
-          }
+    if (regraTratativa.erro) {
+      alert(regraTratativa.erro);
+      return;
+    }
 
-          dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
-
-          if (novasTentativas >= limiteTentativasSemContato) {
-            dadosAtualizacaoCliente.status_pesquisa = "concluido";
-            dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
-          } else {
-            const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
-            const proximoAtendente = filaAtendentes[proximoIndice];
-
-            dadosAtualizacaoCliente.status_pesquisa = "pendente";
-            dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
-          }
-        }
+    dadosAtualizacaoCliente.status_pesquisa = "pendente";
+    dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
+  }
+}
 
         const { error: erroCliente } = await supabaseClient
           .from("clientes")
@@ -1359,35 +1350,47 @@
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
         dadosAtualizacaoCliente.atendente_responsavel = novoResponsavel;
       } else if (statusPesquisa === "sem_contato") {
-        const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
-        const novasTentativas = tentativasAtuais + 1;
+  const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
+  const novasTentativas = tentativasAtuais + 1;
 
-        const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
-        const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
+  dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
 
-        let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-          return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
-        });
+  if (novasTentativas >= limiteTentativasSemContato) {
+    dadosAtualizacaoCliente.status_pesquisa = "concluido";
+    dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
+  } else {
+    if (limiteTentativasSemContato === 2) {
+      const regraTratativa = definirResponsavelTratativa(atendente, horarioRetorno);
 
-        if (indiceAtual === -1) {
-          indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
-            return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
-          });
-        }
-
-        dadosAtualizacaoCliente.tentativas_sem_contato = novasTentativas;
-
-        if (novasTentativas >= limiteTentativasSemContato) {
-          dadosAtualizacaoCliente.status_pesquisa = "concluido";
-          dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
-        } else {
-          const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
-          const proximoAtendente = filaAtendentes[proximoIndice];
-
-          dadosAtualizacaoCliente.status_pesquisa = "pendente";
-          dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
-        }
+      if (regraTratativa.erro) {
+        alert(regraTratativa.erro);
+        return;
       }
+
+      dadosAtualizacaoCliente.status_pesquisa = "pendente";
+      dadosAtualizacaoCliente.atendente_responsavel = regraTratativa.responsavel;
+    } else {
+      const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+      const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
+
+      let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+        return nomeFila.trim().toLowerCase() === atendenteAtual.toLowerCase();
+      });
+
+      if (indiceAtual === -1) {
+        indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
+          return nomeFila.trim().toLowerCase() === String(atendente).trim().toLowerCase();
+        });
+      }
+
+      const proximoIndice = indiceAtual === -1 ? 0 : (indiceAtual + 1) % filaAtendentes.length;
+      const proximoAtendente = filaAtendentes[proximoIndice];
+
+      dadosAtualizacaoCliente.status_pesquisa = "pendente";
+      dadosAtualizacaoCliente.atendente_responsavel = proximoAtendente;
+    }
+  }
+}
 
       const { error: erroCliente } = await supabaseClient
         .from("clientes")
