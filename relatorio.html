@@ -744,37 +744,41 @@
       }
 
       function criarGrafico(id, valores) {
-        let container = document.getElementById(id);
-        if (!container) return;
+  let container = document.getElementById(id);
+  if (!container) return;
 
-        container.innerHTML = "";
+  container.innerHTML = "";
 
-        let numerosAntigos = container.parentElement.querySelector(".numeros");
-        if (numerosAntigos) numerosAntigos.remove();
+  let numerosAntigos = container.parentElement.querySelector(".numeros");
+  if (numerosAntigos) numerosAntigos.remove();
 
-        valores.forEach(function(valor) {
-          let barra = document.createElement("div");
-          barra.className = "barra";
-          barra.style.height = (valor * 8) + "px";
+  let maiorValor = Math.max(...valores, 1);
 
-          let texto = document.createElement("span");
-          texto.innerText = valor;
+  valores.forEach(function(valor) {
+    let barra = document.createElement("div");
+    barra.className = "barra";
 
-          barra.appendChild(texto);
-          container.appendChild(barra);
-        });
+    let altura = (valor / maiorValor) * 140;
+    barra.style.height = altura + "px";
 
-        let numeros = document.createElement("div");
-        numeros.className = "numeros";
+    let texto = document.createElement("span");
+    texto.innerText = valor;
 
-        for (let i = 1; i <= 10; i++) {
-          let n = document.createElement("span");
-          n.innerText = i;
-          numeros.appendChild(n);
-        }
+    barra.appendChild(texto);
+    container.appendChild(barra);
+  });
 
-        container.parentElement.appendChild(numeros);
-      }
+  let numeros = document.createElement("div");
+  numeros.className = "numeros";
+
+  for (let i = 1; i <= 10; i++) {
+    let n = document.createElement("span");
+    n.innerText = i;
+    numeros.appendChild(n);
+  }
+
+  container.parentElement.appendChild(numeros);
+}
 
       function atualizarCards(secao, lista) {
         let cards = secao.querySelectorAll(".card-valor");
