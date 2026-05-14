@@ -320,6 +320,51 @@
       text-align: center;
     }
 
+    .ranking-geral-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 35px;
+}
+
+.ranking-card {
+  background: #176882;
+  border-radius: 35px;
+  padding: 18px 16px 28px;
+  min-height: 420px;
+}
+
+.ranking-card-titulo {
+  background: #8fd0ee;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding: 13px;
+  border-radius: 7px;
+  margin: 0 auto 16px;
+  width: 80%;
+}
+
+.ranking-linha {
+  background: #f5f7fb;
+  padding: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ranking-numero {
+  font-size: 26px;
+  font-weight: bold;
+  color: #1f3c88;
+}
+
+@media (max-width: 1100px) {
+  .ranking-geral-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
     @media (max-width: 1100px) {
       .cards {
         grid-template-columns: repeat(2, 1fr);
@@ -484,12 +529,25 @@
     </section>
 
     <section class="dashboard">
-  <div class="dashboard-topo">
-    <div>
-      <div class="dashboard-titulo">Ranking Total de Atendentes</div>
-      <div class="dashboard-subtitulo">Soma geral de Pós-venda e Pós-suporte</div>
+  <div class="ranking-geral-grid">
+    
+    <div class="ranking-card">
+      <div class="ranking-card-titulo">Visão Geral Pesquisas</div>
+      <div id="visaoGeralPesquisas"></div>
     </div>
+
+    <div class="ranking-card">
+      <div class="ranking-card-titulo">Ranking Geral de Atendentes</div>
+      <div id="rankingTotalAtendentes"></div>
+    </div>
+
+    <div class="ranking-card">
+      <div class="ranking-card-titulo">Ranking Geral de Técnico</div>
+      <div id="rankingTotalTecnicos"></div>
+    </div>
+
   </div>
+</section>
 
   <div class="grafico-box">
     <div class="grafico-titulo">Pesquisas por Atendente - Total Geral</div>
