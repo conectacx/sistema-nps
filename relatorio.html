@@ -25,6 +25,43 @@
       margin-bottom: 25px;
     }
 
+    button {
+      background-color: #1f3c88;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #16306d;
+    }
+
+    input[type="date"] {
+      padding: 5px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+    }
+
+    .btn-verde {
+      background: #00b050;
+    }
+
+    .btn-verde:hover {
+      background: #009245;
+    }
+
+    .btn-cinza {
+      background: #ccc;
+      color: #111;
+    }
+
+    .btn-cinza:hover {
+      background: #aaa;
+    }
+
     .dashboard {
       background-color: #ffffff;
       border-radius: 14px;
@@ -94,21 +131,6 @@
       font-weight: bold;
       color: #333;
       margin-bottom: 12px;
-    }
-
-    .placeholder {
-      min-height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #888;
-      font-size: 14px;
-      border: 2px dashed #d9d9d9;
-      border-radius: 8px;
-      background-color: #fff;
-      width: 100%;
-      overflow: hidden;
-      box-sizing: border-box;
     }
 
     .graficos-avaliacao {
@@ -190,28 +212,21 @@
       min-width: 18px;
     }
 
-    .btn-tratativas {
-      background: #1f3c88;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
+    .acoes-linha {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
     }
 
-    .btn-tratativas:hover {
-      background: #16306d;
+    .btn-tratativas {
+      background: #1f3c88;
     }
 
     .btn-criticos {
       background: #b91c1c;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
     }
 
     .btn-criticos:hover {
@@ -220,19 +235,13 @@
 
     .btn-elogios {
       background: #2f6b1f;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
     }
 
     .btn-elogios:hover {
       background: #255618;
     }
 
-    .tabela-tratativas-box {
+    .tabela-box {
       display: none;
       margin-top: 18px;
       overflow-x: auto;
@@ -240,7 +249,7 @@
       box-sizing: border-box;
     }
 
-    .tabela-tratativas {
+    .tabela-padrao {
       width: 100%;
       border-collapse: collapse;
       background: white;
@@ -248,7 +257,7 @@
       overflow: hidden;
     }
 
-    .tabela-tratativas th {
+    .tabela-padrao th {
       background: #1f3c88;
       color: white;
       padding: 12px;
@@ -257,7 +266,7 @@
       white-space: nowrap;
     }
 
-    .tabela-tratativas td {
+    .tabela-padrao td {
       padding: 12px;
       border-bottom: 1px solid #e5e5e5;
       font-size: 14px;
@@ -265,33 +274,25 @@
     }
 
     .tabela-feedback {
-      width: 100%;
-      border-collapse: collapse;
       table-layout: fixed;
     }
 
     .tabela-feedback th:nth-child(1),
     .tabela-feedback td:nth-child(1) { width: 13%; }
-
     .tabela-feedback th:nth-child(2),
     .tabela-feedback td:nth-child(2) { width: 8%; }
-
     .tabela-feedback th:nth-child(3),
     .tabela-feedback td:nth-child(3) { width: 10%; }
-
     .tabela-feedback th:nth-child(4),
     .tabela-feedback td:nth-child(4) { width: 8%; }
-
     .tabela-feedback th:nth-child(5),
     .tabela-feedback td:nth-child(5),
     .tabela-feedback th:nth-child(6),
     .tabela-feedback td:nth-child(6),
     .tabela-feedback th:nth-child(7),
     .tabela-feedback td:nth-child(7) { width: 4%; }
-
     .tabela-feedback th:nth-child(8),
     .tabela-feedback td:nth-child(8) { width: 8%; }
-
     .tabela-feedback th:nth-child(9),
     .tabela-feedback td:nth-child(9) { width: 41%; }
 
@@ -321,67 +322,89 @@
     }
 
     .ranking-geral-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 35px;
-}
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 35px;
+    }
 
-.ranking-card {
-  background: #176882;
-  border-radius: 35px;
-  padding: 18px 16px 28px;
-  min-height: 420px;
-}
+    .ranking-card {
+      background: #176882;
+      border-radius: 35px;
+      padding: 18px 16px 28px;
+      min-height: 390px;
+      box-sizing: border-box;
+    }
 
-.ranking-card-titulo {
-  background: #8fd0ee;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  padding: 13px;
-  border-radius: 7px;
-  margin: 0 auto 16px;
-  width: 80%;
-}
+    .ranking-card-titulo {
+      background: #8fd0ee;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      padding: 13px;
+      border-radius: 7px;
+      margin: 0 auto 16px;
+      width: 80%;
+    }
 
-.ranking-linha {
-  background: #f5f7fb;
-  padding: 12px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .ranking-linha {
+      background: #f5f7fb;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 7px;
+    }
 
-.ranking-numero {
-  font-size: 26px;
-  font-weight: bold;
-  color: #1f3c88;
-}
+    .ranking-linha.destaque {
+      background: #eef4ff;
+      border-left: 4px solid #d4a017;
+    }
 
-@media (max-width: 1100px) {
-  .ranking-geral-grid {
-    grid-template-columns: 1fr;
-  }
-}
+    .ranking-linha:not(.destaque) {
+      border-left: 4px solid #1f3c88;
+    }
+
+    .ranking-numero {
+      font-size: 26px;
+      font-weight: bold;
+      color: #1f3c88;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .ranking-texto {
+      font-size: 12px;
+      color: #333;
+      line-height: 1.45;
+    }
 
     @media (max-width: 1100px) {
       .cards {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .graficos-avaliacao {
+      .graficos-avaliacao,
+      .linha-dashboard {
         flex-direction: column;
       }
 
-      .grafico-item {
-        max-width: none;
+      .ranking-geral-grid {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 700px) {
+      body {
+        padding: 15px;
+      }
+
       .cards {
         grid-template-columns: 1fr;
+      }
+
+      .titulo-pagina {
+        font-size: 26px;
       }
     }
   </style>
@@ -393,20 +416,8 @@
       <div class="titulo-pagina" style="margin-bottom:0;">Painel de Gestão</div>
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button
-          id="btnUsuarios"
-          onclick="window.location.href='usuarios.html'"
-          style="background:#00b050;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;"
-        >
-          Gerenciar usuários
-        </button>
-
-        <button
-          onclick="logout()"
-          style="background:#1f3c88;color:white;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;"
-        >
-          Sair
-        </button>
+        <button id="btnUsuarios" onclick="window.location.href='usuarios.html'" class="btn-verde">Gerenciar usuários</button>
+        <button onclick="logout()">Sair</button>
       </div>
     </div>
 
@@ -415,43 +426,20 @@
       <input type="date" id="dataInicio">
       <span>até</span>
       <input type="date" id="dataFim">
-
-      <button
-        id="btnFiltrar"
-        style="background:#1f3c88;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;"
-      >
-        Filtrar
-      </button>
-
-      <button
-        id="btnLimparFiltro"
-        style="background:#ccc;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;"
-      >
-        Limpar
-      </button>
-
-      <button
-        id="btnExportar"
-        style="background:#00b050;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;"
-      >
-        Exportar Excel
-      </button>
+      <button id="btnFiltrar">Filtrar</button>
+      <button id="btnLimparFiltro" class="btn-cinza">Limpar</button>
+      <button id="btnExportar" class="btn-verde">Exportar Excel</button>
     </div>
 
     <section class="dashboard">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
-        <div style="font-size:18px;font-weight:bold;color:#1f3c88;">
-          Tratativas:
-          <span id="totalTratativas">0</span>
-        </div>
-
-        <button id="btnToggleTratativas" onclick="toggleTratativas()" class="btn-tratativas">
-          Ver
-        </button>
+      <div style="font-size:18px;font-weight:bold;color:#1f3c88;">
+        Tratativas: <span id="totalTratativas">0</span>
+        <span id="resumoTratativasDetalhado"> | Pendentes: <span style="color:#b45309;">0</span> | Concluídas: <span style="color:#15803d;">0</span></span>
       </div>
+      <button id="btnToggleTratativas" onclick="toggleBox('boxTratativas', 'btnToggleTratativas')" class="btn-tratativas" style="float:right;margin-top:-28px;">Ver</button>
 
-      <div class="tabela-tratativas-box" id="boxTratativas">
-        <table class="tabela-tratativas">
+      <div class="tabela-box" id="boxTratativas">
+        <table class="tabela-padrao">
           <thead>
             <tr>
               <th>Cliente</th>
@@ -467,19 +455,13 @@
         </table>
       </div>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:10px;">
-        <div style="font-size:16px;font-weight:bold;color:#b91c1c;">
-          Feedback Clientes:
-          <span id="totalCriticos">0</span>
-        </div>
-
-        <button id="btnToggleCriticos" onclick="toggleCriticos()" class="btn-criticos">
-          Ver
-        </button>
+      <div class="acoes-linha" style="clear:both;">
+        <div style="font-size:16px;font-weight:bold;color:#b91c1c;">Feedback Clientes: <span id="totalCriticos">0</span></div>
+        <button id="btnToggleCriticos" onclick="toggleBox('boxCriticos', 'btnToggleCriticos')" class="btn-criticos">Ver</button>
       </div>
 
-      <div class="tabela-tratativas-box" id="boxCriticos">
-        <table class="tabela-tratativas tabela-feedback">
+      <div class="tabela-box" id="boxCriticos">
+        <table class="tabela-padrao tabela-feedback">
           <thead>
             <tr>
               <th>Cliente</th>
@@ -497,19 +479,13 @@
         </table>
       </div>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:10px;">
-        <div style="font-size:16px;font-weight:bold;color:#15803d;">
-          Elogios:
-          <span id="totalElogios">0</span>
-        </div>
-
-        <button id="btnToggleElogios" onclick="toggleElogios()" class="btn-elogios">
-          Ver
-        </button>
+      <div class="acoes-linha">
+        <div style="font-size:16px;font-weight:bold;color:#15803d;">Elogios: <span id="totalElogios">0</span></div>
+        <button id="btnToggleElogios" onclick="toggleBox('boxElogios', 'btnToggleElogios')" class="btn-elogios">Ver</button>
       </div>
 
-      <div class="tabela-tratativas-box" id="boxElogios">
-        <table class="tabela-tratativas tabela-feedback">
+      <div class="tabela-box" id="boxElogios">
+        <table class="tabela-padrao tabela-feedback">
           <thead>
             <tr>
               <th>Cliente</th>
@@ -529,25 +505,23 @@
     </section>
 
     <section class="dashboard">
-  <div class="ranking-geral-grid">
-    
-    <div class="ranking-card">
-      <div class="ranking-card-titulo">Visão Geral Pesquisas</div>
-      <div id="visaoGeralPesquisas"></div>
-    </div>
+      <div class="ranking-geral-grid">
+        <div class="ranking-card">
+          <div class="ranking-card-titulo">Visão Geral Pesquisas</div>
+          <div id="visaoGeralPesquisas"></div>
+        </div>
 
-    <div class="ranking-card">
-      <div class="ranking-card-titulo">Ranking Geral de Atendentes</div>
-      <div id="rankingTotalAtendentes"></div>
-    </div>
+        <div class="ranking-card">
+          <div class="ranking-card-titulo">Ranking Geral de Atendentes</div>
+          <div id="rankingTotalAtendentes"></div>
+        </div>
 
-    <div class="ranking-card">
-      <div class="ranking-card-titulo">Ranking Geral de Técnico</div>
-      <div id="rankingTotalTecnicos"></div>
-    </div>
-
-  </div>
-</section>
+        <div class="ranking-card">
+          <div class="ranking-card-titulo">Ranking Geral de Técnico</div>
+          <div id="rankingTotalTecnicos"></div>
+        </div>
+      </div>
+    </section>
 
     <section class="dashboard">
       <div class="dashboard-topo">
@@ -564,32 +538,20 @@
         <div class="card"><div class="card-titulo">Sem Contato</div><div class="card-valor">0</div></div>
       </div>
 
-      <div style="display:flex; gap:20px; align-items:flex-start;">
+      <div class="linha-dashboard" style="display:flex; gap:20px; align-items:flex-start;">
         <div style="flex:1.1; display:flex; flex-direction:column; gap:16px;">
           <div class="grafico-box">
             <div class="grafico-titulo">Avaliações</div>
-
             <div class="graficos-avaliacao">
-              <div class="grafico-item">
-                <div class="titulo-grafico">Agendamento</div>
-                <div class="grafico-barras" id="grafico1"></div>
-              </div>
-
-              <div class="grafico-item">
-                <div class="titulo-grafico">Atendimento Técnico</div>
-                <div class="grafico-barras" id="grafico2"></div>
-              </div>
-
-              <div class="grafico-item">
-                <div class="titulo-grafico">Experiência Geral</div>
-                <div class="grafico-barras" id="grafico3"></div>
-              </div>
+              <div class="grafico-item"><div class="titulo-grafico">Agendamento</div><div class="grafico-barras" id="grafico1"></div></div>
+              <div class="grafico-item"><div class="titulo-grafico">Atendimento Técnico</div><div class="grafico-barras" id="grafico2"></div></div>
+              <div class="grafico-item"><div class="titulo-grafico">Experiência Geral</div><div class="grafico-barras" id="grafico3"></div></div>
             </div>
           </div>
 
           <div class="grafico-box">
             <div class="grafico-titulo">Ranking / Indicadores</div>
-            <div class="placeholder" id="indicadoresPosVenda">Aqui vai ranking, NPS ou outro indicador</div>
+            <div id="indicadoresPosVenda"></div>
           </div>
         </div>
 
@@ -617,32 +579,20 @@
         <div class="card"><div class="card-titulo">Sem Contato</div><div class="card-valor">0</div></div>
       </div>
 
-      <div style="display:flex; gap:20px; align-items:flex-start;">
+      <div class="linha-dashboard" style="display:flex; gap:20px; align-items:flex-start;">
         <div style="flex:1.1; display:flex; flex-direction:column; gap:16px;">
           <div class="grafico-box">
             <div class="grafico-titulo">Avaliações</div>
-
             <div class="graficos-avaliacao">
-              <div class="grafico-item">
-                <div class="titulo-grafico">Suporte</div>
-                <div class="grafico-barras" id="grafico4"></div>
-              </div>
-
-              <div class="grafico-item">
-                <div class="titulo-grafico">Atendimento Técnico</div>
-                <div class="grafico-barras" id="grafico5"></div>
-              </div>
-
-              <div class="grafico-item">
-                <div class="titulo-grafico">Experiência Geral</div>
-                <div class="grafico-barras" id="grafico6"></div>
-              </div>
+              <div class="grafico-item"><div class="titulo-grafico">Suporte</div><div class="grafico-barras" id="grafico4"></div></div>
+              <div class="grafico-item"><div class="titulo-grafico">Atendimento Técnico</div><div class="grafico-barras" id="grafico5"></div></div>
+              <div class="grafico-item"><div class="titulo-grafico">Experiência Geral</div><div class="grafico-barras" id="grafico6"></div></div>
             </div>
           </div>
 
           <div class="grafico-box">
             <div class="grafico-titulo">Ranking / Indicadores</div>
-            <div class="placeholder" id="indicadoresPosSuporte">Aqui vai ranking, NPS ou outro indicador</div>
+            <div id="indicadoresPosSuporte"></div>
           </div>
         </div>
 
@@ -663,13 +613,14 @@
     const SUPABASE_KEY = "sb_publishable_AUguEJIlOy_l87hJeHsbNw_VdwPqRAl";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let listaTratativasAtual = [];
-    let listaCriticosAtual = [];
-    let listaElogiosAtual = [];
+    function logout() {
+      localStorage.removeItem("usuarioLogado");
+      window.location.href = "login.html";
+    }
 
-    function toggleTratativas() {
-      let box = document.getElementById("boxTratativas");
-      let botao = document.getElementById("btnToggleTratativas");
+    function toggleBox(boxId, btnId) {
+      let box = document.getElementById(boxId);
+      let botao = document.getElementById(btnId);
       if (!box || !botao) return;
 
       if (box.style.display === "none" || box.style.display === "") {
@@ -681,39 +632,610 @@
       }
     }
 
-    function toggleCriticos() {
-      let box = document.getElementById("boxCriticos");
-      let botao = document.getElementById("btnToggleCriticos");
-      if (!box || !botao) return;
-
-      if (box.style.display === "none" || box.style.display === "") {
-        box.style.display = "block";
-        botao.innerText = "Ocultar";
-      } else {
-        box.style.display = "none";
-        botao.innerText = "Ver";
-      }
+    function normalizarTexto(texto) {
+      return String(texto || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/-/g, " ")
+        .replace(/_/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
     }
 
-    function toggleElogios() {
-      let box = document.getElementById("boxElogios");
-      let botao = document.getElementById("btnToggleElogios");
-      if (!box || !botao) return;
-
-      if (box.style.display === "none" || box.style.display === "") {
-        box.style.display = "block";
-        botao.innerText = "Ocultar";
-      } else {
-        box.style.display = "none";
-        botao.innerText = "Ver";
-      }
+    function ehRealizada(status) {
+      let s = normalizarTexto(status);
+      return s === "realizada" || s === "pesquisa realizada";
     }
 
-    window.toggleTratativas = toggleTratativas;
-    window.toggleCriticos = toggleCriticos;
-    window.toggleElogios = toggleElogios;
+    function ehNaoQuis(status) {
+      let s = normalizarTexto(status);
+      return s === "nao quis" || s === "nao quis realizar" || s === "nao quis realizar pesquisa";
+    }
 
-    window.addEventListener("DOMContentLoaded", async function () {
+    function ehRetorno(status) {
+      let s = normalizarTexto(status);
+      return s === "retorno" || s === "solicita retorno";
+    }
+
+    function ehSemContato(status) {
+      let s = normalizarTexto(status);
+      return s === "sem contato";
+    }
+
+    function filtrarPorTipo(lista, tipoPesquisa) {
+      let tipoNormalizado = normalizarTexto(tipoPesquisa);
+      return lista.filter(function(item) {
+        return normalizarTexto(item.tipo) === tipoNormalizado;
+      });
+    }
+
+    async function obterRespostas() {
+      let { data, error } = await supabaseClient
+        .from("respostas")
+        .select("*")
+        .order("id", { ascending: true });
+
+      if (error) {
+        console.error("Erro ao buscar respostas:", error);
+        alert("Erro ao carregar relatório: " + error.message);
+        return [];
+      }
+
+      let dataInicio = localStorage.getItem("filtroDataInicio");
+      let dataFim = localStorage.getItem("filtroDataFim");
+
+      if (!dataInicio && !dataFim) return data || [];
+
+      return (data || []).filter(function(item) {
+        if (!item.data) return false;
+        if (dataInicio && item.data < dataInicio) return false;
+        if (dataFim && item.data > dataFim) return false;
+        return true;
+      });
+    }
+
+    function contarAvaliacoes(lista, campo) {
+      let contagem = new Array(10).fill(0);
+
+      lista.forEach(function(item) {
+        let valor = Number(item[campo]);
+        if (valor >= 1 && valor <= 10) {
+          contagem[valor - 1]++;
+        }
+      });
+
+      return contagem;
+    }
+
+    function criarGrafico(id, valores) {
+      let container = document.getElementById(id);
+      if (!container) return;
+
+      container.innerHTML = "";
+
+      let numerosAntigos = container.parentElement.querySelector(".numeros");
+      if (numerosAntigos) numerosAntigos.remove();
+
+      let maiorValor = Math.max(...valores, 1);
+
+      valores.forEach(function(valor) {
+        let barra = document.createElement("div");
+        barra.className = "barra";
+        barra.style.height = ((valor / maiorValor) * 140) + "px";
+
+        let texto = document.createElement("span");
+        texto.innerText = valor;
+
+        barra.appendChild(texto);
+        container.appendChild(barra);
+      });
+
+      let numeros = document.createElement("div");
+      numeros.className = "numeros";
+
+      for (let i = 1; i <= 10; i++) {
+        let n = document.createElement("span");
+        n.innerText = i;
+        numeros.appendChild(n);
+      }
+
+      container.parentElement.appendChild(numeros);
+    }
+
+    function atualizarCards(secao, lista) {
+      let cards = secao.querySelectorAll(".card-valor");
+      if (cards.length < 4) return;
+
+      cards[0].innerText = lista.length;
+      cards[1].innerText = lista.filter(item => ehRealizada(item.status)).length;
+      cards[2].innerText = lista.filter(item => ehNaoQuis(item.status)).length;
+      cards[3].innerText = lista.filter(item => ehSemContato(item.status)).length;
+    }
+
+    function obterResumoPorAtendente(lista) {
+      let resumo = {};
+
+      lista.forEach(function(item) {
+        let nomeOriginal = String(item.atendente || "Não informado").trim();
+        let chave = normalizarTexto(nomeOriginal) || "nao informado";
+
+        if (!resumo[chave]) {
+          resumo[chave] = {
+            atendente: nomeOriginal || "Não informado",
+            total: 0,
+            realizadas: 0,
+            naoQuis: 0,
+            retorno: 0,
+            semContato: 0
+          };
+        }
+
+        resumo[chave].total += 1;
+        if (ehRealizada(item.status)) resumo[chave].realizadas += 1;
+        if (ehNaoQuis(item.status)) resumo[chave].naoQuis += 1;
+        if (ehRetorno(item.status)) resumo[chave].retorno += 1;
+        if (ehSemContato(item.status)) resumo[chave].semContato += 1;
+      });
+
+      return Object.values(resumo).sort(function(a, b) {
+        return b.realizadas - a.realizadas || b.total - a.total;
+      });
+    }
+
+    function obterMediaPorTecnico(lista) {
+      let resumo = {};
+
+      lista.forEach(function(item) {
+        let tecnico = item.tecnico || "Não informado";
+        let notaTecnico = Number(item.pergunta2);
+
+        if (!ehRealizada(item.status)) return;
+        if (!(notaTecnico >= 1 && notaTecnico <= 10)) return;
+
+        if (!resumo[tecnico]) {
+          resumo[tecnico] = { tecnico, soma: 0, quantidade: 0, media: 0 };
+        }
+
+        resumo[tecnico].soma += notaTecnico;
+        resumo[tecnico].quantidade += 1;
+      });
+
+      return Object.values(resumo).map(function(item) {
+        item.media = item.quantidade ? item.soma / item.quantidade : 0;
+        return item;
+      }).sort(function(a, b) {
+        return b.media - a.media || b.quantidade - a.quantidade;
+      });
+    }
+
+    function renderizarRankingAtendentes(containerId, lista) {
+      let box = document.getElementById(containerId);
+      if (!box) return;
+
+      let resumo = obterResumoPorAtendente(lista);
+
+      if (resumo.length === 0) {
+        box.innerHTML = '<div class="ranking-linha">Nenhuma pesquisa registrada.</div>';
+        return;
+      }
+
+      box.innerHTML = resumo.map(function(item, index) {
+        return `
+          <div class="ranking-linha ${index === 0 ? "destaque" : ""}">
+            <div>
+              <strong>${index === 0 ? "🥇 " : ""}${item.atendente}</strong><br>
+              <span class="ranking-texto">
+                Realizadas: ${item.realizadas} | Não quis: ${item.naoQuis}<br>
+                Retorno: ${item.retorno} | Sem contato: ${item.semContato}
+              </span>
+            </div>
+            <div class="ranking-numero">${item.realizadas}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderizarVisaoGeral(containerId, lista) {
+      let box = document.getElementById(containerId);
+      if (!box) return;
+
+      let total = lista.length;
+      let realizadas = lista.filter(item => ehRealizada(item.status)).length;
+      let semContato = lista.filter(item => ehSemContato(item.status)).length;
+      let naoQuis = lista.filter(item => ehNaoQuis(item.status)).length;
+
+      box.innerHTML = `
+        <div class="ranking-linha"><span>Total de pesquisas</span><div class="ranking-numero">${total}</div></div>
+        <div class="ranking-linha"><span>Sem Contato</span><div class="ranking-numero">${semContato}</div></div>
+        <div class="ranking-linha"><span>Pesquisas Realizadas</span><div class="ranking-numero">${realizadas}</div></div>
+        <div class="ranking-linha"><span>Não Quis Realizar Pesquisa</span><div class="ranking-numero">${naoQuis}</div></div>
+      `;
+    }
+
+    function renderizarRankingTecnicos(containerId, lista) {
+      let box = document.getElementById(containerId);
+      if (!box) return;
+
+      let ranking = obterMediaPorTecnico(lista);
+
+      if (ranking.length === 0) {
+        box.innerHTML = '<div class="ranking-linha">Nenhuma avaliação registrada.</div>';
+        return;
+      }
+
+      box.innerHTML = ranking.map(function(item, index) {
+        let cor = item.media >= 9 ? "#16a34a" : item.media >= 7 ? "#f59e0b" : "#dc2626";
+
+        return `
+          <div class="ranking-linha ${index === 0 ? "destaque" : ""}" style="display:block;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <strong>${index === 0 ? "🥇 " : ""}${item.tecnico}</strong>
+              <strong style="color:${cor};">${item.media.toFixed(1)}</strong>
+            </div>
+            <div style="width:100%;height:8px;background:#dbe4ea;border-radius:6px;overflow:hidden;margin-bottom:5px;">
+              <div style="width:${(item.media / 10) * 100}%;height:100%;background:${cor};"></div>
+            </div>
+            <div style="font-size:12px;color:#666;">Avaliações: ${item.quantidade}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderizarIndicadores(containerId, lista) {
+      let box = document.getElementById(containerId);
+      if (!box) return;
+
+      let atendentes = obterResumoPorAtendente(lista);
+      let tecnicos = obterMediaPorTecnico(lista);
+
+      let html = '<div style="display:flex;gap:24px;width:100%;align-items:stretch;box-sizing:border-box;flex-wrap:wrap;">';
+
+      html += '<div style="flex:1;min-width:320px;background:#fff;border:1px solid #e3e8f0;border-radius:10px;padding:12px;">';
+      html += '<div style="font-weight:bold;color:#1f3c88;margin-bottom:12px;">Pesquisas por Atendente</div>';
+      html += atendentes.length ? atendentes.map(function(item, index) {
+        return `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin-bottom:6px;background:${index === 0 ? '#eef4ff' : '#f7f9fc'};border-radius:8px;border-left:4px solid ${index === 0 ? '#d4a017' : '#1f3c88'};">
+            <div>
+              <strong>${index === 0 ? '🥇 ' : ''}${item.atendente}</strong><br>
+              <span style="font-size:12px;color:#666;line-height:1.4;">
+                Realizadas: ${item.realizadas} | Não quis: ${item.naoQuis}<br>
+                Retorno: ${item.retorno} | Sem contato: ${item.semContato}
+              </span>
+            </div>
+            <div style="font-size:20px;font-weight:bold;color:#1f3c88;">${item.realizadas}</div>
+          </div>
+        `;
+      }).join("") : '<div style="color:#888;">Nenhuma pesquisa registrada ainda</div>';
+      html += '</div>';
+
+      html += '<div style="flex:0.75;min-width:280px;background:#fff;border:1px solid #e3e8f0;border-radius:10px;padding:12px;">';
+      html += '<div style="font-weight:bold;color:#1f3c88;margin-bottom:12px;">Ranking de técnicos</div>';
+      html += tecnicos.length ? tecnicos.map(function(item, index) {
+        let cor = item.media >= 9 ? '#15803d' : item.media >= 7 ? '#b45309' : '#b91c1c';
+        return `
+          <div style="padding:10px;margin-bottom:8px;background:${index === 0 ? '#fff8e6' : '#f7f9fc'};border-radius:8px;border-left:4px solid ${index === 0 ? '#d4a017' : cor};">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <strong>${index === 0 ? '🥇 ' : ''}${item.tecnico}</strong>
+              <span style="font-weight:bold;color:${cor};">${item.media.toFixed(1)}</span>
+            </div>
+            <div style="width:100%;height:8px;background:#e3e8f0;border-radius:6px;overflow:hidden;">
+              <div style="width:${(item.media / 10) * 100}%;height:100%;background:${cor};"></div>
+            </div>
+            <div style="font-size:11px;color:#666;margin-top:4px;">Avaliações: ${item.quantidade}</div>
+          </div>
+        `;
+      }).join("") : '<div style="color:#888;">Nenhuma avaliação registrada ainda</div>';
+      html += '</div></div>';
+
+      box.innerHTML = html;
+    }
+
+    function calcularNPS(lista) {
+      let detratores = 0;
+      let neutros = 0;
+      let promotores = 0;
+
+      lista.forEach(function(item) {
+        let nota = Number(item.pergunta3);
+        if (!(nota >= 1 && nota <= 10)) return;
+        if (nota <= 6) detratores++;
+        else if (nota <= 8) neutros++;
+        else promotores++;
+      });
+
+      let total = detratores + neutros + promotores;
+      let nps = total ? ((promotores - detratores) / total) * 100 : 0;
+
+      return {
+        nps: Math.round(nps),
+        detratores,
+        neutros,
+        promotores,
+        total
+      };
+    }
+
+    function renderizarNPS(containerId, lista) {
+      let container = document.getElementById(containerId);
+      if (!container) return;
+
+      let dados = calcularNPS(lista);
+      let angulo = ((dados.nps + 100) / 200) * 180 - 90;
+      let npsTexto = dados.nps.toFixed(2).replace(".", ",");
+      let corNps = "#ff1010";
+      let classificacaoNps = "Crítico";
+
+      if (dados.nps >= 75) { corNps = "#00b050"; classificacaoNps = "Excelente"; }
+      else if (dados.nps >= 50) { corNps = "#34a853"; classificacaoNps = "Muito bom"; }
+      else if (dados.nps >= 0) { corNps = "#ffc000"; classificacaoNps = "Aceitável"; }
+      else if (dados.nps >= -49) { corNps = "#ff7a00"; classificacaoNps = "Ruim"; }
+
+      let ponteiroId = "ponteiro-" + containerId;
+
+      container.innerHTML = `
+        <div style="height:100%;display:flex;align-items:center;justify-content:center;padding:10px 0;box-sizing:border-box;">
+          <div style="width:100%;max-width:430px;display:flex;flex-direction:column;align-items:center;">
+            <div style="font-size:28px;font-weight:bold;color:#111;margin-bottom:4px;">NPS</div>
+            <div style="font-size:48px;font-weight:bold;color:${corNps};margin-bottom:6px;">${npsTexto}</div>
+            <div style="font-size:20px;font-weight:bold;color:${corNps};margin-bottom:20px;">${classificacaoNps}</div>
+
+            <div style="position:relative;width:260px;height:140px;margin-bottom:25px;">
+              <div style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:240px;height:120px;border-top-left-radius:240px;border-top-right-radius:240px;overflow:hidden;background:conic-gradient(from 180deg,#ff1010 0deg 60deg,#ff7a00 60deg 78deg,#ffc000 78deg 144deg,#00b050 144deg 180deg);"></div>
+              <div style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:185px;height:92px;border-top-left-radius:185px;border-top-right-radius:185px;background:#fff;"></div>
+              <div id="${ponteiroId}" style="position:absolute;left:50%;bottom:2px;width:4px;height:85px;background:#a7a7a7;border-radius:3px;transform:translateX(-50%) rotate(-90deg);transform-origin:bottom center;transition:transform 1s ease;"></div>
+              <div style="position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);width:18px;height:18px;border-radius:50%;background:#d8d8d8;border:2px solid #9b9b9b;"></div>
+            </div>
+
+            ${linhaNps('Promotores', dados.promotores, '#00b050', '#fff')}
+            ${linhaNps('Neutros', dados.neutros, '#ffc000', '#111')}
+            ${linhaNps('Detratores', dados.detratores, '#ff1010', '#fff')}
+          </div>
+        </div>
+      `;
+
+      setTimeout(function() {
+        let ponteiro = document.getElementById(ponteiroId);
+        if (ponteiro) ponteiro.style.transform = "translateX(-50%) rotate(" + angulo + "deg)";
+      }, 100);
+    }
+
+    function linhaNps(label, valor, fundo, corTexto) {
+      return `
+        <div style="width:100%;max-width:360px;display:flex;align-items:stretch;height:48px;border-radius:4px;overflow:hidden;background:${fundo};margin-bottom:14px;">
+          <div style="width:95px;background:#fff;color:#333;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%);">${valor}</div>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center;color:${corTexto};font-size:19px;font-weight:500;">${label}</div>
+        </div>
+      `;
+    }
+
+    function montarListaTratativas(lista) {
+      let mapa = {};
+
+      lista.forEach(function(item) {
+        let status = normalizarTexto(item.status);
+        let abriuTratativa = String(item.necessita_tratativa || "").toLowerCase() === "sim";
+        let ehLinhaTratativa = ["tratativa resolvida", "tratativa retorno", "tratativa sem contato"].includes(status);
+
+        if (!abriuTratativa && !ehLinhaTratativa) return;
+
+        let chave = [item.cliente || "", item.tipo || "", item.tecnico || "", item.motivo_tratativa || ""].join("||");
+
+        if (!mapa[chave]) {
+          mapa[chave] = {
+            cliente: item.cliente || "",
+            tipo: item.tipo || "",
+            tecnico: item.tecnico || "",
+            motivo: item.motivo_tratativa || "",
+            statusAtual: "pendente",
+            abertura: item.data || "",
+            conclusao: "",
+            ordem: item.id || 0
+          };
+        }
+
+        if (abriuTratativa) {
+          mapa[chave].statusAtual = "pendente";
+          mapa[chave].abertura = item.data || mapa[chave].abertura;
+        }
+
+        if (ehLinhaTratativa) {
+          if (status === "tratativa resolvida") {
+            mapa[chave].statusAtual = "concluida";
+            mapa[chave].conclusao = item.data || "";
+          } else {
+            mapa[chave].statusAtual = "pendente";
+          }
+        }
+
+        mapa[chave].ordem = item.id || mapa[chave].ordem;
+      });
+
+      return Object.values(mapa).sort(function(a, b) {
+        if (a.statusAtual !== b.statusAtual) return a.statusAtual === "pendente" ? -1 : 1;
+        return (b.ordem || 0) - (a.ordem || 0);
+      });
+    }
+
+    function renderizarTratativas(lista) {
+      let tratativas = montarListaTratativas(lista);
+      let pendentes = tratativas.filter(item => item.statusAtual === "pendente").length;
+      let concluidas = tratativas.filter(item => item.statusAtual === "concluida").length;
+
+      document.getElementById("totalTratativas").innerText = tratativas.length;
+      document.getElementById("resumoTratativasDetalhado").innerHTML = ` | Pendentes: <span style="color:#b45309;">${pendentes}</span> | Concluídas: <span style="color:#15803d;">${concluidas}</span>`;
+
+      let tabela = document.getElementById("tabelaTratativas");
+      tabela.innerHTML = tratativas.length ? tratativas.map(function(item) {
+        return `
+          <tr>
+            <td>${item.cliente}</td>
+            <td>${item.tipo}</td>
+            <td>${item.tecnico}</td>
+            <td>${item.motivo}</td>
+            <td><span class="status-badge ${item.statusAtual === "concluida" ? "status-concluida" : "status-pendente"}">${item.statusAtual === "concluida" ? "Concluída" : "Pendente"}</span></td>
+            <td>${item.abertura}</td>
+            <td>${item.conclusao}</td>
+          </tr>
+        `;
+      }).join("") : '<tr><td colspan="7" class="texto-vazio">Nenhuma tratativa encontrada no período selecionado.</td></tr>';
+    }
+
+    function comentarioContem(comentario, palavras) {
+      let texto = normalizarTexto(comentario);
+      if (!texto) return false;
+      return palavras.some(palavra => texto.includes(normalizarTexto(palavra)));
+    }
+
+    function renderizarCriticos(lista) {
+      let palavrasCriticas = ["reclamacao", "recorrencia", "ativar app", "ativacao", "aplicativo", "app", "suporte", "instabilidade", "sem sinal", "lentidao", "cancelar", "cancelamento", "insatisfeito", "ruim", "pessimo", "voltou a dar problema", "nao conseguiu acessar", "nao consegue acessar", "erro no app", "nao funcionou", "insatisfacao", "demora", "oscila", "velocidade"];
+
+      let criticos = lista.filter(function(item) {
+        let p1 = Number(item.pergunta1);
+        let p2 = Number(item.pergunta2);
+        let p3 = Number(item.pergunta3);
+        let notaCritica = (p1 >= 1 && p1 <= 6) || (p2 >= 1 && p2 <= 6) || (p3 >= 1 && p3 <= 6);
+        return notaCritica || comentarioContem(item.comentario, palavrasCriticas);
+      }).sort((a, b) => (b.id || 0) - (a.id || 0));
+
+      document.getElementById("totalCriticos").innerText = criticos.length;
+      preencherTabelaFeedback("tabelaCriticos", criticos, "Nenhuma avaliação crítica encontrada.");
+    }
+
+    function renderizarElogios(lista) {
+      let palavrasCriticas = ["reclamacao", "problema", "recorrencia", "ativar app", "ativacao", "aplicativo", "app", "suporte", "instabilidade", "sem sinal", "lentidao", "cancelar", "cancelamento", "insatisfeito", "ruim", "pessimo", "voltou a dar problema", "nao conseguiu acessar", "nao consegue acessar", "erro no app", "nao funcionou", "insatisfacao", "demora", "oscila", "velocidade"];
+      let palavrasElogios = ["elogio", "parabenizar", "parabens", "otimo", "excelente", "muito bom", "bom atendimento", "bem atendido", "gostei", "satisfeito", "muito satisfeito", "atendente educado", "tecnico educado", "rapido"];
+
+      let elogios = lista.filter(function(item) {
+        let p1 = Number(item.pergunta1);
+        let p2 = Number(item.pergunta2);
+        let p3 = Number(item.pergunta3);
+        let notaCritica = (p1 >= 1 && p1 <= 6) || (p2 >= 1 && p2 <= 6) || (p3 >= 1 && p3 <= 6);
+        if (notaCritica || comentarioContem(item.comentario, palavrasCriticas)) return false;
+        return comentarioContem(item.comentario, palavrasElogios);
+      }).sort((a, b) => (b.id || 0) - (a.id || 0));
+
+      document.getElementById("totalElogios").innerText = elogios.length;
+      preencherTabelaFeedback("tabelaElogios", elogios, "Nenhum elogio encontrado.");
+    }
+
+    function preencherTabelaFeedback(tabelaId, lista, vazioTexto) {
+      let tabela = document.getElementById(tabelaId);
+      if (!tabela) return;
+
+      tabela.innerHTML = lista.length ? lista.map(function(item) {
+        return `
+          <tr>
+            <td>${item.cliente || ""}</td>
+            <td>${item.tipo || ""}</td>
+            <td>${item.atendente || ""}</td>
+            <td>${item.tecnico || ""}</td>
+            <td>${item.pergunta1 || ""}</td>
+            <td>${item.pergunta2 || ""}</td>
+            <td>${item.pergunta3 || ""}</td>
+            <td>${item.data || ""}</td>
+            <td>${item.comentario || ""}</td>
+          </tr>
+        `;
+      }).join("") : `<tr><td colspan="9" class="texto-vazio">${vazioTexto}</td></tr>`;
+    }
+
+    function aplicarFiltro() {
+      let dataInicio = document.getElementById("dataInicio").value;
+      let dataFim = document.getElementById("dataFim").value;
+
+      if (!dataInicio && !dataFim) {
+        alert("Selecione pelo menos uma data para filtrar.");
+        return;
+      }
+
+      if (dataInicio && dataFim && dataInicio > dataFim) {
+        alert("A data inicial não pode ser maior que a data final.");
+        return;
+      }
+
+      localStorage.setItem("filtroDataInicio", dataInicio || "");
+      localStorage.setItem("filtroDataFim", dataFim || "");
+      location.reload();
+    }
+
+    function limparFiltro() {
+      localStorage.removeItem("filtroDataInicio");
+      localStorage.removeItem("filtroDataFim");
+      location.reload();
+    }
+
+    function limparCampoCSV(valor) {
+      return String(valor || "").replace(/;/g, ",").replace(/\r?\n|\r/g, " ");
+    }
+
+    async function exportarExcel() {
+      let dados = await obterRespostas();
+
+      if (dados.length === 0) {
+        alert("Não há dados para exportar.");
+        return;
+      }
+
+      let csv = "Cliente;Tipo;Atendente;Tecnico;Pergunta1;Pergunta2;Pergunta3;Status;Data;Comentario\n";
+
+      dados.forEach(function(item) {
+        csv += [
+          limparCampoCSV(item.cliente),
+          limparCampoCSV(item.tipo),
+          limparCampoCSV(item.atendente),
+          limparCampoCSV(item.tecnico),
+          limparCampoCSV(item.pergunta1),
+          limparCampoCSV(item.pergunta2),
+          limparCampoCSV(item.pergunta3),
+          limparCampoCSV(item.status),
+          limparCampoCSV(item.data),
+          limparCampoCSV(item.comentario)
+        ].join(";") + "\n";
+      });
+
+      let blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      let link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "relatorio.csv";
+      link.click();
+    }
+
+    async function carregarDashboard() {
+      let secoes = document.querySelectorAll(".dashboard");
+      if (secoes.length < 4) return;
+
+      let respostas = await obterRespostas();
+      let posVenda = filtrarPorTipo(respostas, "Pós Venda");
+      let posSuporte = filtrarPorTipo(respostas, "Pós Suporte");
+
+      renderizarTratativas(respostas);
+      renderizarCriticos(respostas);
+      renderizarElogios(respostas);
+
+      renderizarVisaoGeral("visaoGeralPesquisas", respostas);
+      renderizarRankingAtendentes("rankingTotalAtendentes", respostas);
+      renderizarRankingTecnicos("rankingTotalTecnicos", respostas);
+
+      atualizarCards(secoes[2], posVenda);
+      atualizarCards(secoes[3], posSuporte);
+
+      criarGrafico("grafico1", contarAvaliacoes(posVenda, "pergunta1"));
+      criarGrafico("grafico2", contarAvaliacoes(posVenda, "pergunta2"));
+      criarGrafico("grafico3", contarAvaliacoes(posVenda, "pergunta3"));
+
+      criarGrafico("grafico4", contarAvaliacoes(posSuporte, "pergunta1"));
+      criarGrafico("grafico5", contarAvaliacoes(posSuporte, "pergunta2"));
+      criarGrafico("grafico6", contarAvaliacoes(posSuporte, "pergunta3"));
+
+      renderizarIndicadores("indicadoresPosVenda", posVenda);
+      renderizarIndicadores("indicadoresPosSuporte", posSuporte);
+
+      renderizarNPS("npsPosVenda", posVenda);
+      renderizarNPS("npsPosSuporte", posSuporte);
+    }
+
+    window.addEventListener("DOMContentLoaded", async function() {
       let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
 
       if (!usuarioLogado) {
@@ -732,997 +1254,15 @@
         return;
       }
 
-      function logout() {
-        localStorage.removeItem("usuarioLogado");
-        window.location.href = "login.html";
-      }
-
-      window.logout = logout;
-
-      async function obterRespostas() {
-        let { data, error } = await supabaseClient
-          .from("respostas")
-          .select("*")
-          .order("id", { ascending: true });
-
-        if (error) {
-          console.error("Erro ao buscar respostas:", error);
-          alert("Erro ao carregar relatório: " + error.message);
-          return [];
-        }
-
-        let dataInicio = localStorage.getItem("filtroDataInicio");
-        let dataFim = localStorage.getItem("filtroDataFim");
-
-        if (!dataInicio && !dataFim) return data || [];
-
-        return (data || []).filter(function(item) {
-          if (!item.data) return false;
-
-          let dataItem = item.data;
-          if (dataInicio && dataItem < dataInicio) return false;
-          if (dataFim && dataItem > dataFim) return false;
-
-          return true;
-        });
-      }
-
-      function normalizarTexto(texto) {
-        return String(texto || "")
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/-/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-      }
-
-      function filtrarPorTipo(lista, tipoPesquisa) {
-        let tipoNormalizado = normalizarTexto(tipoPesquisa);
-
-        return lista.filter(function(item) {
-          let tipoItem = normalizarTexto(item.tipo);
-
-          if (tipoNormalizado === "pos venda") return tipoItem === "pos venda";
-          if (tipoNormalizado === "pos suporte") return tipoItem === "pos suporte";
-
-          return tipoItem === tipoNormalizado;
-        });
-      }
-
-      function contarAvaliacoes(lista, campo) {
-        let contagem = new Array(10).fill(0);
-
-        lista.forEach(function(item) {
-          let valor = Number(item[campo]);
-          if (valor >= 1 && valor <= 10) {
-            contagem[valor - 1]++;
-          }
-        });
-
-        return contagem;
-      }
-
-      function criarGrafico(id, valores) {
-  let container = document.getElementById(id);
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  let numerosAntigos = container.parentElement.querySelector(".numeros");
-  if (numerosAntigos) numerosAntigos.remove();
-
-  let maiorValor = Math.max(...valores, 1);
-
-  valores.forEach(function(valor) {
-    let barra = document.createElement("div");
-    barra.className = "barra";
-
-    let altura = (valor / maiorValor) * 140;
-    barra.style.height = altura + "px";
-
-    let texto = document.createElement("span");
-    texto.innerText = valor;
-
-    barra.appendChild(texto);
-    container.appendChild(barra);
-  });
-
-  let numeros = document.createElement("div");
-  numeros.className = "numeros";
-
-  for (let i = 1; i <= 10; i++) {
-    let n = document.createElement("span");
-    n.innerText = i;
-    numeros.appendChild(n);
-  }
-
-  container.parentElement.appendChild(numeros);
-}
-
-      function atualizarCards(secao, lista) {
-        let cards = secao.querySelectorAll(".card-valor");
-        if (cards.length < 4) return;
-
-        let total = lista.length;
-
-        let realizadas = lista.filter(function(item) {
-          let status = normalizarTexto(item.status);
-          return status === "realizada" || status === "pesquisa realizada";
-        }).length;
-
-        let naoQuis = lista.filter(function(item) {
-          let status = normalizarTexto(item.status);
-          return (
-            status === "nao quis" ||
-            status === "nao quis realizar" ||
-            status === "nao quis realizar pesquisa" ||
-            status === "nao_quis"
-          );
-        }).length;
-
-        let semContato = lista.filter(function(item) {
-          let status = normalizarTexto(item.status);
-          return status === "sem contato" || status === "sem_contato";
-        }).length;
-
-        cards[0].innerText = total;
-        cards[1].innerText = realizadas;
-        cards[2].innerText = naoQuis;
-        cards[3].innerText = semContato;
-      }
-
-      function obterResumoPorAtendente(lista) {
-        let resumo = {};
-
-        lista.forEach(function(item) {
-          let nomeOriginal = String(item.atendente || "Não informado").trim();
-          let chaveAtendente = normalizarTexto(nomeOriginal) || "nao informado";
-          let status = normalizarTexto(item.status);
-
-          if (!resumo[chaveAtendente]) {
-            resumo[chaveAtendente] = {
-              atendente: nomeOriginal || "Não informado",
-              total: 0,
-              realizadas: 0,
-              naoQuis: 0,
-              retorno: 0,
-              semContato: 0
-            };
-          }
-
-          resumo[chaveAtendente].total += 1;
-
-          if (status === "realizada" || status === "pesquisa realizada") {
-            resumo[chaveAtendente].realizadas += 1;
-          }
-
-          if (
-            status === "nao quis" ||
-            status === "nao quis realizar" ||
-            status === "nao quis realizar pesquisa" ||
-            status === "nao_quis"
-          ) {
-            resumo[chaveAtendente].naoQuis += 1;
-          }
-
-          if (status === "retorno" || status === "solicita retorno") {
-            resumo[chaveAtendente].retorno += 1;
-          }
-
-          if (status === "sem contato" || status === "sem_contato") {
-            resumo[chaveAtendente].semContato += 1;
-          }
-        });
-
-        return Object.values(resumo).sort(function(a, b) {
-  return b.realizadas - a.realizadas;
-});
-      }
-
-      function obterMediaPorTecnico(lista) {
-        let resumo = {};
-
-        lista.forEach(function(item) {
-          let tecnico = item.tecnico || "Não informado";
-          let notaTecnico = Number(item.pergunta2);
-          let status = normalizarTexto(item.status);
-
-          if (status !== "realizada" && status !== "pesquisa realizada") return;
-          if (!(notaTecnico >= 1 && notaTecnico <= 10)) return;
-
-          if (!resumo[tecnico]) {
-            resumo[tecnico] = {
-              tecnico: tecnico,
-              soma: 0,
-              quantidade: 0,
-              media: 0
-            };
-          }
-
-          resumo[tecnico].soma += notaTecnico;
-          resumo[tecnico].quantidade += 1;
-        });
-
-        let resultado = Object.values(resumo).map(function(item) {
-          item.media = item.quantidade ? (item.soma / item.quantidade) : 0;
-          return item;
-        });
-
-        resultado.sort(function(a, b) {
-          return b.media - a.media;
-        });
-
-        return resultado;
-      }
-
-      function calcularNPS(lista) {
-        let detratores = 0;
-        let neutros = 0;
-        let promotores = 0;
-
-        lista.forEach(function(item) {
-          let nota = Number(item.pergunta3);
-          if (!(nota >= 1 && nota <= 10)) return;
-
-          if (nota <= 6) {
-            detratores++;
-          } else if (nota <= 8) {
-            neutros++;
-          } else {
-            promotores++;
-          }
-        });
-
-        let total = detratores + neutros + promotores;
-
-        if (total === 0) {
-          return {
-            nps: 0,
-            detratores: 0,
-            neutros: 0,
-            promotores: 0,
-            total: 0
-          };
-        }
-
-        let nps = ((promotores - detratores) / total) * 100;
-
-        return {
-          nps: Math.round(nps),
-          detratores,
-          neutros,
-          promotores,
-          total
-        };
-      }
-
-      function renderizarNPS(containerId, lista) {
-        let container = document.getElementById(containerId);
-        if (!container) return;
-
-        let dados = calcularNPS(lista);
-        let angulo = ((dados.nps + 100) / 200) * 180 - 90;
-        let npsTexto = dados.nps.toFixed(2).replace(".", ",");
-
-                let corNps = "";
-        let classificacaoNps = "";
-
-        if (dados.nps >= 75) {
-          corNps = "#00b050";
-          classificacaoNps = "Excelente";
-        } else if (dados.nps >= 50) {
-          corNps = "#34a853";
-          classificacaoNps = "Muito bom";
-        } else if (dados.nps >= 0) {
-          corNps = "#ffc000";
-          classificacaoNps = "Aceitável";
-        } else if (dados.nps >= -49) {
-          corNps = "#ff7a00";
-          classificacaoNps = "Ruim";
-        } else {
-          corNps = "#ff1010";
-          classificacaoNps = "Crítico";
-        }
-
-        let ponteiroId = "ponteiro-" + containerId;
-
-        container.innerHTML = `
-          <div style="height:100%;display:flex;align-items:center;justify-content:center;padding:10px 0;box-sizing:border-box;">
-            <div style="width:100%;max-width:430px;display:flex;flex-direction:column;align-items:center;">
-              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:25px;">
-                <div style="font-size:28px;font-weight:bold;color:#111;margin-bottom:4px;">NPS</div>
-                <div style="font-size:48px;font-weight:bold;color:${corNps};margin-bottom:6px;">${npsTexto}</div>
-                <div style="font-size:20px;font-weight:bold;color:${corNps};margin-bottom:20px;">${classificacaoNps}</div>
-
-                <div style="position:relative;width:260px;height:140px;">
-                  <div style="
-                    position:absolute;
-                    left:50%;
-                    bottom:0;
-                    transform:translateX(-50%);
-                    width:240px;
-                    height:120px;
-                    border-top-left-radius:240px;
-                    border-top-right-radius:240px;
-                    overflow:hidden;
-                    background: conic-gradient(
-                      from 180deg,
-                      #ff1010 0deg 36deg,
-                      #ff1010 36deg 60deg,
-                      #ff3b1a 60deg 78deg,
-                      #ffc000 78deg 102deg,
-                      #ffc000 102deg 126deg,
-                      #ffc000 126deg 144deg,
-                      #00b050 144deg 162deg,
-                      #00b050 162deg 180deg
-                    );
-                  "></div>
-
-                  <div style="
-                    position:absolute;
-                    left:50%;
-                    bottom:0;
-                    transform:translateX(-50%);
-                    width:185px;
-                    height:92px;
-                    border-top-left-radius:185px;
-                    border-top-right-radius:185px;
-                    background:#fff;
-                  "></div>
-
-                  <div id="${ponteiroId}" style="
-                    position:absolute;
-                    left:50%;
-                    bottom:2px;
-                    width:4px;
-                    height:85px;
-                    background:#a7a7a7;
-                    border-radius:3px;
-                    transform:translateX(-50%) rotate(-90deg);
-                    transform-origin:bottom center;
-                    transition:transform 1s ease;
-                  "></div>
-
-                  <div style="
-                    position:absolute;
-                    left:50%;
-                    bottom:-2px;
-                    transform:translateX(-50%);
-                    width:18px;
-                    height:18px;
-                    border-radius:50%;
-                    background:#d8d8d8;
-                    border:2px solid #9b9b9b;
-                  "></div>
-                </div>
-              </div>
-
-              <div style="width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px;margin-top:10px;">
-                <div style="display:flex;align-items:stretch;height:48px;border-radius:4px;overflow:hidden;background:#00b050;">
-                  <div style="width:95px;background:#fff;color:#333;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%);">
-                    ${dados.promotores}
-                  </div>
-                  <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;font-weight:500;">
-                    Promotores
-                  </div>
-                </div>
-
-                <div style="display:flex;align-items:stretch;height:48px;border-radius:4px;overflow:hidden;background:#ffc000;">
-                  <div style="width:95px;background:#fff;color:#333;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%);">
-                    ${dados.neutros}
-                  </div>
-                  <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#111;font-size:19px;font-weight:500;">
-                    Neutros
-                  </div>
-                </div>
-
-                <div style="display:flex;align-items:stretch;height:48px;border-radius:4px;overflow:hidden;background:#ff1010;">
-                  <div style="width:95px;background:#fff;color:#333;font-size:22px;font-weight:700;display:flex;align-items:center;justify-content:center;clip-path:polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%);">
-                    ${dados.detratores}
-                  </div>
-                  <div style="flex:1;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;font-weight:500;">
-                    Detratores
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-
-        setTimeout(function() {
-          let ponteiro = document.getElementById(ponteiroId);
-          if (ponteiro) {
-            ponteiro.style.transform = "translateX(-50%) rotate(" + angulo + "deg)";
-          }
-        }, 100);
-      }
-
-      function renderizarIndicadores(containerId, lista) {
-        let box = document.getElementById(containerId);
-        if (!box) return;
-
-        let resumoAtendentes = obterResumoPorAtendente(lista);
-        let mediasTecnicos = obterMediaPorTecnico(lista);
-
-        let html = '<div style="display:flex;gap:24px;width:100%;align-items:stretch;box-sizing:border-box;">';
-
-        html += '<div style="flex:1;min-width:0;">';
-        html += '<div style="background:#ffffff;border:1px solid #e3e8f0;border-radius:10px;padding:12px;height:100%;">';
-        html += '<div style="font-weight:bold;color:#1f3c88;margin-bottom:12px;">Pesquisas por Atendente</div>';
-
-        if (resumoAtendentes.length === 0) {
-          html += '<div style="margin-bottom:18px;color:#888;">Nenhuma pesquisa registrada ainda</div>';
-        } else {
-          resumoAtendentes.forEach(function(item, index) {
-            let destaqueAtendente = index === 0;
-
-            html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin-bottom:6px;background:' + (destaqueAtendente ? '#eef4ff' : '#f7f9fc') + ';border-radius:8px;border-left:4px solid ' + (destaqueAtendente ? '#d4a017' : '#1f3c88') + ';box-shadow:' + (destaqueAtendente ? '0 3px 10px rgba(0,0,0,0.08)' : 'none') + ';">';
-            html += '<div>';
-            html += '<strong>' + (index === 0 ? '🥇 ' : '') + item.atendente + '</strong><br>';
-            html += '<span style="font-size:12px;color:#666;line-height:1.4;">';
-            html += 'Realizadas: ' + item.realizadas + ' | Não quis: ' + item.naoQuis + '<br>';
-            html += 'Retorno: ' + item.retorno + ' | Sem contato: ' + item.semContato;
-            html += '</span>';
-            html += '</div>';
-            html += '<div style="font-size:20px;font-weight:bold;color:#1f3c88;">' + item.total + '</div>';
-            html += '</div>';
-          });
-        }
-
-        html += '</div></div>';
-
-        html += '<div style="flex:0.75;min-width:0;">';
-        html += '<div style="background:#ffffff;border:1px solid #e3e8f0;border-radius:10px;padding:12px;height:100%;">';
-        html += '<div style="font-weight:bold;color:#1f3c88;margin-bottom:12px;">Ranking de técnicos</div>';
-
-        if (mediasTecnicos.length === 0) {
-          html += '<div style="color:#888;">Nenhuma avaliação de técnico registrada ainda</div>';
-        } else {
-          mediasTecnicos.forEach(function(item, index) {
-            let porcentagem = (item.media / 10) * 100;
-            let corBarra = "";
-            let corTexto = "";
-
-            if (item.media >= 9) {
-              corBarra = "linear-gradient(90deg, #1f9d55, #15803d)";
-              corTexto = "#15803d";
-            } else if (item.media >= 7) {
-              corBarra = "linear-gradient(90deg, #f4b400, #d97706)";
-              corTexto = "#b45309";
-            } else {
-              corBarra = "linear-gradient(90deg, #dc2626, #b91c1c)";
-              corTexto = "#b91c1c";
-            }
-
-            let destaqueTecnico = index === 0;
-
-            html += '<div style="padding:10px;margin-bottom:8px;background:' + (destaqueTecnico ? '#fff8e6' : '#f7f9fc') + ';border-radius:8px;border-left:4px solid ' + (destaqueTecnico ? '#d4a017' : corTexto) + ';box-shadow:' + (destaqueTecnico ? '0 3px 10px rgba(0,0,0,0.08)' : 'none') + ';">';
-            html += '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">';
-            html += '<strong>' + (index === 0 ? '🥇 ' : '') + item.tecnico + '</strong>';
-            html += '<span style="font-weight:bold;color:' + corTexto + ';">' + item.media.toFixed(1) + '</span>';
-            html += '</div>';
-            html += '<div style="width:100%;height:8px;background:#e3e8f0;border-radius:6px;overflow:hidden;">';
-            html += '<div style="width:' + porcentagem + '%;height:100%;background:' + corBarra + ';"></div>';
-            html += '</div>';
-            html += '<div style="font-size:11px;color:#666;margin-top:4px;">Avaliações: ' + item.quantidade + '</div>';
-            html += '</div>';
-          });
-        }
-
-        html += '</div></div></div>';
-
-        box.innerHTML = html;
-        box.style.display = "block";
-        box.style.height = "auto";
-        box.style.alignItems = "flex-start";
-        box.style.justifyContent = "flex-start";
-      }
-
-      function montarListaTratativas(lista) {
-        let mapa = {};
-
-        lista.forEach(function(item) {
-          let status = normalizarTexto(item.status);
-          let abriuTratativa = String(item.necessita_tratativa || "").toLowerCase() === "sim";
-          let ehLinhaTratativa =
-            status === "tratativa resolvida" ||
-            status === "tratativa retorno" ||
-            status === "tratativa sem contato" ||
-            status === "tratativa_resolvida" ||
-            status === "tratativa_retorno" ||
-            status === "tratativa_sem_contato";
-
-          if (!abriuTratativa && !ehLinhaTratativa) return;
-
-          let chave = [
-            item.cliente || "",
-            item.tipo || "",
-            item.tecnico || "",
-            item.motivo_tratativa || ""
-          ].join("||");
-
-          if (!mapa[chave]) {
-            mapa[chave] = {
-              cliente: item.cliente || "",
-              tipo: item.tipo || "",
-              tecnico: item.tecnico || "",
-              motivo: item.motivo_tratativa || "",
-              statusAtual: "pendente",
-              abertura: item.data || "",
-              conclusao: "",
-              ordem: item.id || 0
-            };
-          }
-
-          if (abriuTratativa) {
-            mapa[chave].cliente = item.cliente || mapa[chave].cliente;
-            mapa[chave].tipo = item.tipo || mapa[chave].tipo;
-            mapa[chave].tecnico = item.tecnico || mapa[chave].tecnico;
-            mapa[chave].motivo = item.motivo_tratativa || mapa[chave].motivo;
-            mapa[chave].abertura = item.data || mapa[chave].abertura;
-            mapa[chave].statusAtual = "pendente";
-          }
-
-          if (ehLinhaTratativa) {
-            if (status === "tratativa resolvida" || status === "tratativa_resolvida") {
-              mapa[chave].statusAtual = "concluida";
-              mapa[chave].conclusao = item.data || "";
-            } else {
-              mapa[chave].statusAtual = "pendente";
-            }
-          }
-
-          mapa[chave].ordem = item.id || mapa[chave].ordem;
-        });
-
-        return Object.values(mapa).sort(function(a, b) {
-          if (a.statusAtual !== b.statusAtual) {
-            return a.statusAtual === "pendente" ? -1 : 1;
-          }
-
-          return (b.ordem || 0) - (a.ordem || 0);
-        });
-      }
-
-      function renderizarTratativas(lista) {
-        listaTratativasAtual = montarListaTratativas(lista);
-
-        let total = listaTratativasAtual.length;
-        let pendentes = listaTratativasAtual.filter(function(item) {
-          return item.statusAtual === "pendente";
-        }).length;
-
-        let concluidas = listaTratativasAtual.filter(function(item) {
-          return item.statusAtual === "concluida";
-        }).length;
-
-        let campoTotal = document.getElementById("totalTratativas");
-        let campoPendentes = document.getElementById("tratativasPendentes");
-        let campoConcluidas = document.getElementById("tratativasConcluidas");
-        let tabela = document.getElementById("tabelaTratativas");
-
-        if (campoTotal) campoTotal.innerText = total;
-        if (campoPendentes) campoPendentes.innerText = pendentes;
-        if (campoConcluidas) campoConcluidas.innerText = concluidas;
-
-        if (!tabela) return;
-
-        tabela.innerHTML = "";
-
-        if (listaTratativasAtual.length === 0) {
-          tabela.innerHTML = `
-            <tr>
-              <td colspan="7" class="texto-vazio">Nenhuma tratativa encontrada no período selecionado.</td>
-            </tr>
-          `;
-          return;
-        }
-
-        listaTratativasAtual.forEach(function(item) {
-          tabela.innerHTML += `
-            <tr>
-              <td>${item.cliente || ""}</td>
-              <td>${item.tipo || ""}</td>
-              <td>${item.tecnico || ""}</td>
-              <td>${item.motivo || ""}</td>
-              <td>
-                <span class="status-badge ${item.statusAtual === "concluida" ? "status-concluida" : "status-pendente"}">
-                  ${item.statusAtual === "concluida" ? "Concluída" : "Pendente"}
-                </span>
-              </td>
-              <td>${item.abertura || ""}</td>
-              <td>${item.conclusao || ""}</td>
-            </tr>
-          `;
-        });
-      }
-
-      function renderizarCriticos(lista) {
-        let tabela = document.getElementById("tabelaCriticos");
-        let total = document.getElementById("totalCriticos");
-        if (!tabela || !total) return;
-
-        function normalizarComentario(texto) {
-          return String(texto || "")
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim();
-        }
-
-        function comentarioCritico(comentario) {
-          let texto = normalizarComentario(comentario);
-          if (!texto) return false;
-
-          let palavrasChave = [
-            "reclamacao",
-            "recorrencia",
-            "ativar app",
-            "ativacao",
-            "aplicativo",
-            "app",
-            "suporte",
-            "instabilidade",
-            "sem sinal",
-            "lentidao",
-            "cancelar",
-            "cancelamento",
-            "insatisfeito",
-            "ruim",
-            "pessimo",
-            "voltou a dar problema",
-            "nao conseguiu acessar",
-            "nao consegue acessar",
-            "erro no app",
-            "nao funcionou",
-            "não funcionou",
-            "insatisfacao",
-            "demora",
-            "oscila",
-            "velocidade"
-          ];
-
-          return palavrasChave.some(function(palavra) {
-            return texto.includes(palavra);
-          });
-        }
-
-        listaCriticosAtual = lista.filter(function(item) {
-          let p1 = Number(item.pergunta1);
-          let p2 = Number(item.pergunta2);
-          let p3 = Number(item.pergunta3);
-          let comentario = item.comentario || "";
-
-          let temNotaCritica =
-            (p1 >= 1 && p1 <= 6) ||
-            (p2 >= 1 && p2 <= 6) ||
-            (p3 >= 1 && p3 <= 6);
-
-          let temComentarioCritico = comentarioCritico(comentario);
-
-          return temNotaCritica || temComentarioCritico;
-        }).sort(function(a, b) {
-          return (b.id || 0) - (a.id || 0);
-        });
-
-        total.innerText = listaCriticosAtual.length;
-        tabela.innerHTML = "";
-
-        if (listaCriticosAtual.length === 0) {
-          tabela.innerHTML = `
-            <tr>
-              <td colspan="9" class="texto-vazio">Nenhuma avaliação crítica encontrada.</td>
-            </tr>
-          `;
-          return;
-        }
-
-        listaCriticosAtual.forEach(function(item) {
-          tabela.innerHTML += `
-            <tr>
-              <td>${item.cliente || ""}</td>
-              <td>${item.tipo || ""}</td>
-              <td>${item.atendente || ""}</td>
-              <td>${item.tecnico || ""}</td>
-              <td>${item.pergunta1 || ""}</td>
-              <td>${item.pergunta2 || ""}</td>
-              <td>${item.pergunta3 || ""}</td>
-              <td>${item.data || ""}</td>
-              <td>${item.comentario || ""}</td>
-            </tr>
-          `;
-        });
-      }
-
-      function renderizarElogios(lista) {
-        let tabela = document.getElementById("tabelaElogios");
-        let total = document.getElementById("totalElogios");
-        if (!tabela || !total) return;
-
-        function normalizarComentario(texto) {
-          return String(texto || "")
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .trim();
-        }
-
-        function comentarioCritico(comentario) {
-          let texto = normalizarComentario(comentario);
-          if (!texto) return false;
-
-          let palavrasChave = [
-            "reclamacao",
-            "problema",
-            "recorrencia",
-            "ativar app",
-            "ativacao",
-            "aplicativo",
-            "app",
-            "suporte",
-            "instabilidade",
-            "sem sinal",
-            "lentidao",
-            "cancelar",
-            "cancelamento",
-            "insatisfeito",
-            "ruim",
-            "pessimo",
-            "voltou a dar problema",
-            "nao conseguiu acessar",
-            "nao consegue acessar",
-            "erro no app",
-            "nao funcionou",
-            "não funcionou",
-            "insatisfacao",
-            "demora",
-            "oscila",
-            "velocidade"
-          ];
-
-          return palavrasChave.some(function(palavra) {
-            return texto.includes(palavra);
-          });
-        }
-
-        function comentarioElogio(comentario) {
-          let texto = normalizarComentario(comentario);
-          if (!texto) return false;
-
-          let palavrasChave = [
-            "elogio",
-            "parabenizar",
-            "parabens",
-            "parabéns",
-            "otimo",
-            "ótimo",
-            "excelente",
-            "muito bom",
-            "bom atendimento",
-            "bem atendido",
-            "gostei",
-            "satisfeito",
-            "muito satisfeito",
-            "atendente educado",
-            "tecnico educado",
-            "técnico educado",
-            "rapido",
-            "rápido"
-          ];
-
-          return palavrasChave.some(function(palavra) {
-            return texto.includes(palavra);
-          });
-        }
-
-        listaElogiosAtual = lista.filter(function(item) {
-          let p1 = Number(item.pergunta1);
-          let p2 = Number(item.pergunta2);
-          let p3 = Number(item.pergunta3);
-          let comentario = item.comentario || "";
-
-          let temNotaCritica =
-            (p1 >= 1 && p1 <= 6) ||
-            (p2 >= 1 && p2 <= 6) ||
-            (p3 >= 1 && p3 <= 6);
-
-          let temComentarioCritico = comentarioCritico(comentario);
-
-          if (temNotaCritica || temComentarioCritico) {
-            return false;
-          }
-          
-          let temComentarioElogio = comentarioElogio(comentario);
-
-    return temComentarioElogio;
-        }).sort(function(a, b) {
-          return (b.id || 0) - (a.id || 0);
-        });
-
-        total.innerText = listaElogiosAtual.length;
-        tabela.innerHTML = "";
-
-        if (listaElogiosAtual.length === 0) {
-          tabela.innerHTML = `
-            <tr>
-              <td colspan="9" class="texto-vazio">Nenhum elogio encontrado.</td>
-            </tr>
-          `;
-          return;
-        }
-
-        listaElogiosAtual.forEach(function(item) {
-          tabela.innerHTML += `
-            <tr>
-              <td>${item.cliente || ""}</td>
-              <td>${item.tipo || ""}</td>
-              <td>${item.atendente || ""}</td>
-              <td>${item.tecnico || ""}</td>
-              <td>${item.pergunta1 || ""}</td>
-              <td>${item.pergunta2 || ""}</td>
-              <td>${item.pergunta3 || ""}</td>
-              <td>${item.data || ""}</td>
-              <td>${item.comentario || ""}</td>
-            </tr>
-          `;
-        });
-      }
-
-      function aplicarFiltro() {
-        let dataInicio = document.getElementById("dataInicio").value;
-        let dataFim = document.getElementById("dataFim").value;
-
-        if (!dataInicio && !dataFim) {
-          alert("Selecione pelo menos uma data para filtrar.");
-          return;
-        }
-
-        if (dataInicio && dataFim && dataInicio > dataFim) {
-          alert("A data inicial não pode ser maior que a data final.");
-          return;
-        }
-
-        localStorage.setItem("filtroDataInicio", dataInicio || "");
-        localStorage.setItem("filtroDataFim", dataFim || "");
-        location.reload();
-      }
-
-      function limparFiltro() {
-        localStorage.removeItem("filtroDataInicio");
-        localStorage.removeItem("filtroDataFim");
-        location.reload();
-      }
-
-      function limparCampoCSV(valor) {
-        return String(valor || "")
-          .replace(/;/g, ",")
-          .replace(/\r?\n|\r/g, " ");
-      }
-
-      async function exportarExcel() {
-        let dados = await obterRespostas();
-
-        if (dados.length === 0) {
-          alert("Não há dados para exportar.");
-          return;
-        }
-
-        let csv = "Cliente;Tipo;Atendente;Tecnico;Pergunta1;Pergunta2;Pergunta3;Status;Data;Comentario\n";
-
-        dados.forEach(function(item) {
-          csv += [
-            limparCampoCSV(item.cliente),
-            limparCampoCSV(item.tipo),
-            limparCampoCSV(item.atendente),
-            limparCampoCSV(item.tecnico),
-            limparCampoCSV(item.pergunta1),
-            limparCampoCSV(item.pergunta2),
-            limparCampoCSV(item.pergunta3),
-            limparCampoCSV(item.status),
-            limparCampoCSV(item.data),
-            limparCampoCSV(item.comentario)
-          ].join(";") + "\n";
-        });
-
-        let blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-        let link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "relatorio.csv";
-        link.click();
-      }
-function renderizarRankingTotalAtendentes(containerId, lista) {
-  let box = document.getElementById(containerId);
-  if (!box) return;
-
-  let resumoAtendentes = obterResumoPorAtendente(lista);
-
-  let html = '<div style="width:100%;box-sizing:border-box;">';
-
-  if (resumoAtendentes.length === 0) {
-    html += '<div style="color:#888;">Nenhuma pesquisa registrada ainda</div>';
-  } else {
-    resumoAtendentes.forEach(function(item, index) {
-      let destaqueAtendente = index === 0;
-
-      html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;margin-bottom:8px;background:' + (destaqueAtendente ? '#eef4ff' : '#f7f9fc') + ';border-radius:8px;border-left:4px solid ' + (destaqueAtendente ? '#d4a017' : '#1f3c88') + ';box-shadow:' + (destaqueAtendente ? '0 3px 10px rgba(0,0,0,0.08)' : 'none') + ';">';
-
-      html += '<div>';
-      html += '<strong>' + (index === 0 ? '🥇 ' : '') + item.atendente + '</strong><br>';
-      html += '<span style="font-size:12px;color:#666;line-height:1.4;">';
-      html += 'Realizadas: ' + item.realizadas + ' | Não quis: ' + item.naoQuis + '<br>';
-      html += 'Retorno: ' + item.retorno + ' | Sem contato: ' + item.semContato;
-      html += '</span>';
-      html += '</div>';
-
-      html += '<div style="font-size:24px;font-weight:bold;color:#1f3c88;">' + item.total + '</div>';
-
-      html += '</div>';
-    });
-  }
-
-  html += '</div>';
-
-  box.innerHTML = html;
-  box.style.display = "block";
-  box.style.height = "auto";
-  box.style.alignItems = "flex-start";
-  box.style.justifyContent = "flex-start";
-}
-      async function carregarDashboard() {
-        let secoes = document.querySelectorAll(".dashboard");
-        if (secoes.length < 3) return;
-
-        let respostas = await obterRespostas();
-        let posVenda = filtrarPorTipo(respostas, "Pós Venda");
-        let posSuporte = filtrarPorTipo(respostas, "Pós Suporte");
-
-        renderizarTratativas(respostas);
-        renderizarCriticos(respostas);
-        renderizarElogios(respostas);
-
-        atualizarCards(secoes[1], posVenda);
-        atualizarCards(secoes[2], posSuporte);
-
-        criarGrafico("grafico1", contarAvaliacoes(posVenda, "pergunta1"));
-        criarGrafico("grafico2", contarAvaliacoes(posVenda, "pergunta2"));
-        criarGrafico("grafico3", contarAvaliacoes(posVenda, "pergunta3"));
-
-        criarGrafico("grafico4", contarAvaliacoes(posSuporte, "pergunta1"));
-        criarGrafico("grafico5", contarAvaliacoes(posSuporte, "pergunta2"));
-        criarGrafico("grafico6", contarAvaliacoes(posSuporte, "pergunta3"));
-
-        renderizarIndicadores("indicadoresPosVenda", posVenda);
-        renderizarIndicadores("indicadoresPosSuporte", posSuporte);
-
-        renderizarRankingTotalAtendentes("rankingTotalAtendentes", respostas);
-
-        renderizarNPS("npsPosVenda", posVenda);
-        renderizarNPS("npsPosSuporte", posSuporte);
-      }
-
       let dataInicioSalva = localStorage.getItem("filtroDataInicio");
       let dataFimSalva = localStorage.getItem("filtroDataFim");
 
-      let campoDataInicio = document.getElementById("dataInicio");
-      let campoDataFim = document.getElementById("dataFim");
+      if (dataInicioSalva) document.getElementById("dataInicio").value = dataInicioSalva;
+      if (dataFimSalva) document.getElementById("dataFim").value = dataFimSalva;
 
-      if (campoDataInicio && dataInicioSalva) {
-        campoDataInicio.value = dataInicioSalva;
-      }
-
-      if (campoDataFim && dataFimSalva) {
-        campoDataFim.value = dataFimSalva;
-      }
-
-      let btnFiltrar = document.getElementById("btnFiltrar");
-      if (btnFiltrar) btnFiltrar.addEventListener("click", aplicarFiltro);
-
-      let btnLimparFiltro = document.getElementById("btnLimparFiltro");
-      if (btnLimparFiltro) btnLimparFiltro.addEventListener("click", limparFiltro);
-
-      let btnExportar = document.getElementById("btnExportar");
-      if (btnExportar) btnExportar.addEventListener("click", exportarExcel);
+      document.getElementById("btnFiltrar").addEventListener("click", aplicarFiltro);
+      document.getElementById("btnLimparFiltro").addEventListener("click", limparFiltro);
+      document.getElementById("btnExportar").addEventListener("click", exportarExcel);
 
       try {
         await carregarDashboard();
