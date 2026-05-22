@@ -279,20 +279,26 @@
 
     .tabela-feedback th:nth-child(1),
     .tabela-feedback td:nth-child(1) { width: 13%; }
+
     .tabela-feedback th:nth-child(2),
     .tabela-feedback td:nth-child(2) { width: 8%; }
+
     .tabela-feedback th:nth-child(3),
     .tabela-feedback td:nth-child(3) { width: 10%; }
+
     .tabela-feedback th:nth-child(4),
     .tabela-feedback td:nth-child(4) { width: 8%; }
+
     .tabela-feedback th:nth-child(5),
     .tabela-feedback td:nth-child(5),
     .tabela-feedback th:nth-child(6),
     .tabela-feedback td:nth-child(6),
     .tabela-feedback th:nth-child(7),
     .tabela-feedback td:nth-child(7) { width: 4%; }
+
     .tabela-feedback th:nth-child(8),
     .tabela-feedback td:nth-child(8) { width: 8%; }
+
     .tabela-feedback th:nth-child(9),
     .tabela-feedback td:nth-child(9) { width: 41%; }
 
@@ -328,18 +334,18 @@
     }
 
     .ranking-card {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 20px;
-  min-height: 390px;
-  box-sizing: border-box;
-  border: 1px solid #e3e8f0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px;
+      min-height: 390px;
+      box-sizing: border-box;
+      border: 1px solid #e3e8f0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
 
     .ranking-card-titulo {
       background: #eef4ff;
-  color: #1f3c88;
+      color: #1f3c88;
       font-weight: bold;
       text-align: center;
       padding: 13px;
@@ -438,6 +444,7 @@
         Tratativas: <span id="totalTratativas">0</span>
         <span id="resumoTratativasDetalhado"> | Pendentes: <span style="color:#b45309;">0</span> | Concluídas: <span style="color:#15803d;">0</span></span>
       </div>
+
       <button id="btnToggleTratativas" onclick="toggleBox('boxTratativas', 'btnToggleTratativas')" class="btn-tratativas" style="float:right;margin-top:-28px;">Ver</button>
 
       <div class="tabela-box" id="boxTratativas">
@@ -458,7 +465,9 @@
       </div>
 
       <div class="acoes-linha" style="clear:both;">
-        <div style="font-size:16px;font-weight:bold;color:#b91c1c;">Feedback Clientes: <span id="totalCriticos">0</span></div>
+        <div style="font-size:16px;font-weight:bold;color:#b91c1c;">
+          Feedback Clientes: <span id="totalCriticos">0</span>
+        </div>
         <button id="btnToggleCriticos" onclick="toggleBox('boxCriticos', 'btnToggleCriticos')" class="btn-criticos">Ver</button>
       </div>
 
@@ -482,7 +491,9 @@
       </div>
 
       <div class="acoes-linha">
-        <div style="font-size:16px;font-weight:bold;color:#15803d;">Elogios: <span id="totalElogios">0</span></div>
+        <div style="font-size:16px;font-weight:bold;color:#15803d;">
+          Elogios: <span id="totalElogios">0</span>
+        </div>
         <button id="btnToggleElogios" onclick="toggleBox('boxElogios', 'btnToggleElogios')" class="btn-elogios">Ver</button>
       </div>
 
@@ -534,20 +545,47 @@
       </div>
 
       <div class="cards">
-        <div class="card"><div class="card-titulo">Total de Pesquisas</div><div class="card-valor">0</div></div>
-        <div class="card"><div class="card-titulo">Pesquisas Realizadas</div><div class="card-valor">0</div></div>
-        <div class="card"><div class="card-titulo">Não Quis Realizar Pesquisa</div><div class="card-valor">0</div></div>
-        <div class="card"><div class="card-titulo">Sem Contato</div><div class="card-valor">0</div></div>
+        <div class="card">
+          <div class="card-titulo">Total de Pesquisas</div>
+          <div class="card-valor">0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">Pesquisas Realizadas</div>
+          <div class="card-valor">0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">Não Quis Realizar Pesquisa</div>
+          <div class="card-valor">0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">Sem Contato</div>
+          <div class="card-valor">0</div>
+        </div>
       </div>
 
       <div class="linha-dashboard" style="display:flex; gap:20px; align-items:flex-start;">
         <div style="flex:1.1; display:flex; flex-direction:column; gap:16px;">
           <div class="grafico-box">
             <div class="grafico-titulo">Avaliações</div>
+
             <div class="graficos-avaliacao">
-              <div class="grafico-item"><div class="titulo-grafico">Agendamento</div><div class="grafico-barras" id="grafico1"></div></div>
-              <div class="grafico-item"><div class="titulo-grafico">Atendimento Técnico</div><div class="grafico-barras" id="grafico2"></div></div>
-              <div class="grafico-item"><div class="titulo-grafico">Experiência Geral</div><div class="grafico-barras" id="grafico3"></div></div>
+              <div class="grafico-item">
+                <div class="titulo-grafico">Agendamento</div>
+                <div class="grafico-barras" id="grafico1"></div>
+              </div>
+
+              <div class="grafico-item">
+                <div class="titulo-grafico">Atendimento Técnico</div>
+                <div class="grafico-barras" id="grafico2"></div>
+              </div>
+
+              <div class="grafico-item">
+                <div class="titulo-grafico">Experiência Geral</div>
+                <div class="grafico-barras" id="grafico3"></div>
+              </div>
             </div>
           </div>
 
@@ -575,20 +613,47 @@
       </div>
 
       <div class="cards">
-        <div class="card"><div class="card-titulo">Total de Pesquisas</div><div class="card-valor">0</div></div>
-        <div class="card"><div class="card-titulo">Pesquisas Realizadas</div><div class="card-valor">0</div></div>
-        <div class="card"><div class="card-titulo">Não Quis Realizar Pesquisa</div><div class="card-valor">0</div></div>
-        <div class="card"><div class="card-titulo">Sem Contato</div><div class="card-valor">0</div></div>
+        <div class="card">
+          <div class="card-titulo">Total de Pesquisas</div>
+          <div class="card-valor">0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">Pesquisas Realizadas</div>
+          <div class="card-valor">0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">Não Quis Realizar Pesquisa</div>
+          <div class="card-valor">0</div>
+        </div>
+
+        <div class="card">
+          <div class="card-titulo">Sem Contato</div>
+          <div class="card-valor">0</div>
+        </div>
       </div>
 
       <div class="linha-dashboard" style="display:flex; gap:20px; align-items:flex-start;">
         <div style="flex:1.1; display:flex; flex-direction:column; gap:16px;">
           <div class="grafico-box">
             <div class="grafico-titulo">Avaliações</div>
+
             <div class="graficos-avaliacao">
-              <div class="grafico-item"><div class="titulo-grafico">Suporte</div><div class="grafico-barras" id="grafico4"></div></div>
-              <div class="grafico-item"><div class="titulo-grafico">Atendimento Técnico</div><div class="grafico-barras" id="grafico5"></div></div>
-              <div class="grafico-item"><div class="titulo-grafico">Experiência Geral</div><div class="grafico-barras" id="grafico6"></div></div>
+              <div class="grafico-item">
+                <div class="titulo-grafico">Suporte</div>
+                <div class="grafico-barras" id="grafico4"></div>
+              </div>
+
+              <div class="grafico-item">
+                <div class="titulo-grafico">Atendimento Técnico</div>
+                <div class="grafico-barras" id="grafico5"></div>
+              </div>
+
+              <div class="grafico-item">
+                <div class="titulo-grafico">Experiência Geral</div>
+                <div class="grafico-barras" id="grafico6"></div>
+              </div>
             </div>
           </div>
 
@@ -652,7 +717,11 @@
 
     function ehNaoQuis(status) {
       let s = normalizarTexto(status);
-      return s === "nao quis" || s === "nao quis realizar" || s === "nao quis realizar pesquisa";
+      return (
+        s === "nao quis" ||
+        s === "nao quis realizar" ||
+        s === "nao quis realizar pesquisa"
+      );
     }
 
     function ehRetorno(status) {
@@ -665,8 +734,13 @@
       return s === "sem contato";
     }
 
+    function ehStatusFinalPesquisa(status) {
+      return ehRealizada(status) || ehNaoQuis(status) || ehSemContato(status);
+    }
+
     function filtrarPorTipo(lista, tipoPesquisa) {
       let tipoNormalizado = normalizarTexto(tipoPesquisa);
+
       return lista.filter(function(item) {
         return normalizarTexto(item.tipo) === tipoNormalizado;
       });
@@ -702,6 +776,7 @@
 
       lista.forEach(function(item) {
         let valor = Number(item[campo]);
+
         if (valor >= 1 && valor <= 10) {
           contagem[valor - 1]++;
         }
@@ -749,7 +824,7 @@
       let cards = secao.querySelectorAll(".card-valor");
       if (cards.length < 4) return;
 
-      cards[0].innerText = lista.length;
+      cards[0].innerText = lista.filter(item => ehStatusFinalPesquisa(item.status)).length;
       cards[1].innerText = lista.filter(item => ehRealizada(item.status)).length;
       cards[2].innerText = lista.filter(item => ehNaoQuis(item.status)).length;
       cards[3].innerText = lista.filter(item => ehSemContato(item.status)).length;
@@ -773,16 +848,18 @@
           };
         }
 
-        resumo[chave].total += 1;
+        if (ehStatusFinalPesquisa(item.status)) resumo[chave].total += 1;
         if (ehRealizada(item.status)) resumo[chave].realizadas += 1;
         if (ehNaoQuis(item.status)) resumo[chave].naoQuis += 1;
         if (ehRetorno(item.status)) resumo[chave].retorno += 1;
         if (ehSemContato(item.status)) resumo[chave].semContato += 1;
       });
 
-      return Object.values(resumo).sort(function(a, b) {
-        return b.realizadas - a.realizadas || b.total - a.total;
-      });
+      return Object.values(resumo)
+        .filter(item => item.total > 0)
+        .sort(function(a, b) {
+          return b.realizadas - a.realizadas || b.total - a.total;
+        });
     }
 
     function obterMediaPorTecnico(lista) {
@@ -796,19 +873,26 @@
         if (!(notaTecnico >= 1 && notaTecnico <= 10)) return;
 
         if (!resumo[tecnico]) {
-          resumo[tecnico] = { tecnico, soma: 0, quantidade: 0, media: 0 };
+          resumo[tecnico] = {
+            tecnico,
+            soma: 0,
+            quantidade: 0,
+            media: 0
+          };
         }
 
         resumo[tecnico].soma += notaTecnico;
         resumo[tecnico].quantidade += 1;
       });
 
-      return Object.values(resumo).map(function(item) {
-        item.media = item.quantidade ? item.soma / item.quantidade : 0;
-        return item;
-      }).sort(function(a, b) {
-        return b.media - a.media || b.quantidade - a.quantidade;
-      });
+      return Object.values(resumo)
+        .map(function(item) {
+          item.media = item.quantidade ? item.soma / item.quantidade : 0;
+          return item;
+        })
+        .sort(function(a, b) {
+          return b.media - a.media || b.quantidade - a.quantidade;
+        });
     }
 
     function renderizarRankingAtendentes(containerId, lista) {
@@ -829,7 +913,7 @@
               <strong>${index === 0 ? "🥇 " : ""}${item.atendente}</strong><br>
               <span class="ranking-texto">
                 Realizadas: ${item.realizadas} | Não quis: ${item.naoQuis}<br>
-                Retorno: ${item.retorno} | Sem contato: ${item.semContato}
+                Sem contato: ${item.semContato}
               </span>
             </div>
             <div class="ranking-numero">${item.total}</div>
@@ -842,16 +926,31 @@
       let box = document.getElementById(containerId);
       if (!box) return;
 
-      let total = lista.length;
+      let total = lista.filter(item => ehStatusFinalPesquisa(item.status)).length;
       let realizadas = lista.filter(item => ehRealizada(item.status)).length;
       let semContato = lista.filter(item => ehSemContato(item.status)).length;
       let naoQuis = lista.filter(item => ehNaoQuis(item.status)).length;
 
       box.innerHTML = `
-        <div class="ranking-linha"><span>Total de pesquisas</span><div class="ranking-numero">${total}</div></div>
-        <div class="ranking-linha"><span>Sem Contato</span><div class="ranking-numero">${semContato}</div></div>
-        <div class="ranking-linha"><span>Pesquisas Realizadas</span><div class="ranking-numero">${realizadas}</div></div>
-        <div class="ranking-linha"><span>Não Quis Realizar Pesquisa</span><div class="ranking-numero">${naoQuis}</div></div>
+        <div class="ranking-linha">
+          <span>Total de pesquisas</span>
+          <div class="ranking-numero">${total}</div>
+        </div>
+
+        <div class="ranking-linha">
+          <span>Sem Contato</span>
+          <div class="ranking-numero">${semContato}</div>
+        </div>
+
+        <div class="ranking-linha">
+          <span>Pesquisas Realizadas</span>
+          <div class="ranking-numero">${realizadas}</div>
+        </div>
+
+        <div class="ranking-linha">
+          <span>Não Quis Realizar Pesquisa</span>
+          <div class="ranking-numero">${naoQuis}</div>
+        </div>
       `;
     }
 
@@ -875,10 +974,14 @@
               <strong>${index === 0 ? "🥇 " : ""}${item.tecnico}</strong>
               <strong style="color:${cor};">${item.media.toFixed(1)}</strong>
             </div>
+
             <div style="width:100%;height:8px;background:#dbe4ea;border-radius:6px;overflow:hidden;margin-bottom:5px;">
               <div style="width:${(item.media / 10) * 100}%;height:100%;background:${cor};"></div>
             </div>
-            <div style="font-size:12px;color:#666;">Avaliações: ${item.quantidade}</div>
+
+            <div style="font-size:12px;color:#666;">
+              Avaliações: ${item.quantidade}
+            </div>
           </div>
         `;
       }).join("");
@@ -895,6 +998,7 @@
 
       html += '<div style="flex:1;min-width:320px;background:#fff;border:1px solid #e3e8f0;border-radius:10px;padding:12px;">';
       html += '<div style="font-weight:bold;color:#1f3c88;margin-bottom:12px;">Pesquisas por Atendente</div>';
+
       html += atendentes.length ? atendentes.map(function(item, index) {
         return `
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin-bottom:6px;background:${index === 0 ? '#eef4ff' : '#f7f9fc'};border-radius:8px;border-left:4px solid ${index === 0 ? '#d4a017' : '#1f3c88'};">
@@ -902,32 +1006,40 @@
               <strong>${index === 0 ? '🥇 ' : ''}${item.atendente}</strong><br>
               <span style="font-size:12px;color:#666;line-height:1.4;">
                 Realizadas: ${item.realizadas} | Não quis: ${item.naoQuis}<br>
-                Retorno: ${item.retorno} | Sem contato: ${item.semContato}
+                Sem contato: ${item.semContato}
               </span>
             </div>
-            <div style="font-size:20px;font-weight:bold;color:#1f3c88;">${item.realizadas}</div>
+            <div style="font-size:20px;font-weight:bold;color:#1f3c88;">${item.total}</div>
           </div>
         `;
       }).join("") : '<div style="color:#888;">Nenhuma pesquisa registrada ainda</div>';
+
       html += '</div>';
 
       html += '<div style="flex:0.75;min-width:280px;background:#fff;border:1px solid #e3e8f0;border-radius:10px;padding:12px;">';
       html += '<div style="font-weight:bold;color:#1f3c88;margin-bottom:12px;">Ranking de técnicos</div>';
+
       html += tecnicos.length ? tecnicos.map(function(item, index) {
         let cor = item.media >= 9 ? '#15803d' : item.media >= 7 ? '#b45309' : '#b91c1c';
+
         return `
           <div style="padding:10px;margin-bottom:8px;background:${index === 0 ? '#fff8e6' : '#f7f9fc'};border-radius:8px;border-left:4px solid ${index === 0 ? '#d4a017' : cor};">
             <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
               <strong>${index === 0 ? '🥇 ' : ''}${item.tecnico}</strong>
               <span style="font-weight:bold;color:${cor};">${item.media.toFixed(1)}</span>
             </div>
+
             <div style="width:100%;height:8px;background:#e3e8f0;border-radius:6px;overflow:hidden;">
               <div style="width:${(item.media / 10) * 100}%;height:100%;background:${cor};"></div>
             </div>
-            <div style="font-size:11px;color:#666;margin-top:4px;">Avaliações: ${item.quantidade}</div>
+
+            <div style="font-size:11px;color:#666;margin-top:4px;">
+              Avaliações: ${item.quantidade}
+            </div>
           </div>
         `;
       }).join("") : '<div style="color:#888;">Nenhuma avaliação registrada ainda</div>';
+
       html += '</div></div>';
 
       box.innerHTML = html;
@@ -941,6 +1053,7 @@
       lista.forEach(function(item) {
         let nota = Number(item.pergunta3);
         if (!(nota >= 1 && nota <= 10)) return;
+
         if (nota <= 6) detratores++;
         else if (nota <= 8) neutros++;
         else promotores++;
@@ -965,13 +1078,23 @@
       let dados = calcularNPS(lista);
       let angulo = ((dados.nps + 100) / 200) * 180 - 90;
       let npsTexto = dados.nps.toFixed(2).replace(".", ",");
+
       let corNps = "#ff1010";
       let classificacaoNps = "Crítico";
 
-      if (dados.nps >= 75) { corNps = "#00b050"; classificacaoNps = "Excelente"; }
-      else if (dados.nps >= 50) { corNps = "#34a853"; classificacaoNps = "Muito bom"; }
-      else if (dados.nps >= 0) { corNps = "#ffc000"; classificacaoNps = "Aceitável"; }
-      else if (dados.nps >= -49) { corNps = "#ff7a00"; classificacaoNps = "Ruim"; }
+      if (dados.nps >= 75) {
+        corNps = "#00b050";
+        classificacaoNps = "Excelente";
+      } else if (dados.nps >= 50) {
+        corNps = "#34a853";
+        classificacaoNps = "Muito bom";
+      } else if (dados.nps >= 0) {
+        corNps = "#ffc000";
+        classificacaoNps = "Aceitável";
+      } else if (dados.nps >= -49) {
+        corNps = "#ff7a00";
+        classificacaoNps = "Ruim";
+      }
 
       let ponteiroId = "ponteiro-" + containerId;
 
@@ -998,7 +1121,9 @@
 
       setTimeout(function() {
         let ponteiro = document.getElementById(ponteiroId);
-        if (ponteiro) ponteiro.style.transform = "translateX(-50%) rotate(" + angulo + "deg)";
+        if (ponteiro) {
+          ponteiro.style.transform = "translateX(-50%) rotate(" + angulo + "deg)";
+        }
       }, 100);
     }
 
@@ -1017,11 +1142,21 @@
       lista.forEach(function(item) {
         let status = normalizarTexto(item.status);
         let abriuTratativa = String(item.necessita_tratativa || "").toLowerCase() === "sim";
-        let ehLinhaTratativa = ["tratativa resolvida", "tratativa retorno", "tratativa sem contato"].includes(status);
+
+        let ehLinhaTratativa = [
+          "tratativa resolvida",
+          "tratativa retorno",
+          "tratativa sem contato"
+        ].includes(status);
 
         if (!abriuTratativa && !ehLinhaTratativa) return;
 
-        let chave = [item.cliente || "", item.tipo || "", item.tecnico || "", item.motivo_tratativa || ""].join("||");
+        let chave = [
+          item.cliente || "",
+          item.tipo || "",
+          item.tecnico || "",
+          item.motivo_tratativa || ""
+        ].join("||");
 
         if (!mapa[chave]) {
           mapa[chave] = {
@@ -1054,20 +1189,27 @@
       });
 
       return Object.values(mapa).sort(function(a, b) {
-        if (a.statusAtual !== b.statusAtual) return a.statusAtual === "pendente" ? -1 : 1;
+        if (a.statusAtual !== b.statusAtual) {
+          return a.statusAtual === "pendente" ? -1 : 1;
+        }
+
         return (b.ordem || 0) - (a.ordem || 0);
       });
     }
 
     function renderizarTratativas(lista) {
       let tratativas = montarListaTratativas(lista);
+
       let pendentes = tratativas.filter(item => item.statusAtual === "pendente").length;
       let concluidas = tratativas.filter(item => item.statusAtual === "concluida").length;
 
       document.getElementById("totalTratativas").innerText = tratativas.length;
-      document.getElementById("resumoTratativasDetalhado").innerHTML = ` | Pendentes: <span style="color:#b45309;">${pendentes}</span> | Concluídas: <span style="color:#15803d;">${concluidas}</span>`;
+
+      document.getElementById("resumoTratativasDetalhado").innerHTML =
+        ` | Pendentes: <span style="color:#b45309;">${pendentes}</span> | Concluídas: <span style="color:#15803d;">${concluidas}</span>`;
 
       let tabela = document.getElementById("tabelaTratativas");
+
       tabela.innerHTML = tratativas.length ? tratativas.map(function(item) {
         return `
           <tr>
@@ -1075,7 +1217,11 @@
             <td>${item.tipo}</td>
             <td>${item.tecnico}</td>
             <td>${item.motivo}</td>
-            <td><span class="status-badge ${item.statusAtual === "concluida" ? "status-concluida" : "status-pendente"}">${item.statusAtual === "concluida" ? "Concluída" : "Pendente"}</span></td>
+            <td>
+              <span class="status-badge ${item.statusAtual === "concluida" ? "status-concluida" : "status-pendente"}">
+                ${item.statusAtual === "concluida" ? "Concluída" : "Pendente"}
+              </span>
+            </td>
             <td>${item.abertura}</td>
             <td>${item.conclusao}</td>
           </tr>
@@ -1086,36 +1232,123 @@
     function comentarioContem(comentario, palavras) {
       let texto = normalizarTexto(comentario);
       if (!texto) return false;
-      return palavras.some(palavra => texto.includes(normalizarTexto(palavra)));
+
+      return palavras.some(function(palavra) {
+        return texto.includes(normalizarTexto(palavra));
+      });
     }
 
     function renderizarCriticos(lista) {
-      let palavrasCriticas = ["reclamacao", "recorrencia", "ativar app", "ativacao", "aplicativo", "app", "suporte", "instabilidade", "sem sinal", "lentidao", "cancelar", "cancelamento", "insatisfeito", "ruim", "pessimo", "voltou a dar problema", "nao conseguiu acessar", "nao consegue acessar", "erro no app", "nao funcionou", "insatisfacao", "demora", "oscila", "velocidade"];
+      let palavrasCriticas = [
+        "reclamacao",
+        "recorrencia",
+        "ativar app",
+        "ativacao",
+        "aplicativo",
+        "app",
+        "suporte",
+        "instabilidade",
+        "sem sinal",
+        "lentidao",
+        "cancelar",
+        "cancelamento",
+        "insatisfeito",
+        "ruim",
+        "pessimo",
+        "voltou a dar problema",
+        "nao conseguiu acessar",
+        "nao consegue acessar",
+        "erro no app",
+        "nao funcionou",
+        "insatisfacao",
+        "demora",
+        "oscila",
+        "velocidade"
+      ];
 
       let criticos = lista.filter(function(item) {
         let p1 = Number(item.pergunta1);
         let p2 = Number(item.pergunta2);
         let p3 = Number(item.pergunta3);
-        let notaCritica = (p1 >= 1 && p1 <= 6) || (p2 >= 1 && p2 <= 6) || (p3 >= 1 && p3 <= 6);
+
+        let notaCritica =
+          (p1 >= 1 && p1 <= 6) ||
+          (p2 >= 1 && p2 <= 6) ||
+          (p3 >= 1 && p3 <= 6);
+
         return notaCritica || comentarioContem(item.comentario, palavrasCriticas);
-      }).sort((a, b) => (b.id || 0) - (a.id || 0));
+      }).sort(function(a, b) {
+        return (b.id || 0) - (a.id || 0);
+      });
 
       document.getElementById("totalCriticos").innerText = criticos.length;
       preencherTabelaFeedback("tabelaCriticos", criticos, "Nenhuma avaliação crítica encontrada.");
     }
 
     function renderizarElogios(lista) {
-      let palavrasCriticas = ["reclamacao", "problema", "recorrencia", "ativar app", "ativacao", "aplicativo", "app", "suporte", "instabilidade", "sem sinal", "lentidao", "cancelar", "cancelamento", "insatisfeito", "ruim", "pessimo", "voltou a dar problema", "nao conseguiu acessar", "nao consegue acessar", "erro no app", "nao funcionou", "insatisfacao", "demora", "oscila", "velocidade"];
-      let palavrasElogios = ["elogio", "parabenizar", "parabens", "otimo", "excelente", "muito bom", "bom atendimento", "bem atendido", "gostei", "satisfeito", "muito satisfeito", "atendente educado", "tecnico educado", "rapido"];
+      let palavrasCriticas = [
+        "reclamacao",
+        "problema",
+        "recorrencia",
+        "ativar app",
+        "ativacao",
+        "aplicativo",
+        "app",
+        "suporte",
+        "instabilidade",
+        "sem sinal",
+        "lentidao",
+        "cancelar",
+        "cancelamento",
+        "insatisfeito",
+        "ruim",
+        "pessimo",
+        "voltou a dar problema",
+        "nao conseguiu acessar",
+        "nao consegue acessar",
+        "erro no app",
+        "nao funcionou",
+        "insatisfacao",
+        "demora",
+        "oscila",
+        "velocidade"
+      ];
+
+      let palavrasElogios = [
+        "elogio",
+        "parabenizar",
+        "parabens",
+        "otimo",
+        "excelente",
+        "muito bom",
+        "bom atendimento",
+        "bem atendido",
+        "gostei",
+        "satisfeito",
+        "muito satisfeito",
+        "atendente educado",
+        "tecnico educado",
+        "rapido"
+      ];
 
       let elogios = lista.filter(function(item) {
         let p1 = Number(item.pergunta1);
         let p2 = Number(item.pergunta2);
         let p3 = Number(item.pergunta3);
-        let notaCritica = (p1 >= 1 && p1 <= 6) || (p2 >= 1 && p2 <= 6) || (p3 >= 1 && p3 <= 6);
-        if (notaCritica || comentarioContem(item.comentario, palavrasCriticas)) return false;
+
+        let notaCritica =
+          (p1 >= 1 && p1 <= 6) ||
+          (p2 >= 1 && p2 <= 6) ||
+          (p3 >= 1 && p3 <= 6);
+
+        if (notaCritica || comentarioContem(item.comentario, palavrasCriticas)) {
+          return false;
+        }
+
         return comentarioContem(item.comentario, palavrasElogios);
-      }).sort((a, b) => (b.id || 0) - (a.id || 0));
+      }).sort(function(a, b) {
+        return (b.id || 0) - (a.id || 0);
+      });
 
       document.getElementById("totalElogios").innerText = elogios.length;
       preencherTabelaFeedback("tabelaElogios", elogios, "Nenhum elogio encontrado.");
@@ -1168,7 +1401,9 @@
     }
 
     function limparCampoCSV(valor) {
-      return String(valor || "").replace(/;/g, ",").replace(/\r?\n|\r/g, " ");
+      return String(valor || "")
+        .replace(/;/g, ",")
+        .replace(/\r?\n|\r/g, " ");
     }
 
     async function exportarExcel() {
@@ -1198,6 +1433,7 @@
 
       let blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       let link = document.createElement("a");
+
       link.href = URL.createObjectURL(blob);
       link.download = "relatorio.csv";
       link.click();
@@ -1208,8 +1444,12 @@
       if (secoes.length < 4) return;
 
       let respostas = await obterRespostas();
+
       let posVenda = filtrarPorTipo(respostas, "Pós Venda");
       let posSuporte = filtrarPorTipo(respostas, "Pós Suporte");
+
+      let posVendaRealizadas = posVenda.filter(item => ehRealizada(item.status));
+      let posSuporteRealizadas = posSuporte.filter(item => ehRealizada(item.status));
 
       renderizarTratativas(respostas);
       renderizarCriticos(respostas);
@@ -1222,19 +1462,19 @@
       atualizarCards(secoes[2], posVenda);
       atualizarCards(secoes[3], posSuporte);
 
-      criarGrafico("grafico1", contarAvaliacoes(posVenda, "pergunta1"));
-      criarGrafico("grafico2", contarAvaliacoes(posVenda, "pergunta2"));
-      criarGrafico("grafico3", contarAvaliacoes(posVenda, "pergunta3"));
+      criarGrafico("grafico1", contarAvaliacoes(posVendaRealizadas, "pergunta1"));
+      criarGrafico("grafico2", contarAvaliacoes(posVendaRealizadas, "pergunta2"));
+      criarGrafico("grafico3", contarAvaliacoes(posVendaRealizadas, "pergunta3"));
 
-      criarGrafico("grafico4", contarAvaliacoes(posSuporte, "pergunta1"));
-      criarGrafico("grafico5", contarAvaliacoes(posSuporte, "pergunta2"));
-      criarGrafico("grafico6", contarAvaliacoes(posSuporte, "pergunta3"));
+      criarGrafico("grafico4", contarAvaliacoes(posSuporteRealizadas, "pergunta1"));
+      criarGrafico("grafico5", contarAvaliacoes(posSuporteRealizadas, "pergunta2"));
+      criarGrafico("grafico6", contarAvaliacoes(posSuporteRealizadas, "pergunta3"));
 
       renderizarIndicadores("indicadoresPosVenda", posVenda);
       renderizarIndicadores("indicadoresPosSuporte", posSuporte);
 
-      renderizarNPS("npsPosVenda", posVenda);
-      renderizarNPS("npsPosSuporte", posSuporte);
+      renderizarNPS("npsPosVenda", posVendaRealizadas);
+      renderizarNPS("npsPosSuporte", posSuporteRealizadas);
     }
 
     window.addEventListener("DOMContentLoaded", async function() {
@@ -1259,8 +1499,13 @@
       let dataInicioSalva = localStorage.getItem("filtroDataInicio");
       let dataFimSalva = localStorage.getItem("filtroDataFim");
 
-      if (dataInicioSalva) document.getElementById("dataInicio").value = dataInicioSalva;
-      if (dataFimSalva) document.getElementById("dataFim").value = dataFimSalva;
+      if (dataInicioSalva) {
+        document.getElementById("dataInicio").value = dataInicioSalva;
+      }
+
+      if (dataFimSalva) {
+        document.getElementById("dataFim").value = dataFimSalva;
+      }
 
       document.getElementById("btnFiltrar").addEventListener("click", aplicarFiltro);
       document.getElementById("btnLimparFiltro").addEventListener("click", limparFiltro);
