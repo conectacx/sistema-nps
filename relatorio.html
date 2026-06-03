@@ -747,35 +747,34 @@
     }
 
     async function obterRespostas() {
-      let { data, error } = await supabaseClient
-        .from("respostas")
-        .select("*")
-        .order("id", { ascending: true });
+  let dataInicio = localStorage.getItem("filtroDataInicio");
+  let dataFim = localStorage.getItem("filtroDataFim");
 
-      if (error) {
-        console.error("Erro ao buscar respostas:", error);
-        alert("Erro ao carregar relatório: " + error.message);
-        return [];
-      }
+  let consulta = supabaseClient
+    .from("respostas")
+    .select("*")
+    .order("id", { ascending: true });
 
-      let dataInicio = localStorage.getItem("filtroDataInicio");
-      let dataFim = localStorage.getItem("filtroDataFim");
+  if (dataInicio) {
+    consulta = consulta.gte("data", dataInicio);
+  }
 
-      if (!dataInicio && !dataFim) return data || [];
+  if (dataFim) {
+    consulta = consulta.lte("data", dataFim);
+  }
 
-      return (data || []).filter(function(item) {
-  let dataRegistro = item.data || item.created_at;
+  let { data, error } = await consulta;
 
-  if (!dataRegistro) return false;
+  if (error) {
+    console.error("Erro ao buscar respostas:", error);
+    alert("Erro ao carregar relatório: " + error.message);
+    return [];
+  }
 
-  dataRegistro = dataRegistro.substring(0, 10);
+  alert("Total encontrado: " + (data ? data.length : 0));
 
-  if (dataInicio && dataRegistro < dataInicio) return false;
-  if (dataFim && dataRegistro > dataFim) return false;
-
-  return true;
-});
-    }
+  return data || [];
+}
 
     function contarAvaliacoes(lista, campo) {
       let contagem = new Array(10).fill(0);
