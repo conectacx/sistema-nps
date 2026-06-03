@@ -764,11 +764,17 @@
       if (!dataInicio && !dataFim) return data || [];
 
       return (data || []).filter(function(item) {
-        if (!item.data) return false;
-        if (dataInicio && item.data < dataInicio) return false;
-        if (dataFim && item.data > dataFim) return false;
-        return true;
-      });
+  let dataRegistro = item.data || item.created_at;
+
+  if (!dataRegistro) return false;
+
+  dataRegistro = dataRegistro.substring(0, 10);
+
+  if (dataInicio && dataRegistro < dataInicio) return false;
+  if (dataFim && dataRegistro > dataFim) return false;
+
+  return true;
+});
     }
 
     function contarAvaliacoes(lista, campo) {
