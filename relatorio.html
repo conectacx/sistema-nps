@@ -1450,6 +1450,7 @@
       if (secoes.length < 4) return;
 
       let respostas = await obterRespostas();
+      alert("Total encontrado: " + respostas.length);
 
       let posVenda = filtrarPorTipo(respostas, "Pós Venda");
       let posSuporte = filtrarPorTipo(respostas, "Pós Suporte");
