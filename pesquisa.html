@@ -381,7 +381,7 @@
         return { responsavel: "Hudson" };
       }
 
-      if (atendente === "tamara" || atendente === "carlos") {
+      if (atendente === "tamara" || atendente === "Lucas") {
         return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
       }
 
@@ -415,7 +415,7 @@
         return "Hudson";
       }
 
-      if (atendente === "tamara" || atendente === "carlos") {
+      if (atendente === "tamara" || atendente === "Lucas") {
         return totalMinutos < (14 * 60) ? "Hudson" : "Lucas";
       }
 
@@ -1319,7 +1319,7 @@
             dadosAtualizacaoCliente.status_pesquisa = "pendente";
             dadosAtualizacaoCliente.atendente_responsavel = novoResponsavel;
           } else {
-            const filaAtendentes = ["Carlos", "Hudson", "Lucas", "Tamara"];
+            const filaAtendentes = ["Lucas", "Hudson", "Lucas", "Tamara"];
             const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
 
             let indiceAtual = filaAtendentes.findIndex(function(nomeFila) {
@@ -1379,3 +1379,4 @@
   </script>
 </body>
 </html>
+
