@@ -341,12 +341,10 @@
     function definirProximoResponsavelSemContato(atendenteAtual) {
       const atendente = normalizarTexto(atendenteAtual);
 
-      if (atendente === "tamara") return "Lucas";
-      if (atendente === "lucas") return "Tamara";
-      if (atendente === "hudson") return "Gabriel";
-      if (atendente === "gabriel") return "Hudson";
+      if (atendente === "lucas") return "Hudson";
+      if (atendente === "hudson") return "Lucas";
 
-      return "Tamara";
+      return "Hudson";
     }
 
     function definirResponsavelTratativa(atendentePesquisa, horarioRetorno) {
@@ -356,9 +354,8 @@
       const totalMinutos = (hora * 60) + minuto;
 
       const inicioHudson = (7 * 60) + 45;
-      const inicioLucas = (11 * 60);
-      const meioTurno = (14 * 60);
-      const limiteTarde = (16 * 60);
+      const inicioLucas = (10 * 60) + 45;
+      const fimHudson = (16 * 60);
       const fimLucas = (20 * 60);
 
       const atendente = String(atendentePesquisa || "").trim().toLowerCase();
@@ -370,18 +367,10 @@
       }
 
       if (totalMinutos < inicioLucas) {
-        if (atendente === "hudson") {
-          return { responsavel: "Tamara" };
-        }
         return { responsavel: "Hudson" };
       }
 
-      if (totalMinutos > limiteTarde) {
-        if (atendente === "lucas") {
-          return {
-            erro: "Esse horário ficaria somente com o Lucas disponível, e a tratativa não pode voltar para quem realizou a pesquisa."
-          };
-        }
+      if (totalMinutos > fimHudson) {
         return { responsavel: "Lucas" };
       }
 
@@ -393,11 +382,7 @@
         return { responsavel: "Hudson" };
       }
 
-      if (atendente === "tamara" || atendente === "Lucas") {
-        return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
-      }
-
-      return { responsavel: totalMinutos < meioTurno ? "Hudson" : "Lucas" };
+      return { responsavel: "Hudson" };
     }
 
     function definirResponsavelRetorno(atendenteAtual, horarioRetorno) {
@@ -406,32 +391,36 @@
       const minuto = Number(minutoTexto || 0);
       const totalMinutos = (hora * 60) + minuto;
 
+      const inicioHudson = (7 * 60) + 45;
+      const inicioLucas = (10 * 60) + 45;
+      const fimHudson = (16 * 60);
+      const fimLucas = (20 * 60);
+
       const atendente = String(atendenteAtual || "").trim().toLowerCase();
 
-      if (totalMinutos < (11 * 60)) {
-        if (atendente === "hudson") {
-          return "Tamara";
-        }
-        return "Hudson";
+      if (totalMinutos < inicioHudson || totalMinutos > fimLucas) {
+        return {
+          erro: "O horário informado está fora do período disponível para retorno."
+        };
       }
 
-      if (totalMinutos > (16 * 60)) {
-        return "Lucas";
+      if (totalMinutos < inicioLucas) {
+        return { responsavel: "Hudson" };
+      }
+
+      if (totalMinutos > fimHudson) {
+        return { responsavel: "Lucas" };
       }
 
       if (atendente === "hudson") {
-        return "Lucas";
+        return { responsavel: "Lucas" };
       }
 
       if (atendente === "lucas") {
-        return "Hudson";
+        return { responsavel: "Hudson" };
       }
 
-      if (atendente === "tamara" || atendente === "Lucas") {
-        return totalMinutos < (14 * 60) ? "Hudson" : "Lucas";
-      }
-
-      return totalMinutos < (14 * 60) ? "Hudson" : "Lucas";
+      return { responsavel: "Hudson" };
     }
 
     function montarCampoTecnico() {
@@ -1331,10 +1320,16 @@
         dadosAtualizacaoCliente.status_pesquisa = "concluido";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
       } else if (statusPesquisa === "retorno") {
-        const novoResponsavel = definirResponsavelRetorno(atendente, horarioRetorno);
+        const regraRetorno = definirResponsavelRetorno(atendente, horarioRetorno);
+
+        if (regraRetorno.erro) {
+          alert(regraRetorno.erro);
+          return;
+        }
+
         dadosAtualizacaoCliente.status_pesquisa = "pendente";
         dadosAtualizacaoCliente.tentativas_sem_contato = 0;
-        dadosAtualizacaoCliente.atendente_responsavel = novoResponsavel;
+        dadosAtualizacaoCliente.atendente_responsavel = regraRetorno.responsavel;
       } else if (statusPesquisa === "sem_contato") {
         const tentativasAtuais = Number(clienteAtual?.tentativas_sem_contato || 0);
         const novasTentativas = tentativasAtuais + 1;
@@ -1346,9 +1341,15 @@
           dadosAtualizacaoCliente.atendente_responsavel = clienteAtual?.atendente_responsavel || atendente;
         } else {
           if (limiteTentativasSemContato === 2 && horarioRetornoOriginal) {
-            const novoResponsavel = definirResponsavelRetorno(atendente, horarioRetornoOriginal);
+            const regraRetorno = definirResponsavelRetorno(atendente, horarioRetornoOriginal);
+
+            if (regraRetorno.erro) {
+              alert(regraRetorno.erro);
+              return;
+            }
+
             dadosAtualizacaoCliente.status_pesquisa = "pendente";
-            dadosAtualizacaoCliente.atendente_responsavel = novoResponsavel;
+            dadosAtualizacaoCliente.atendente_responsavel = regraRetorno.responsavel;
           } else {
             const atendenteAtual = String(clienteAtual?.atendente_responsavel || atendente || "").trim();
             const proximoAtendente = definirProximoResponsavelSemContato(atendenteAtual || atendente);
