@@ -340,9 +340,17 @@
         });
       }
 
-      const nomesClientesTodos = lista.map(function(item) {
-        return item.nome || "";
-      }).filter(Boolean);
+      const nomesClientesTodos = lista
+        .filter(function(item) {
+          return (
+            Number(item.tentativas_sem_contato || 0) > 0 ||
+            !!item.ultima_tentativa_por
+          );
+        })
+        .map(function(item) {
+          return item.nome || "";
+        })
+        .filter(Boolean);
 
       const mapaInfos = await buscarInfoPendencia(nomesClientesTodos);
 
